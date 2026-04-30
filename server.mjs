@@ -37,4 +37,4 @@ fastify.post('/guardar', async (request, reply) => {
   return error ? `Error: ${error.message}` : "¡Historia subida con éxito!";
 });
 
-fastify.listen({ port: 3000, host: '0.0.0.0' });
+fastify.listen({ port: 8080, host: '0.0.0.0' });
