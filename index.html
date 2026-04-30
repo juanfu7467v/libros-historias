@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Panel de Historias - PeliPREX</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; background: #f4f4f9; }
+        input, textarea { width: 100%; margin-bottom: 15px; padding: 10px; border-radius: 5px; border: 1px solid #ddd; }
+        button { background: #2c3e50; color: white; padding: 10px 20px; border: none; cursor: pointer; width: 100%; }
+    </style>
+</head>
+<body>
+    <h2>Subir Nueva Historia</h2>
+    <form action="/guardar" method="POST">
+        <input type="password" name="password" placeholder="Contraseña de Administrador" required>
+        <input type="text" name="titulo" placeholder="Título de la historia" required>
+        <input type="text" name="autora_nombre" placeholder="Nombre de la autora" required>
+        <input type="text" name="poster_url" placeholder="URL del Poster (Imagen)" required>
+        <textarea name="sinopsis" placeholder="Sinopsis corta..."></textarea>
+        <textarea name="contenido_html" rows="10" placeholder="Escribe aquí el cuento (puedes usar <p> para párrafos)"></textarea>
+        <button type="submit">Publicar en PeliPREX</button>
+    </form>
+</body>
+</html>
