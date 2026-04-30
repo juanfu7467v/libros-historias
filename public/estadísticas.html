@@ -512,30 +512,30 @@
             <nav>
                 <!-- General -->
                 <div class="sb-cat">General</div>
-                <a href="home">
-                    <i class="fas fa-home sb-icon"></i>
-                    <span>Inicio</span>
-                </a>
-                
-                <!-- Studio de Escritura -->
-                <div class="sb-cat">Studio PeliPREX</div>
-                <a href="studio-peliprex">
-                    <i class="fas fa-pen-fancy sb-icon"></i>
-                    <span>Nueva Historia</span>
-                </a>
-                <a href="mis-historias">
-                    <i class="fas fa-book-open sb-icon"></i>
-                    <span>Mis Historias</span>
-                </a>
-                <a href="borradores">
-                    <i class="fas fa-file-alt sb-icon"></i>
-                    <span>Borradores</span>
-                    <span class="sb-badge">3</span>
-                </a>
-                <a href="estadisticas" class="active">
-                    <i class="fas fa-chart-bar sb-icon"></i>
-                    <span>Estadísticas</span>
-                </a>
+<a href="inicio.html">
+	                    <i class="fas fa-home sb-icon"></i>
+	                    <span>Inicio</span>
+	                </a>
+	                
+	                <!-- Studio de Escritura -->
+	                <div class="sb-cat">Studio PeliPREX</div>
+	                <a href="nueva-historia.html">
+	                    <i class="fas fa-pen-fancy sb-icon"></i>
+	                    <span>Nueva Historia</span>
+	                </a>
+	                <a href="mis-historias.html">
+	                    <i class="fas fa-book-open sb-icon"></i>
+	                    <span>Mis Historias</span>
+	                </a>
+	                <a href="borradores.html">
+	                    <i class="fas fa-file-alt sb-icon"></i>
+	                    <span>Borradores</span>
+	                    <span class="sb-badge" id="sidebar-draft-count">0</span>
+	                </a>
+	                <a href="estadísticas.html" class="active">
+	                    <i class="fas fa-chart-bar sb-icon"></i>
+	                    <span>Estadísticas</span>
+	                </a>
             
                 <!-- Entretenimiento -->
                 <div class="sb-cat">Entretenimiento</div>
@@ -825,6 +825,52 @@
 
     <script>
         lucide.createIcons();
+
+        // Cargar contador de borradores en sidebar
+        async function loadSidebarStats() {
+            try {
+                const res = await fetch('/api/borradores');
+                const drafts = await res.json();
+                const badge = document.getElementById('sidebar-draft-count');
+                if (badge) badge.textContent = drafts.length;
+            } catch (err) { console.error(err); }
+        }
+        loadSidebarStats();
+
+        // Lógica para ocultar estadísticas si no hay datos reales
+        async function checkStats() {
+            try {
+                const res = await fetch('/api/historias');
+                const historias = await res.json();
+                
+                if (!historias || historias.length === 0) {
+                    // Si no hay historias, ocultar secciones de estadísticas
+                    document.querySelectorAll('.stat-card, .charts-grid, .drafts-hero').forEach(el => {
+                        el.style.display = 'none';
+                    });
+                    
+                    // Mostrar mensaje de estado vacío
+                    const container = document.querySelector('.main-container');
+                    const emptyState = document.createElement('div');
+                    emptyState.className = 'empty-state animate-in';
+                    emptyState.innerHTML = `
+                        <div class="empty-state-icon"><i class="fas fa-chart-line"></i></div>
+                        <h3>Sin datos aún</h3>
+                        <p>Publica tu primera historia para empezar a ver estadísticas reales de tus lectores.</p>
+                        <a href="studio-peliprex" class="empty-btn">
+                            <i class="fas fa-feather-alt"></i> EMPEZAR A ESCRIBIR
+                        </a>
+                    `;
+                    container.appendChild(emptyState);
+                } else {
+                    // Si hay historias, podríamos cargar datos reales aquí si existieran en la DB
+                    // Por ahora, al menos nos aseguramos de que no se muestren datos inventados si la DB está vacía
+                }
+            } catch (err) {
+                console.error('Error verificando estadísticas:', err);
+            }
+        }
+        checkStats();
 
         const menuToggle = document.getElementById('menu-toggle');
         const sidebarEl = document.getElementById('sidebar');

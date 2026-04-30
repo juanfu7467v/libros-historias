@@ -531,6 +531,9 @@
             <div class="logo">
                 <div class="logo-icon"><i class="fas fa-feather-alt"></i></div>
                 <div class="logo-text"><span>Studio</span> PeliPREX</div>
+            <div id="sidebar-trigger" style="position: fixed; top: 16px; left: 16px; z-index: 100; cursor: pointer; color: var(--violet-light); font-size: 24px; display: none;">
+                <i class="fas fa-bars"></i>
+            </div>
             </div>
         </header>
 
@@ -760,7 +763,7 @@
         <section class="final-cta">
             <h3>Tu historia merece ser leída</h3>
             <p>Cada día que pasa sin publicar, hay lectores que se pierden tu talento. Comparte tu voz con el mundo hoy.</p>
-            <a href="studio-peliprex" class="btn-start">
+            <a href="nueva-historia.html" class="btn-start">
                 <i class="fas fa-feather-alt"></i> EMPEZAR A PUBLICAR <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>
             </a>
         </section>
@@ -847,6 +850,21 @@
         }, { threshold: 0.3 });
 
         document.querySelectorAll('.stat-card').forEach(card => statsObserver.observe(card));
+
+        // Ocultar estadísticas si no hay datos reales
+        async function checkRealStats() {
+            try {
+                const res = await fetch('/api/historias');
+                const historias = await res.json();
+                if (!historias || historias.length === 0) {
+                    document.querySelector('.stats-grid').style.display = 'none';
+                    document.querySelector('.recovery-section').style.display = 'none';
+                }
+            } catch (err) {
+                console.error('Error verificando estadísticas:', err);
+            }
+        }
+        checkRealStats();
     </script>
 </body>
 </html>
