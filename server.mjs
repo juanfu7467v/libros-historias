@@ -36,7 +36,6 @@ const htmlPages = [
   'mis-historias',
   'borradores',
   'estadisticas',
-  'studio-peliprex',
 ];
 
 htmlPages.forEach((page) => {
@@ -46,6 +45,9 @@ htmlPages.forEach((page) => {
     return reply.sendFile(fileName);
   });
 });
+
+// Redirigir studio-peliprex a nueva-historia.html
+fastify.get('/studio-peliprex', (req, reply) => reply.sendFile('nueva-historia.html'));
 
 // Alias /estadísticas (con tilde) → estadísticas.html
 fastify.get('/estadísticas', (req, reply) => reply.sendFile('estadísticas.html'));
@@ -179,6 +181,40 @@ fastify.put('/actualizar/:id', async (request, reply) => {
 
   if (error) return reply.code(400).send({ error: error.message });
   return { message: '¡Actualizado con éxito!', data: data[0] };
+});
+
+// ── Duplicar historia ─────────────────────────────────────────────────────────
+fastify.post('/duplicar/:id', async (request, reply) => {
+  const { id } = request.params;
+  const { password } = request.body;
+
+  if (password !== process.env.ADMIN_PASSWORD) {
+    return reply.code(401).send({ error: 'Token de acceso incorrecto' });
+  }
+
+  // Obtener la historia original
+  const { data: original, error: fetchError } = await supabase
+    .from('historias')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (fetchError) return reply.code(404).send({ error: 'Historia no encontrada' });
+
+  // Crear la copia
+  const { id: _id, created_at: _c, updated_at: _u, vistas: _v, ...copyData } = original;
+  copyData.titulo = `${copyData.titulo} (Copia)`;
+  copyData.estado = 'borrador'; // Siempre duplicar como borrador
+  copyData.vistas = 0;
+  copyData.fecha_publicacion = null;
+
+  const { data: copy, error: insertError } = await supabase
+    .from('historias')
+    .insert([copyData])
+    .select();
+
+  if (insertError) return reply.code(400).send({ error: insertError.message });
+  return { message: '¡Copia creada con éxito!', data: copy[0] };
 });
 
 // ── Eliminar historia ─────────────────────────────────────────────────────────
