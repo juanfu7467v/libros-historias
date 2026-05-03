@@ -265,6 +265,14 @@ fastify.get('/api/estadisticas', async (request, reply) => {
   return { totalHistorias, totalVistas, topHistorias: data.slice(0, 10) };
 });
 
+// ── Configuración pública (solo URL y Anon Key) ──────────────────────────────
+fastify.get('/api/config', async () => {
+  return {
+    supabaseUrl: process.env.SUPABASE_URL,
+    supabaseAnonKey: process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_KEY
+  };
+});
+
 // ── Health check ──────────────────────────────────────────────────────────────
 fastify.get('/health', async () => ({ status: 'ok', timestamp: new Date().toISOString() }));
 

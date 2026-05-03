@@ -1,6 +1,7 @@
 /**
  * returnConfig.js
- * Centraliza la lógica para el manejo de redirecciones y parámetros returnTo.
+ * Centraliza la lógica para el manejo de redirecciones y parámetros return_to.
+ * Adaptado para Supabase Auth.
  */
 
 const ReturnConfig = {
@@ -15,14 +16,14 @@ const ReturnConfig = {
     },
 
     /**
-     * Obtiene la ruta de retorno válida (returnTo) priorizando la URL y luego el sessionStorage.
+     * Obtiene la ruta de retorno válida (return_to) priorizando la URL y luego el sessionStorage.
      * @returns {string|null} - La ruta de retorno decodificada o null.
      */
     getReturnPath: function() {
-        let returnTo = this.getUrlParameter('returnTo');
+        let returnTo = this.getUrlParameter('return_to');
         
         if (!returnTo || returnTo === 'null' || returnTo === 'undefined') {
-            returnTo = sessionStorage.getItem('returnTo');
+            returnTo = sessionStorage.getItem('return_to');
         }
 
         if (returnTo) {
@@ -40,35 +41,28 @@ const ReturnConfig = {
     },
 
     /**
-     * Guarda el parámetro returnTo de la URL en el sessionStorage si existe.
+     * Guarda el parámetro return_to de la URL en el sessionStorage si existe.
      */
     saveReturnToSession: function() {
-        const returnTo = this.getUrlParameter('returnTo');
+        const returnTo = this.getUrlParameter('return_to');
         if (returnTo && returnTo !== 'null' && returnTo !== 'undefined') {
-            sessionStorage.setItem('returnTo', returnTo);
+            sessionStorage.setItem('return_to', returnTo);
         }
     },
 
     /**
-     * Limpia el parámetro returnTo del sessionStorage.
+     * Limpia el parámetro return_to del sessionStorage.
      */
     clearReturnToSession: function() {
-        sessionStorage.removeItem('returnTo');
+        sessionStorage.removeItem('return_to');
     },
 
     /**
      * Ejecuta la redirección después de la autenticación.
-     * @param {Object} user - Objeto de usuario de Firebase.
-     * @param {string} defaultPath - Ruta por defecto si no hay returnTo.
+     * @param {Object} session - Objeto de sesión de Supabase.
+     * @param {string} defaultPath - Ruta por defecto si no hay return_to.
      */
-    redirectAfterAuth: function(user, defaultPath = '/actividad') {
-        if (user && !user.emailVerified) {
-            const returnTo = this.getUrlParameter('returnTo') || sessionStorage.getItem('returnTo');
-            const verifyUrl = returnTo ? `verificacion.html?returnTo=${encodeURIComponent(returnTo)}` : "verificacion.html";
-            window.location.href = verifyUrl;
-            return;
-        }
-
+    redirectAfterAuth: function(session, defaultPath = '/mis-historias') {
         const returnPath = this.getReturnPath();
         if (returnPath) {
             this.clearReturnToSession();
@@ -79,7 +73,7 @@ const ReturnConfig = {
     },
 
     /**
-     * Redirige al login incluyendo la ruta actual como returnTo.
+     * Redirige al login incluyendo la ruta actual como return_to.
      */
     redirectToLogin: function() {
         // Aseguramos que la ruta comience con / para que login.html la acepte como relativa
@@ -87,7 +81,20 @@ const ReturnConfig = {
         if (!currentPath.startsWith('/')) {
             currentPath = '/' + currentPath;
         }
-        window.location.href = "login.html?returnTo=" + encodeURIComponent(currentPath);
+        window.location.href = "/login.html?return_to=" + encodeURIComponent(currentPath);
+    },
+
+    /**
+     * Verifica si el usuario está autenticado (Lado Cliente).
+     * Si no lo está, redirige al login.
+     */
+    checkAuth: async function(supabaseClient) {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (!session) {
+            this.redirectToLogin();
+            return null;
+        }
+        return session;
     }
 };
 
