@@ -52,31 +52,62 @@
         font-weight: 700;
         cursor: pointer;
         transition: transform 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     .btn-primary:active { transform: scale(0.98); }
+    .btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
+    .hidden { display: none; }
+    
+    /* Animación suave para el cambio */
+    .fade-in {
+        animation: fadeIn 0.3s ease-in-out;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 <body>
-  <div class="login-card">
+  <div class="login-card fade-in">
     <div class="text-center mb-8">
         <img src="https://cdn-icons-png.flaticon.com/128/747/747965.png" class="w-16 h-16 mx-auto mb-4" alt="Logo">
         <h1 class="text-2xl font-bold text-gray-800">Studio PeliPREX</h1>
-        <p class="text-gray-500">Inicia sesión para continuar</p>
+        <p id="form-title" class="text-gray-500">Inicia sesión para continuar</p>
     </div>
 
+    <!-- Formulario de Login -->
     <form id="login-form">
-        <input type="email" id="email" class="input-field" placeholder="Correo electrónico" required>
-        <input type="password" id="password" class="input-field" placeholder="Contraseña" required>
-        <button type="submit" class="btn-primary">ENTRAR</button>
+        <input type="email" id="login-email" class="input-field" placeholder="Correo electrónico" required>
+        <input type="password" id="login-password" class="input-field" placeholder="Contraseña" required>
+        <button type="submit" id="login-btn" class="btn-primary">ENTRAR</button>
+    </form>
+
+    <!-- Formulario de Registro -->
+    <form id="register-form" class="hidden">
+        <input type="text" id="reg-name" class="input-field" placeholder="Nombre completo" required>
+        <input type="email" id="reg-email" class="input-field" placeholder="Correo electrónico" required>
+        <input type="password" id="reg-password" class="input-field" placeholder="Contraseña (mín. 6 caracteres)" required minlength="6">
+        <button type="submit" id="reg-btn" class="btn-primary">CREAR CUENTA</button>
     </form>
 
     <div class="mt-6 text-center text-sm text-gray-500">
-        ¿No tienes cuenta? <a href="#" class="text-blue-600 font-semibold">Regístrate</a>
+        <span id="toggle-text">¿No tienes cuenta?</span> 
+        <a href="#" id="toggle-form" class="text-blue-600 font-semibold">Regístrate</a>
     </div>
   </div>
 
   <script>
     let supabaseClient;
+    const loginForm = document.getElementById('login-form');
+    const registerForm = document.getElementById('register-form');
+    const formTitle = document.getElementById('form-title');
+    const toggleFormBtn = document.getElementById('toggle-form');
+    const toggleText = document.getElementById('toggle-text');
+
+    let isLogin = true;
 
     async function initSupabase() {
         try {
@@ -97,10 +128,35 @@
         }
     }
 
-    document.getElementById('login-form').addEventListener('submit', async (e) => {
+    // Alternar entre Login y Registro
+    toggleFormBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
+        isLogin = !isLogin;
+        
+        if (isLogin) {
+            loginForm.classList.remove('hidden');
+            registerForm.classList.add('hidden');
+            formTitle.innerText = 'Inicia sesión para continuar';
+            toggleText.innerText = '¿No tienes cuenta?';
+            toggleFormBtn.innerText = 'Regístrate';
+        } else {
+            loginForm.classList.add('hidden');
+            registerForm.classList.remove('hidden');
+            formTitle.innerText = 'Crea tu cuenta en Studio PeliPREX';
+            toggleText.innerText = '¿Ya tienes cuenta?';
+            toggleFormBtn.innerText = 'Inicia sesión';
+        }
+    });
+
+    // Manejar Login
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        const btn = document.getElementById('login-btn');
+
+        btn.disabled = true;
+        btn.innerText = 'CARGANDO...';
 
         try {
             const { data, error } = await supabaseClient.auth.signInWithPassword({
@@ -115,6 +171,50 @@
             }
         } catch (err) {
             alert('Error inesperado al iniciar sesión');
+        } finally {
+            btn.disabled = false;
+            btn.innerText = 'ENTRAR';
+        }
+    });
+
+    // Manejar Registro
+    registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('reg-name').value;
+        const email = document.getElementById('reg-email').value;
+        const password = document.getElementById('reg-password').value;
+        const btn = document.getElementById('reg-btn');
+
+        btn.disabled = true;
+        btn.innerText = 'CREANDO...';
+
+        try {
+            const { data, error } = await supabaseClient.auth.signUp({
+                email,
+                password,
+                options: {
+                    data: {
+                        full_name: name
+                    }
+                }
+            });
+
+            if (error) {
+                alert('Error: ' + error.message);
+            } else {
+                if (data.user && data.user.identities && data.user.identities.length === 0) {
+                    alert('Este correo ya está registrado. Intenta iniciar sesión.');
+                } else {
+                    alert('¡Registro exitoso! Por favor, revisa tu correo para confirmar tu cuenta.');
+                    // Opcional: Cambiar a login automáticamente
+                    toggleFormBtn.click();
+                }
+            }
+        } catch (err) {
+            alert('Error inesperado al registrarse');
+        } finally {
+            btn.disabled = false;
+            btn.innerText = 'CREAR CUENTA';
         }
     });
 

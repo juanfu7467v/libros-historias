@@ -9,10 +9,19 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const fastify = Fastify({ logger: true });
 
 // ── Supabase ──────────────────────────────────────────────────────────────────
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_KEY
-);
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_KEY;
+
+if (!supabaseUrl || !supabaseKey) {
+  console.error('Faltan variables de entorno de Supabase');
+}
+
+const supabase = createClient(supabaseUrl, supabaseKey, {
+  auth: {
+    autoRefreshToken: true,
+    persistSession: false
+  }
+});
 
 // ── Plugins ───────────────────────────────────────────────────────────────────
 fastify.register(fastifyFormbody);
@@ -266,7 +275,7 @@ fastify.get('/api/estadisticas', async (request, reply) => {
 });
 
 // ── Configuración pública (solo URL y Anon Key) ──────────────────────────────
-fastify.get('/api/config', async () => {
+fastify.get('/api/config', async (request, reply) => {
   return {
     supabaseUrl: process.env.SUPABASE_URL,
     supabaseAnonKey: process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_KEY
