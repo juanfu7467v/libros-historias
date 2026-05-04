@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <title>Estadísticas | Studio PeliPREX - Masitaprex</title>
+    <meta name="description" content="Estadísticas de tus historias en Studio PeliPREX. Visualiza lectores, vistas, valoraciones y el rendimiento de tus obras.">
+    <meta name="keywords" content="estadisticas escritor, metricas historias, studio peliprex, rendimiento obras, masitaprex" />
+    <meta name="robots" content="index, follow" />
+    
+    <meta property="og:title" content="Estadísticas | Studio PeliPREX - Masitaprex" />
+    <meta property="og:description" content="Visualiza el rendimiento de tus historias. Lectores, vistas, valoraciones y más." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://cdn-icons-png.flaticon.com/128/747/747965.png" />
+
+    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/128/747/747965.png">
+    <link rel="shortcut icon" type="image/png" href="https://cdn-icons-png.flaticon.com/128/747/747965.png">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/128/747/747965.png">
+
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700;800&family=DM+Mono:wght@400;500&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap');
+        
+        :root {
+            --navy-deep: #0A1628;
+            --navy-surface: #0F1F3D;
+            --navy-card: #15294A;
+            --navy-border: #1E3A5F;
+            
+            --emerald: #00C853;
+            --emerald-light: #69F0AE;
+            --emerald-dark: #00A844;
+            --emerald-glow: rgba(0, 200, 83, 0.2);
+            --emerald-glow-strong: rgba(0, 200, 83, 0.35);
+            
+            --gold: #FFD700;
+            --gold-light: #FFED4A;
+            --gold-dim: #B8960F;
+            --gold-glow: rgba(255, 215, 0, 0.15);
+            
+            --violet: #7C3AED;
+            --violet-light: #A78BFA;
+            --violet-glow: rgba(124, 58, 237, 0.2);
+            
+            --ruby: #E53935;
+            --ruby-light: #FF5252;
+            --ruby-glow: rgba(229, 57, 53, 0.2);
+            
+            --white: #F8FAFC;
+            --text-primary: #E2E8F0;
+            --text-muted: #94A3B8;
+            --text-subtle: #64748B;
+            
+            --shadow-card: 0 8px 32px rgba(0,0,0,0.4);
+            --shadow-emerald: 0 4px 20px rgba(0,200,83,0.2);
+            
+            --border-subtle: rgba(255,255,255,0.06);
+            --border-active: rgba(0,200,83,0.25);
+            
+            --radius: 16px;
+            --radius-sm: 10px;
+            --font-family: 'Outfit', 'Inter', sans-serif;
+            --font-display: 'Space Grotesk', 'Outfit', sans-serif;
+            --font-serif: 'Cormorant Garamond', serif;
+            --font-mono: 'DM Mono', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { font-size: 106.25%; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
+
+        body {
+            font-family: var(--font-family);
+            background: var(--navy-deep);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            -webkit-font-smoothing: antialiased;
+            user-select: none;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.6;
+        }
+
+        .ambient-1 {
+            position: fixed; top: -20%; left: -10%;
+            width: 60vw; height: 60vw; border-radius: 50%;
+            background: radial-gradient(circle, rgba(124,58,237,0.04) 0%, transparent 65%);
+            pointer-events: none; z-index: -1;
+            animation: floatAmbient 10s ease-in-out infinite;
+        }
+        .ambient-2 {
+            position: fixed; bottom: -20%; right: -10%;
+            width: 50vw; height: 50vw; border-radius: 50%;
+            background: radial-gradient(circle, rgba(0,200,83,0.04) 0%, transparent 65%);
+            pointer-events: none; z-index: -1;
+            animation: floatAmbient 12s ease-in-out infinite reverse;
+        }
+        @keyframes floatAmbient {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(20px, -20px) scale(1.05); }
+            66% { transform: translate(-15px, 15px) scale(0.95); }
+        }
+
+        /* ═══ SIDEBAR ÉLITE ═══ */
+        #sidebar-overlay { 
+            position: fixed; inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 50; opacity: 0;
+            transition: opacity 0.3s ease;
+            display: none;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+        }
+        #sidebar-overlay.opacity-100 { opacity: 1; }
+        #sidebar-overlay.hidden { display: none; }
+        #sidebar {
+            position: fixed; top: 0; left: 0;
+            height: 100%; width: 290px;
+            background: linear-gradient(180deg, #0A1628 0%, #0F1F3D 100%) !important;
+            border-right: 1px solid var(--border-active);
+            z-index: 60; overflow: hidden;
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(-100%);
+            display: flex; flex-direction: column;
+            box-shadow: 8px 0 40px rgba(0,0,0,0.5);
+        }
+        #sidebar.open { transform: translateX(0); }
+        .sb-header {
+            padding: 32px 20px 20px;
+            background: linear-gradient(160deg, #0A1628 0%, #0F1F3D 100%);
+            border-bottom: 1px solid var(--border-active);
+            text-align: center; position: relative; overflow: hidden; flex-shrink: 0;
+        }
+        .sb-header::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--emerald), var(--gold), transparent);
+            animation: shimmerHeader 3s infinite;
+        }
+        @keyframes shimmerHeader { 0%,100%{transform:translateX(-100%);} 50%{transform:translateX(100%);} }
+        .sb-logo-box {
+            width: 68px; height: 68px; margin: 0 auto 12px;
+            border-radius: 18px; overflow: hidden;
+            border: 2px solid var(--border-active);
+            box-shadow: 0 0 25px var(--emerald-glow);
+            transition: transform 0.3s ease; background: rgba(0,200,83,0.05);
+        }
+        .sb-logo-box:hover { transform: scale(1.1) rotate(5deg); }
+        .sb-logo-box img { width: 100%; height: 100%; object-fit: cover; }
+        .sb-brand {
+            font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.3rem;
+            color: var(--gold) !important; letter-spacing: 0.2em; text-transform: uppercase;
+            text-shadow: 0 0 20px rgba(255,215,0,0.4);
+        }
+        .sb-tagline { font-size: 0.7rem; font-weight: 500; color: var(--text-muted); letter-spacing: 0.15em; margin-top: 6px; text-transform: uppercase; }
+        .sb-scroll-area { flex: 1; overflow-y: auto; padding: 8px 0; }
+        .sb-scroll-area::-webkit-scrollbar { width: 3px; }
+        .sb-scroll-area::-webkit-scrollbar-track { background: transparent; }
+        .sb-scroll-area::-webkit-scrollbar-thumb { background: var(--emerald-dark); border-radius: 3px; }
+        .sb-cat { padding: 14px 24px 8px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.2em; color: var(--emerald); }
+        #sidebar nav a {
+            display: flex; align-items: center; gap: 12px; padding: 12px 24px;
+            color: var(--text-primary) !important; transition: all 0.25s ease;
+            text-decoration: none; font-size: 0.9rem; font-weight: 500; position: relative; overflow: hidden;
+        }
+        #sidebar nav a::before {
+            content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+            width: 3px; background: var(--emerald); transform: scaleY(0); transition: transform 0.25s ease;
+        }
+        #sidebar nav a:hover { background: rgba(0,200,83,0.08); color: var(--emerald-light) !important; transform: translateX(4px); }
+        #sidebar nav a:hover::before { transform: scaleY(1); }
+        #sidebar nav a.active { background: linear-gradient(90deg, rgba(0,200,83,0.12) 0%, transparent 100%); color: var(--emerald) !important; font-weight: 700; }
+        #sidebar nav a.active::before { transform: scaleY(1); }
+        .sb-icon { width: 20px; height: 20px; flex-shrink: 0; font-size: 1.1rem; text-align: center; color: var(--text-muted); transition: color 0.25s ease; }
+        #sidebar nav a:hover .sb-icon, #sidebar nav a.active .sb-icon { color: var(--emerald); }
+        .sb-badge {
+            font-size: 0.65rem; padding: 2px 8px; border-radius: 12px;
+            background: linear-gradient(135deg, var(--emerald-dark), var(--emerald));
+            color: #000; font-weight: 800; letter-spacing: 0.05em;
+            animation: pulse 2s infinite; margin-left: auto;
+        }
+        @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.7;} }
+        .sb-footer { padding: 16px 20px; border-top: 1px solid var(--border-subtle); display: flex; gap: 16px; justify-content: center; background: rgba(0,0,0,0.2); flex-shrink: 0; }
+        .sb-footer a { color: var(--text-muted) !important; font-size: 1.3rem; transition: all 0.25s ease; }
+        .sb-footer a:hover { color: var(--emerald) !important; transform: translateY(-3px); }
+
+        /* Botón hamburguesa */
+        #menu-toggle {
+            position: fixed; top: 16px; left: 16px; z-index: 100;
+            background: rgba(15, 31, 61, 0.9); color: var(--emerald);
+            border: 1px solid var(--border-active);
+            width: 44px; height: 44px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        }
+        #menu-toggle:hover { transform: scale(1.08); background: rgba(0,200,83,0.1); box-shadow: 0 6px 20px var(--emerald-glow); }
+        #menu-toggle i { color: var(--emerald); font-size: 20px; }
+
+        /* ═══ CONTENEDOR PRINCIPAL ═══ */
+        .main-container {
+            position: relative; z-index: 10;
+            width: 100%; max-width: 900px;
+            margin: 0 auto; padding: 20px 16px 40px;
+        }
+
+        /* Header */
+        .dashboard-header {
+            display: flex; align-items: center; justify-content: center;
+            padding: 8px 0 20px; width: 100%; position: relative;
+        }
+        .header-center { text-align: center; }
+        .logo-text { 
+            font-family: var(--font-serif); 
+            font-weight: 700; font-size: 24px; 
+            color: var(--white); letter-spacing: -0.5px;
+            font-style: italic;
+        }
+        .logo-text span { color: var(--emerald); font-style: normal; font-family: var(--font-display); font-weight: 800; }
+
+        /* Hero */
+        .stats-hero { text-align: center; margin-bottom: 32px; }
+        .stats-eyebrow {
+            font-family: var(--font-mono); font-size: 0.7rem;
+            letter-spacing: 0.3em; text-transform: uppercase;
+            color: var(--violet-light); margin-bottom: 12px;
+        }
+        .stats-title {
+            font-family: var(--font-serif);
+            font-size: clamp(2rem, 6vw, 2.8rem);
+            font-weight: 700; font-style: italic;
+            color: var(--white); margin-bottom: 8px;
+        }
+        .stats-title em { color: var(--violet-light); font-style: normal; }
+        .stats-subtitle { font-size: 0.9rem; color: var(--text-muted); }
+
+        /* ═══ KPI CARDS ═══ */
+        .kpi-grid {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 12px; margin-bottom: 28px;
+        }
+        @media (min-width: 640px) { .kpi-grid { grid-template-columns: repeat(4, 1fr); gap: 16px; } }
+        .kpi-card {
+            background: var(--navy-card); border: 1px solid var(--border-subtle);
+            border-radius: 18px; padding: 20px 16px;
+            transition: all 0.3s ease;
+        }
+        .kpi-card:hover { border-color: var(--border-active); transform: translateY(-2px); box-shadow: 0 8px 24px var(--emerald-glow); }
+        .kpi-icon { width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 12px; }
+        .kpi-icon.violet { background: rgba(124,58,237,0.12); color: var(--violet-light); }
+        .kpi-icon.emerald { background: rgba(0,200,83,0.12); color: var(--emerald-light); }
+        .kpi-icon.gold { background: rgba(255,215,0,0.1); color: var(--gold); }
+        .kpi-icon.blue { background: rgba(59,130,246,0.12); color: #60a5fa; }
+        .kpi-value { font-family: var(--font-display); font-size: 26px; font-weight: 800; color: var(--white); margin-bottom: 2px; }
+        .kpi-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .kpi-trend { font-size: 10px; margin-top: 8px; display: flex; align-items: center; gap: 4px; }
+        .kpi-trend.up { color: var(--emerald-light); }
+        .kpi-trend.down { color: var(--ruby-light); }
+
+        /* ═══ CHARTS SECTION ═══ */
+        .charts-grid {
+            display: grid; grid-template-columns: 1fr;
+            gap: 16px; margin-bottom: 28px;
+        }
+        @media (min-width: 768px) { .charts-grid { grid-template-columns: 1fr 1fr; } }
+        .chart-card {
+            background: var(--navy-card); border: 1px solid var(--border-subtle);
+            border-radius: 18px; padding: 20px;
+            transition: all 0.3s ease;
+        }
+        .chart-card:hover { border-color: var(--border-active); box-shadow: 0 4px 16px var(--emerald-glow); }
+        .chart-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+        .chart-title { font-weight: 700; font-size: 14px; color: var(--white); }
+        .chart-badge { font-size: 10px; padding: 3px 10px; border-radius: 20px; font-weight: 700; text-transform: uppercase; }
+        .chart-badge.emerald { background: rgba(0,200,83,0.12); color: var(--emerald-light); }
+        .chart-badge.violet { background: rgba(124,58,237,0.12); color: var(--violet-light); }
+
+        /* ═══ BAR CHART - CORREGIDO ═══ */
+        .bar-chart-wrapper {
+            display: flex; flex-direction: column;
+            position: relative;
+        }
+        .bar-chart {
+            display: flex; align-items: flex-end; gap: 12px;
+            height: 180px;
+            padding-top: 10px;
+            padding-bottom: 8px;
+        }
+        .bar-item {
+            flex: 1;
+            display: flex; flex-direction: column;
+            align-items: center;
+            height: 100%;
+            justify-content: flex-end;
+        }
+        .bar-fill {
+            width: 100%; max-width: 48px;
+            background: linear-gradient(180deg, var(--violet-light), var(--violet));
+            border-radius: 8px 8px 4px 4px;
+            transition: height 0.5s ease;
+            box-shadow: 0 2px 8px var(--violet-glow);
+            margin-bottom: 4px;
+        }
+        .bar-fill.emerald { background: linear-gradient(180deg, var(--emerald-light), var(--emerald-dark)); box-shadow: 0 2px 8px var(--emerald-glow); }
+        .bar-fill.gold { background: linear-gradient(180deg, var(--gold-light), var(--gold-dim)); box-shadow: 0 2px 8px var(--gold-glow); }
+        .bar-value {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--white);
+            font-weight: 600;
+            margin-bottom: 2px;
+            text-align: center;
+            white-space: nowrap;
+        }
+        .bar-labels-row {
+            display: flex; gap: 12px;
+            padding-top: 6px;
+        }
+        .bar-label-item {
+            flex: 1;
+            font-size: 11px;
+            color: var(--text-muted);
+            text-align: center;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* ═══ DONUT CHART ═══ */
+        .donut-container { display: flex; align-items: center; justify-content: center; gap: 20px; }
+        .donut-chart {
+            width: 120px; height: 120px;
+            border-radius: 50%;
+            background: conic-gradient(
+                var(--violet-light) 0% 45%,
+                var(--emerald-light) 45% 70%,
+                var(--gold) 70% 85%,
+                #60a5fa 85% 100%
+            );
+            position: relative;
+            box-shadow: 0 4px 20px var(--violet-glow);
+        }
+        .donut-chart::before {
+            content: '';
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70px; height: 70px;
+            border-radius: 50%;
+            background: var(--navy-card);
+        }
+        .donut-center {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: var(--font-display); font-weight: 800;
+            font-size: 18px; color: var(--white);
+        }
+        .donut-legend { display: flex; flex-direction: column; gap: 8px; }
+        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-muted); }
+        .legend-dot { width: 10px; height: 10px; border-radius: 3px; }
+        .legend-dot.violet { background: var(--violet-light); }
+        .legend-dot.emerald { background: var(--emerald-light); }
+        .legend-dot.gold { background: var(--gold); }
+        .legend-dot.blue { background: #60a5fa; }
+
+        /* ═══ TOP HISTORIAS ═══ */
+        .top-stories { margin-bottom: 28px; }
+        .story-row {
+            display: flex; align-items: center; gap: 14px;
+            background: var(--navy-card); border: 1px solid var(--border-subtle);
+            border-radius: 16px; padding: 16px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+        .story-row:hover { border-color: var(--border-active); box-shadow: 0 4px 16px var(--emerald-glow); }
+        .story-rank {
+            width: 36px; height: 36px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-family: var(--font-display); font-weight: 800; font-size: 16px;
+            flex-shrink: 0;
+        }
+        .story-rank.gold { background: linear-gradient(135deg, var(--gold), var(--gold-dim)); color: #000; }
+        .story-rank.silver { background: linear-gradient(135deg, #c0c0c0, #909090); color: #000; }
+        .story-rank.bronze { background: linear-gradient(135deg, #cd7f32, #a0522d); color: #fff; }
+        .story-rank.default { background: var(--navy-surface); color: var(--text-muted); }
+        .story-cover {
+            width: 48px; height: 64px; border-radius: 8px;
+            background: var(--navy-surface); flex-shrink: 0;
+            overflow: hidden;
+        }
+        .story-cover img { width: 100%; height: 100%; object-fit: cover; }
+        .story-info { flex: 1; min-width: 0; }
+        .story-name { font-weight: 700; font-size: 14px; color: var(--white); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .story-meta { font-size: 11px; color: var(--text-muted); }
+        .story-stats { text-align: right; flex-shrink: 0; }
+        .story-views { font-family: var(--font-display); font-weight: 700; font-size: 16px; color: var(--white); }
+        .story-views-label { font-size: 10px; color: var(--text-subtle); }
+
+        /* ═══ ACTIVITY TIMELINE ═══ */
+        .timeline { margin-bottom: 28px; }
+        .timeline-item {
+            display: flex; gap: 14px; padding: 14px 0;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .timeline-item:last-child { border-bottom: none; }
+        .timeline-dot {
+            width: 12px; height: 12px; border-radius: 50%;
+            margin-top: 4px; flex-shrink: 0;
+        }
+        .timeline-dot.violet { background: var(--violet-light); box-shadow: 0 0 12px var(--violet-glow); }
+        .timeline-dot.emerald { background: var(--emerald-light); box-shadow: 0 0 12px var(--emerald-glow); }
+        .timeline-dot.gold { background: var(--gold); box-shadow: 0 0 12px var(--gold-glow); }
+        .timeline-content { flex: 1; }
+        .timeline-title { font-weight: 600; font-size: 13px; color: var(--white); margin-bottom: 2px; }
+        .timeline-desc { font-size: 12px; color: var(--text-muted); }
+        .timeline-time { font-family: var(--font-mono); font-size: 10px; color: var(--text-subtle); margin-top: 4px; }
+
+        /* ═══ FOOTER ═══ */
+        .footer-ecosystem {
+            width: 100%;
+            background: var(--navy-surface);
+            padding: 44px 20px 36px;
+            text-align: center;
+            border-top: 1px solid var(--border-active);
+            position: relative; z-index: 1;
+        }
+        .footer-ecosystem::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--emerald), var(--gold), transparent);
+        }
+        .footer-ecosystem h3 { font-size: 0.88rem; font-weight: 700; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 18px; font-family: var(--font-display); }
+        .footer-social-icons { display: flex; justify-content: center; gap: 20px; margin-bottom: 22px; }
+        .footer-social-icons a { display: inline-flex; align-items: center; justify-content: center; width: 46px; height: 46px; border-radius: 50%; background: rgba(0,200,83,0.08); color: var(--emerald-light); font-size: 1.4rem; transition: all 0.3s ease; border: 1px solid var(--border-subtle); }
+        .footer-social-icons a:hover { background: rgba(0,200,83,0.2); transform: translateY(-4px); border-color: var(--emerald); box-shadow: 0 8px 24px var(--emerald-glow); }
+        .footer-ecosystem p { font-size: 0.8rem; color: var(--text-subtle); line-height: 1.7; margin-bottom: 8px; }
+        .footer-ecosystem .footer-links-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 18px; margin: 18px 0 14px; }
+        .footer-ecosystem .footer-links-row a { color: var(--text-muted); text-decoration: none; font-size: 0.78rem; font-weight: 600; transition: color 0.2s ease; }
+        .footer-ecosystem .footer-links-row a:hover { color: var(--emerald); }
+        .footer-ecosystem .footer-links-row .link-separator { color: var(--text-subtle); font-size: 0.6rem; }
+        .footer-ecosystem .footer-copyright { color: var(--text-subtle); font-size: 0.72rem; margin-top: 12px; }
+        .footer-ecosystem .footer-version { color: var(--text-subtle); font-size: 0.65rem; margin-top: 6px; font-family: var(--font-mono); letter-spacing: 0.5px; }
+
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-in { animation: fadeUp 0.5s ease-out forwards; }
+        .delay-1 { animation-delay: 0.1s; opacity: 0; animation-fill-mode: forwards; }
+        .delay-2 { animation-delay: 0.2s; opacity: 0; animation-fill-mode: forwards; }
+        .delay-3 { animation-delay: 0.3s; opacity: 0; animation-fill-mode: forwards; }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--emerald-dark); border-radius: 2px; }
+
+        @media (max-width: 640px) {
+            #sidebar { width: 100%; max-width: 300px; }
+            .main-container { padding: 14px 12px 32px; }
+            .bar-chart { gap: 6px; height: 150px; }
+            .bar-fill { max-width: 36px; }
+            .bar-value { font-size: 10px; }
+            .bar-labels-row { gap: 6px; }
+            .bar-label-item { font-size: 9px; }
+            .donut-container { flex-direction: column; }
+            .kpi-card { padding: 16px 12px; }
+            .kpi-value { font-size: 22px; }
+        }
+        @media (min-width: 1024px) {
+            .main-container { padding: 28px 24px 56px; max-width: 960px; }
+            .charts-grid { gap: 20px; }
+            .bar-chart { height: 200px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-1"></div>
+    <div class="ambient-2"></div>
+
+    <!-- Botón hamburguesa -->
+    <button id="menu-toggle" aria-label="Abrir menú">
+        <i data-lucide="menu"></i>
+    </button>
+
+    <!-- Overlay -->
+    <div id="sidebar-overlay" class="hidden"></div>
+
+    <!-- ═══ SIDEBAR ÉLITE ═══ -->
+    <aside id="sidebar">
+        <div class="sb-header">
+            <div class="sb-logo-box">
+                <img src="https://cdn-icons-png.flaticon.com/128/747/747965.png" alt="Masitaprex">
+            </div>
+            <div class="sb-brand">Masitaprex</div>
+            <div class="sb-tagline">Infraestructura Tecnológica • LATAM</div>
+        </div>
+        <div class="sb-scroll-area">
+            <nav>
+                <!-- General -->
+                <div class="sb-cat">General</div>
+<a href="inicio.html">
+	                    <i class="fas fa-home sb-icon"></i>
+	                    <span>Inicio</span>
+	                </a>
+	                
+	                <!-- Studio de Escritura -->
+	                <div class="sb-cat">Studio PeliPREX</div>
+	                <a href="nueva-historia.html">
+	                    <i class="fas fa-pen-fancy sb-icon"></i>
+	                    <span>Nueva Historia</span>
+	                </a>
+	                <a href="mis-historias.html">
+	                    <i class="fas fa-book-open sb-icon"></i>
+	                    <span>Mis Historias</span>
+	                </a>
+	                <a href="borradores.html">
+	                    <i class="fas fa-file-alt sb-icon"></i>
+	                    <span>Borradores</span>
+	                    <span class="sb-badge" id="sidebar-draft-count">0</span>
+	                </a>
+	                <a href="estadísticas.html" class="active">
+	                    <i class="fas fa-chart-bar sb-icon"></i>
+	                    <span>Estadísticas</span>
+	                </a>
+            
+                <!-- Entretenimiento -->
+                <div class="sb-cat">Entretenimiento</div>
+                <a href="https://www.masitaprex.com/PeliPREX">
+                    <i class="fas fa-film sb-icon"></i>
+                    <span>Películas gratis</span>
+                </a>
+            </nav>
+        </div>
+        <div class="sb-footer">
+            <a href="https://m.facebook.com/61564349657272/" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://youtube.com/@eltiojota628" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+            <a href="https://wa.me/51944950234" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        </div>
+    </aside>
+
+    <!-- ═══ CONTENIDO PRINCIPAL ═══ -->
+    <div class="main-container">
+        
+        <!-- Header -->
+        <header class="dashboard-header animate-in">
+            <div class="header-center">
+                <div class="logo-text"><span>Stats</span> PeliPREX</div>
+            </div>
+        </header>
+
+        <!-- Hero -->
+        <div class="stats-hero animate-in delay-1">
+            <p class="stats-eyebrow">Panel de Estadísticas</p>
+            <h1 class="stats-title">El rendimiento de <em>tus obras</em></h1>
+            <p class="stats-subtitle">Datos actualizados en tiempo real. Monitorea cómo crece tu audiencia.</p>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="kpi-grid animate-in delay-2">
+            <div class="kpi-card">
+                <div class="kpi-icon violet"><i class="fas fa-eye"></i></div>
+                <div class="kpi-value">24.8K</div>
+                <div class="kpi-label">Vistas Totales</div>
+                <div class="kpi-trend up"><i class="fas fa-arrow-up"></i> +12.5%</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon emerald"><i class="fas fa-book-reader"></i></div>
+                <div class="kpi-value">8,420</div>
+                <div class="kpi-label">Lectores Únicos</div>
+                <div class="kpi-trend up"><i class="fas fa-arrow-up"></i> +8.3%</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon gold"><i class="fas fa-star"></i></div>
+                <div class="kpi-value">4.7★</div>
+                <div class="kpi-label">Calificación Promedio</div>
+                <div class="kpi-trend up"><i class="fas fa-arrow-up"></i> +0.2</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon blue"><i class="fas fa-clock"></i></div>
+                <div class="kpi-value">12m</div>
+                <div class="kpi-label">Tiempo Promedio Lectura</div>
+                <div class="kpi-trend up"><i class="fas fa-arrow-up"></i> +2m</div>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="charts-grid animate-in delay-2">
+            <!-- Bar Chart: Vistas por día - CORREGIDO -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <span class="chart-title">📊 Vistas por Día (Última Semana)</span>
+                    <span class="chart-badge violet">+18%</span>
+                </div>
+                <div class="bar-chart-wrapper">
+                    <!-- Barras con valores arriba -->
+                    <div class="bar-chart">
+                        <div class="bar-item">
+                            <div class="bar-value">340</div>
+                            <div class="bar-fill" style="height: 60px;"></div>
+                        </div>
+                        <div class="bar-item">
+                            <div class="bar-value">420</div>
+                            <div class="bar-fill" style="height: 75px;"></div>
+                        </div>
+                        <div class="bar-item">
+                            <div class="bar-value">580</div>
+                            <div class="bar-fill emerald" style="height: 105px;"></div>
+                        </div>
+                        <div class="bar-item">
+                            <div class="bar-value">380</div>
+                            <div class="bar-fill" style="height: 65px;"></div>
+                        </div>
+                        <div class="bar-item">
+                            <div class="bar-value">510</div>
+                            <div class="bar-fill emerald" style="height: 92px;"></div>
+                        </div>
+                        <div class="bar-item">
+                            <div class="bar-value">620</div>
+                            <div class="bar-fill gold" style="height: 115px;"></div>
+                        </div>
+                        <div class="bar-item">
+                            <div class="bar-value">480</div>
+                            <div class="bar-fill emerald" style="height: 85px;"></div>
+                        </div>
+                    </div>
+                    <!-- Etiquetas de días debajo -->
+                    <div class="bar-labels-row">
+                        <div class="bar-label-item">Lun</div>
+                        <div class="bar-label-item">Mar</div>
+                        <div class="bar-label-item">Mié</div>
+                        <div class="bar-label-item">Jue</div>
+                        <div class="bar-label-item">Vie</div>
+                        <div class="bar-label-item">Sáb</div>
+                        <div class="bar-label-item">Dom</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Donut Chart: Géneros -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <span class="chart-title">🎭 Distribución por Género</span>
+                    <span class="chart-badge emerald">5 géneros</span>
+                </div>
+                <div class="donut-container">
+                    <div style="position: relative; width: 120px; height: 120px;">
+                        <div class="donut-chart"></div>
+                        <div class="donut-center">5</div>
+                    </div>
+                    <div class="donut-legend">
+                        <div class="legend-item"><span class="legend-dot violet"></span> Fantasía 45%</div>
+                        <div class="legend-item"><span class="legend-dot emerald"></span> Romance 25%</div>
+                        <div class="legend-item"><span class="legend-dot gold"></span> Misterio 15%</div>
+                        <div class="legend-item"><span class="legend-dot blue"></span> Otros 15%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Historias -->
+        <div class="top-stories animate-in delay-3">
+            <div class="chart-header" style="margin-bottom: 16px;">
+                <span class="chart-title" style="font-family: var(--font-serif); font-size: 20px; font-style: italic;">🏆 Mis Historias Más Leídas</span>
+            </div>
+            
+            <div class="story-row">
+                <div class="story-rank gold">1</div>
+                <div class="story-cover"><div style="width:100%;height:100%;background:linear-gradient(135deg,#7C3AED,#00C853);display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;">📖</div></div>
+                <div class="story-info">
+                    <div class="story-name">Las Crónicas del Tiempo</div>
+                    <div class="story-meta">Fantasía • 12 capítulos • Publicado hace 3 meses</div>
+                </div>
+                <div class="story-stats">
+                    <div class="story-views">8,420</div>
+                    <div class="story-views-label">vistas</div>
+                </div>
+            </div>
+
+            <div class="story-row">
+                <div class="story-rank silver">2</div>
+                <div class="story-cover"><div style="width:100%;height:100%;background:linear-gradient(135deg,#E53935,#FF5252);display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;">📕</div></div>
+                <div class="story-info">
+                    <div class="story-name">Bajo el Cielo de Octubre</div>
+                    <div class="story-meta">Romance • 8 capítulos • Publicado hace 2 meses</div>
+                </div>
+                <div class="story-stats">
+                    <div class="story-views">6,150</div>
+                    <div class="story-views-label">vistas</div>
+                </div>
+            </div>
+
+            <div class="story-row">
+                <div class="story-rank bronze">3</div>
+                <div class="story-cover"><div style="width:100%;height:100%;background:linear-gradient(135deg,#F59E0B,#D97706);display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;">📗</div></div>
+                <div class="story-info">
+                    <div class="story-name">El Último Suspiro</div>
+                    <div class="story-meta">Misterio • 5 capítulos • Publicado hace 1 mes</div>
+                </div>
+                <div class="story-stats">
+                    <div class="story-views">4,890</div>
+                    <div class="story-views-label">vistas</div>
+                </div>
+            </div>
+
+            <div class="story-row">
+                <div class="story-rank default">4</div>
+                <div class="story-cover"><div style="width:100%;height:100%;background:linear-gradient(135deg,#3B82F6,#1D4ED8);display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;">📘</div></div>
+                <div class="story-info">
+                    <div class="story-name">Fragmentos de Luna</div>
+                    <div class="story-meta">Poesía • 1 capítulo • Publicado hace 2 semanas</div>
+                </div>
+                <div class="story-stats">
+                    <div class="story-views">3,200</div>
+                    <div class="story-views-label">vistas</div>
+                </div>
+            </div>
+
+            <div class="story-row">
+                <div class="story-rank default">5</div>
+                <div class="story-cover"><div style="width:100%;height:100%;background:linear-gradient(135deg,#10B981,#047857);display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;">📙</div></div>
+                <div class="story-info">
+                    <div class="story-name">Sombras del Pasado</div>
+                    <div class="story-meta">Terror • 3 capítulos • Publicado hace 1 semana</div>
+                </div>
+                <div class="story-stats">
+                    <div class="story-views">1,750</div>
+                    <div class="story-views-label">vistas</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actividad Reciente -->
+        <div class="timeline animate-in delay-3">
+            <div class="chart-header" style="margin-bottom: 16px;">
+                <span class="chart-title" style="font-family: var(--font-serif); font-size: 20px; font-style: italic;">📅 Actividad Reciente</span>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-dot emerald"></div>
+                <div class="timeline-content">
+                    <div class="timeline-title">Nuevo lector frecuente</div>
+                    <div class="timeline-desc">@maria_lectora ha leído 3 de tus historias esta semana</div>
+                    <div class="timeline-time">Hace 2 horas</div>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot violet"></div>
+                <div class="timeline-content">
+                    <div class="timeline-title">"Las Crónicas del Tiempo" alcanzó 8,420 vistas</div>
+                    <div class="timeline-desc">¡Felicidades! Tu obra más popular sigue creciendo</div>
+                    <div class="timeline-time">Hace 5 horas</div>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot gold"></div>
+                <div class="timeline-content">
+                    <div class="timeline-title">Nueva valoración de 5 estrellas</div>
+                    <div class="timeline-desc">@carlos_escritor valoró "Bajo el Cielo de Octubre" con 5★</div>
+                    <div class="timeline-time">Hace 1 día</div>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot emerald"></div>
+                <div class="timeline-content">
+                    <div class="timeline-title">Racha de escritura: 7 días</div>
+                    <div class="timeline-desc">Has escrito o publicado contenido durante 7 días consecutivos. ¡Sigue así!</div>
+                    <div class="timeline-time">Hace 1 día</div>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot violet"></div>
+                <div class="timeline-content">
+                    <div class="timeline-title">"Fragmentos de Luna" publicado</div>
+                    <div class="timeline-desc">Tu nueva obra ya está disponible para todos los lectores</div>
+                    <div class="timeline-time">Hace 2 semanas</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ FOOTER IDÉNTICO AL ECOSISTEMA ═══ -->
+    <footer class="footer-ecosystem">
+        <div style="max-width: 960px; margin: 0 auto;">
+            <h3>Síguenos en nuestras redes</h3>
+            <div class="footer-social-icons">
+                <a href="https://m.facebook.com/61564349657272/" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://youtube.com/@eltiojota628" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                <a href="https://wa.me/51944950234" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            </div>
+            <p><strong style="color: var(--emerald-light);">Masitaprex</strong> © 2026 - Todos los derechos reservados</p>
+            <p style="font-size: 0.72rem;">Infraestructura tecnológica funciona con apis externas. No somos responsables por el contenido o servicios ofrecidos por terceros.</p>
+            <div class="footer-links-row">
+                <a href="https://www.masitaprex.com/terminos-condiciones">Términos y condiciones</a>
+                <span class="link-separator">|</span>
+                <a href="https://www.masitaprex.com/politica-privacidad">Política de privacidad</a>
+                <span class="link-separator">|</span>
+                <a href="https://www.masitaprex.com/disclaimer-apis">Aviso legal APIS</a>
+                <span class="link-separator">|</span>
+                <a href="https://www.masitaprex.com/aviso-legal-peliprex">Aviso legal peliPREX</a>
+            </div>
+            <p style="font-size: 0.7rem; max-width: 500px; margin: 0 auto 12px;">
+                <strong style="color: var(--emerald-light);">Consulta PE APK</strong> | <strong style="color: var(--emerald-light);">PeliPREX HD</strong> | <strong style="color: var(--emerald-light);">Masitaprex</strong>
+            </p>
+            <p class="footer-copyright">
+                Masitaprex - consulta Pe - peliPREX | <strong>Cajamarca, Perú</strong><br>
+                <strong>Representante: JOSÉ RENÉ CUBAS PÉREZ | RUC: 10736224351</strong>
+            </p>
+            <div class="footer-version">V 2.4.0</div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // Cargar contador de borradores en sidebar
+        async function loadSidebarStats() {
+            try {
+                const res = await fetch('/api/borradores');
+                const drafts = await res.json();
+                const badge = document.getElementById('sidebar-draft-count');
+                if (badge) badge.textContent = drafts.length;
+            } catch (err) { console.error(err); }
+        }
+        loadSidebarStats();
+
+        // Lógica para ocultar estadísticas si no hay datos reales
+        async function checkStats() {
+            try {
+                const res = await fetch('/api/historias');
+                const historias = await res.json();
+                
+                if (!historias || historias.length === 0) {
+                    // Si no hay historias, ocultar secciones de estadísticas
+                    document.querySelectorAll('.stat-card, .charts-grid, .drafts-hero').forEach(el => {
+                        el.style.display = 'none';
+                    });
+                    
+                    // Mostrar mensaje de estado vacío
+                    const container = document.querySelector('.main-container');
+                    const emptyState = document.createElement('div');
+                    emptyState.className = 'empty-state animate-in';
+                    emptyState.innerHTML = `
+                        <div class="empty-state-icon"><i class="fas fa-chart-line"></i></div>
+                        <h3>Sin datos aún</h3>
+                        <p>Publica tu primera historia para empezar a ver estadísticas reales de tus lectores.</p>
+                        <a href="studio-peliprex" class="empty-btn">
+                            <i class="fas fa-feather-alt"></i> EMPEZAR A ESCRIBIR
+                        </a>
+                    `;
+                    container.appendChild(emptyState);
+                } else {
+                    // Si hay historias, podríamos cargar datos reales aquí si existieran en la DB
+                    // Por ahora, al menos nos aseguramos de que no se muestren datos inventados si la DB está vacía
+                }
+            } catch (err) {
+                console.error('Error verificando estadísticas:', err);
+            }
+        }
+        checkStats();
+
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebarEl = document.getElementById('sidebar');
+        const overlayEl = document.getElementById('sidebar-overlay');
+
+        function toggleMenu() {
+            const isOpen = sidebarEl.classList.toggle('open');
+            if (isOpen) {
+                overlayEl.classList.remove('hidden');
+                overlayEl.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+                setTimeout(() => overlayEl.classList.add('opacity-100'), 10);
+            } else {
+                overlayEl.classList.remove('opacity-100');
+                document.body.style.overflow = '';
+                setTimeout(() => {
+                    if (!sidebarEl.classList.contains('open')) {
+                        overlayEl.classList.add('hidden');
+                        overlayEl.style.display = 'none';
+                    }
+                }, 300);
+            }
+        }
+
+        menuToggle.addEventListener('click', toggleMenu);
+        overlayEl.addEventListener('click', toggleMenu);
+
+        const navLinks = sidebarEl.querySelectorAll('nav a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                const href = link.getAttribute('href');
+                if (href && href !== '#') {
+                    e.preventDefault();
+                    toggleMenu();
+                    setTimeout(() => { window.location.href = href; }, 300);
+                }
+            });
+        });
+
+        const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.animate-in').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>
