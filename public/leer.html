@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <title>Cargando Historia... | Studio PeliPREX</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="returnConfig.js"></script>
+
+    <style>
+        :root {
+            --navy-deep: #0A1628;
+            --navy-surface: #0F1F3D;
+            --navy-card: #15294A;
+            --navy-border: #1E3A5F;
+            --emerald: #00C853;
+            --emerald-light: #69F0AE;
+            --text-primary: #E2E8F0;
+            --text-muted: #94A3B8;
+            --white: #F8FAFC;
+            --font-family: 'Outfit', sans-serif;
+            --font-serif: 'Cormorant Garamond', serif;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background: var(--navy-deep);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .reader-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .story-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .story-poster {
+            width: 200px;
+            height: 300px;
+            margin: 0 auto 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            object-fit: cover;
+            border: 1px solid var(--navy-border);
+        }
+
+        .story-title {
+            font-family: var(--font-serif);
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 10px;
+            line-height: 1.1;
+        }
+
+        .story-meta {
+            color: var(--emerald-light);
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .story-content {
+            font-family: var(--font-serif);
+            font-size: 1.35rem;
+            color: var(--text-primary);
+            background: var(--navy-surface);
+            padding: 50px;
+            border-radius: 20px;
+            border: 1px solid var(--navy-border);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .story-content p { margin-bottom: 1.5em; }
+        
+        .story-footer {
+            margin-top: 60px;
+            text-align: center;
+            padding: 40px;
+            border-top: 1px solid var(--navy-border);
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 24px;
+            background: var(--navy-card);
+            border: 1px solid var(--navy-border);
+            color: var(--white);
+            border-radius: 12px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .btn-back:hover { background: var(--emerald); color: var(--navy-deep); border-color: var(--emerald); }
+
+        .loading-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 80vh;
+        }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--navy-border);
+            border-top: 4px solid var(--emerald);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        @media (max-width: 768px) {
+            .story-title { font-size: 2.2rem; }
+            .story-content { padding: 30px 20px; font-size: 1.2rem; }
+            .story-poster { width: 150px; height: 225px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app">
+        <div class="loading-state" id="loading">
+            <div class="spinner"></div>
+            <p>Abriendo el libro...</p>
+        </div>
+
+        <div class="reader-container hidden" id="content">
+            <div class="story-header">
+                <img id="story-poster" src="" alt="Portada" class="story-poster">
+                <h1 id="story-title" class="story-title"></h1>
+                <div id="story-meta" class="story-meta"></div>
+                <div class="flex justify-center gap-4 mt-4">
+                    <span id="story-cat" class="px-3 py-1 bg-navy-card border border-navy-border rounded-full text-xs uppercase tracking-widest"></span>
+                    <span id="story-views" class="px-3 py-1 bg-navy-card border border-navy-border rounded-full text-xs uppercase tracking-widest"></span>
+                </div>
+            </div>
+
+            <article class="story-content" id="story-body">
+                <!-- Contenido de la historia -->
+            </article>
+
+            <div class="story-footer">
+                <h3 class="text-xl font-bold mb-4">Sobre el Autor/a</h3>
+                <p id="story-author-note" class="text-text-muted italic mb-8"></p>
+                <a href="inicio" class="btn-back">
+                    <i class="fas fa-home"></i> Volver al Inicio
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let supabaseClient;
+
+        async function initReader() {
+            try {
+                const response = await fetch('/api/config');
+                const config = await response.json();
+                supabaseClient = supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
+                
+                const urlParams = new URLSearchParams(window.location.search);
+                const storyId = urlParams.get('id');
+
+                if (!storyId) {
+                    showError('No se especificó ninguna historia para leer.');
+                    return;
+                }
+
+                loadStory(storyId);
+            } catch (error) {
+                console.error('Error init:', error);
+                showError('Error de conexión con el servidor.');
+            }
+        }
+
+        async function loadStory(id) {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('historias')
+                    .select('*')
+                    .eq('id', id)
+                    .single();
+
+                if (error) throw error;
+                if (!data) throw new Error('La historia no existe o no está disponible.');
+
+                // Actualizar vistas (opcional, pero recomendado para realismo)
+                await supabaseClient.rpc('increment_views', { story_id: id }).catch(() => {
+                    // Si el RPC no existe, intentamos update manual
+                    supabaseClient.from('historias').update({ vistas: (data.vistas || 0) + 1 }).eq('id', id);
+                });
+
+                renderStory(data);
+            } catch (err) {
+                showError(err.message);
+            }
+        }
+
+        function renderStory(story) {
+            document.title = `${story.titulo} | Studio PeliPREX`;
+            document.getElementById('story-poster').src = story.poster_url || 'https://via.placeholder.com/200x300?text=Sin+Portada';
+            document.getElementById('story-title').textContent = story.titulo;
+            document.getElementById('story-meta').textContent = `Por ${story.autora_nombre || 'Autor Anónimo'}`;
+            document.getElementById('story-cat').textContent = story.categoria || 'Sin Categoría';
+            document.getElementById('story-views').textContent = `${(story.vistas || 0).toLocaleString()} vistas`;
+            document.getElementById('story-body').innerHTML = story.contenido_html;
+            document.getElementById('story-author-note').textContent = story.nota_autora || 'Este autor aún no ha compartido su biografía.';
+
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('content').classList.remove('hidden');
+        }
+
+        function showError(msg) {
+            document.getElementById('loading').innerHTML = `
+                <div class="text-center p-8">
+                    <i class="fas fa-exclamation-triangle text-ruby text-5xl mb-4"></i>
+                    <h2 class="text-2xl font-bold mb-2">¡Vaya! Algo salió mal</h2>
+                    <p class="text-text-muted mb-6">${msg}</p>
+                    <a href="inicio" class="btn-back">Volver al Inicio</a>
+                </div>
+            `;
+        }
+
+        initReader();
+    </script>
+</body>
+</html>
