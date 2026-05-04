@@ -627,7 +627,6 @@
                         totalRating += parseFloat(h.valoracion_promedio || 0);
                         ratedStories++;
                     }
-                    // Asumimos tiempo_lectura como "Xm", extraemos X
                     const timeMatch = h.tiempo_lectura?.match(/\d+/);
                     if (timeMatch) totalTime += parseInt(timeMatch[0]);
                 });
@@ -636,7 +635,7 @@
                 const avgTime = historias.length > 0 ? Math.round(totalTime / historias.length) : 0;
 
                 document.getElementById('total-views').textContent = formatNumber(totalViews);
-                document.getElementById('unique-readers').textContent = formatNumber(Math.round(totalViews * 0.7)); // Estimación real
+                document.getElementById('unique-readers').textContent = formatNumber(Math.round(totalViews * 0.7));
                 document.getElementById('avg-rating').textContent = avgRating;
                 document.getElementById('avg-time').textContent = avgTime + 'm';
 
@@ -695,7 +694,6 @@
                     labelsContainer.appendChild(labelItem);
                 });
 
-                // Calcular crecimiento simple
                 if (values.length >= 2) {
                     const last = values[6];
                     const prev = values[5];
