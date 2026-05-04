@@ -29,6 +29,7 @@
     <!-- Quill.js Editor -->
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="returnConfig.js"></script>
 
     <style>
@@ -550,12 +551,7 @@
             <p class="hero-desc">Gestor de Contenido Original v2.0 — Donde tus historias cobran vida y llegan a miles de lectores</p>
 
             <div class="form-body">
-                <div class="form-group full-width">
-                    <label><i class="fas fa-key"></i> Token de Acceso <span style="color: var(--ruby-light);">*</span></label>
-                    <input type="password" name="password" id="campo-token" placeholder="Ingresa tu token de acceso" required>
-                    <p class="field-hint"><i class="fas fa-shield-alt"></i> Requerido para autenticar tu publicación</p>
-                    <div class="validation-error" id="error-token" style="display:none;"><i class="fas fa-exclamation-circle"></i> Obligatorio</div>
-                </div>
+
 
                 <div class="form-group">
                     <label><i class="fas fa-feather-alt"></i> Nombre de Pluma <span style="color: var(--ruby-light);">*</span></label>
@@ -823,16 +819,48 @@
     <script>
         lucide.createIcons();
 
+        let supabaseClient;
+        let currentUser;
+
+        async function initApp() {
+            try {
+                const response = await fetch('/api/config');
+                const config = await response.json();
+                supabaseClient = supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
+                
+                const session = await ReturnConfig.checkAuth(supabaseClient);
+                if (session) {
+                    currentUser = session.user;
+                    loadSidebarStats();
+                    // Pre-rellenar email si está disponible
+                    if (currentUser.email) {
+                        document.getElementById('campo-email').value = currentUser.email;
+                    }
+                    // Pre-rellenar nombre si está disponible en metadata
+                    if (currentUser.user_metadata && currentUser.user_metadata.full_name) {
+                        document.getElementById('campo-autora').value = currentUser.user_metadata.full_name;
+                    }
+                }
+            } catch (error) {
+                console.error('Error inicializando la app:', error);
+            }
+        }
+        initApp();
+
         // Cargar contador de borradores en sidebar
         async function loadSidebarStats() {
+            if (!supabaseClient || !currentUser) return;
             try {
-                const res = await fetch('/api/borradores');
-                const drafts = await res.json();
+                const { data, count, error } = await supabaseClient
+                    .from('historias')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('user_id', currentUser.id)
+                    .eq('estado', 'borrador');
+                
                 const badge = document.getElementById('sidebar-draft-count');
-                if (badge) badge.textContent = drafts.length;
+                if (badge) badge.textContent = count || 0;
             } catch (err) { console.error(err); }
         }
-        loadSidebarStats();
 
         // Initialize Quill
         var quill = new Quill('#editor-container', {
@@ -921,14 +949,11 @@
 
         // VALIDATION SECTION 1
         function validateSection1() {
-            const token = document.getElementById('campo-token').value.trim();
             const autora = document.getElementById('campo-autora').value.trim();
             const email = document.getElementById('campo-email').value.trim();
             const idioma = document.getElementById('campo-idioma').value;
             let valid = true;
 
-            if (!token) { showFieldError('campo-token', 'error-token'); valid = false; }
-            else { clearFieldError('campo-token', 'error-token'); }
             if (!autora) { showFieldError('campo-autora', 'error-autora'); valid = false; }
             else { clearFieldError('campo-autora', 'error-autora'); }
             if (!email) { showFieldError('campo-email', 'error-email'); valid = false; }
@@ -972,7 +997,7 @@
         }
 
         // SUBMIT
-        function validateAndSubmit(event) {
+        async function validateAndSubmit(event) {
             const sinopsis = document.getElementById('campo-sinopsis').value.trim();
             const contenido = quill.root.innerHTML.trim();
             document.getElementById('campo-contenido').value = contenido;
@@ -983,61 +1008,51 @@
             if (!contenido) { showFieldError('campo-contenido', 'error-contenido'); valid = false; }
             else { clearFieldError('campo-contenido', 'error-contenido'); }
 
-            if (!valid) { event.preventDefault(); return false; }
+            if (!valid) { if(event) event.preventDefault(); return false; }
 
-            // Sync hidden fields
-const mappings = [
-	                ['campo-token', 'hidden-token'], ['campo-autora', 'hidden-autora'],
-	                ['campo-perfil-url', 'hidden-perfil-url'], ['campo-email', 'hidden-email'],
-	                ['campo-idioma', 'hidden-idioma'], ['campo-titulo', 'hidden-titulo'],
-	                ['campo-categoria', 'hidden-categoria'], ['campo-orden', 'hidden-orden'],
-	                ['campo-publico', 'hidden-publico'], ['campo-tiempo', 'hidden-tiempo'],
-	                ['campo-poster', 'hidden-poster']
-	            ];
-                
-                const formData = {};
-                mappings.forEach(([src, dest]) => {
-                    const srcEl = document.getElementById(src);
-                    formData[srcEl.name || src] = srcEl.value;
-                });
-                formData.sinopsis = document.getElementById('campo-sinopsis').value;
-                formData.tags = document.getElementById('campo-tags').value;
-                formData.nota_autora = document.getElementById('campo-nota').value;
-                formData.contenido = document.getElementById('campo-contenido').value;
-                formData.derechos = document.getElementById('campo-derechos').value;
-                formData.estado = window.formStatus || 'publicado';
-                formData.password = document.getElementById('campo-token').value;
+            const formData = {
+                autora_nombre: document.getElementById('campo-autora').value,
+                autora_perfil_url: document.getElementById('campo-perfil-url').value,
+                autora_email: document.getElementById('campo-email').value,
+                idioma: document.getElementById('campo-idioma').value,
+                titulo: document.getElementById('campo-titulo').value,
+                categoria: document.getElementById('campo-categoria').value,
+                orden_indice: parseInt(document.getElementById('campo-orden').value) || 0,
+                publico: document.getElementById('campo-publico').value,
+                tiempo_lectura: document.getElementById('campo-tiempo').value,
+                poster_url: document.getElementById('campo-poster').value,
+                sinopsis: document.getElementById('campo-sinopsis').value,
+                tags: document.getElementById('campo-tags').value,
+                nota_autora: document.getElementById('campo-nota').value,
+                contenido_html: contenido,
+                derechos: document.getElementById('campo-derechos').value,
+                estado: window.formStatus || 'publicado',
+                user_id: currentUser.id
+            };
 
-                fetch('/guardar', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData)
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.error) {
-                        alert('Error: ' + data.error);
-                    } else {
-                        updateProgress(3);
-                        hideAllSections();
-                        showSection('section-4');
-                        if (formData.estado === 'borrador') {
-                            document.querySelector('.success-title').innerHTML = '¡Borrador <em>guardado!</em>';
-                            document.querySelector('.success-text').innerHTML = 'Tu historia se ha guardado en borradores correctamente.';
-                        }
+            try {
+                const { data, error } = await supabaseClient
+                    .from('historias')
+                    .insert([formData]);
+
+                if (error) {
+                    alert('Error al guardar: ' + error.message);
+                } else {
+                    updateProgress(3);
+                    hideAllSections();
+                    showSection('section-4');
+                    if (formData.estado === 'borrador') {
+                        document.querySelector('.success-title').innerHTML = '¡Borrador <em>guardado!</em>';
+                        document.querySelector('.success-text').innerHTML = 'Tu historia se ha guardado en borradores correctamente.';
                     }
-                })
-                .catch(err => alert('Error de conexión'));
+                    loadSidebarStats();
+                }
+            } catch (err) {
+                alert('Error de conexión con Supabase');
+                console.error(err);
+            }
 
-                return false; // Prevent default form submission
-            mappings.forEach(([src, dest]) => {
-                const srcEl = document.getElementById(src);
-                const destEl = document.getElementById(dest);
-                if (srcEl && destEl) destEl.value = srcEl.value;
-            });
-
-            setTimeout(() => { updateProgress(3); hideAllSections(); showSection('section-4'); }, 500);
-            return true;
+            return false;
         }
 
         function resetStudio() {
@@ -1051,7 +1066,7 @@ const mappings = [
 
         // Clear errors on input
         document.addEventListener('DOMContentLoaded', () => {
-            ['campo-token', 'campo-autora', 'campo-email', 'campo-titulo', 'campo-poster', 'campo-sinopsis', 'campo-contenido', 'campo-tags', 'campo-nota', 'campo-tiempo'].forEach(id => {
+            ['campo-autora', 'campo-email', 'campo-titulo', 'campo-poster', 'campo-sinopsis', 'campo-contenido', 'campo-tags', 'campo-nota', 'campo-tiempo'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.addEventListener('input', function() {
                     const group = this.closest('.form-group');

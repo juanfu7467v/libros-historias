@@ -25,6 +25,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" />
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="returnConfig.js"></script>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700;800&family=DM+Mono:wght@400;500&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap');
@@ -826,51 +828,125 @@
     <script>
         lucide.createIcons();
 
-        // Cargar contador de borradores en sidebar
-        async function loadSidebarStats() {
-            try {
-                const res = await fetch('/api/borradores');
-                const drafts = await res.json();
-                const badge = document.getElementById('sidebar-draft-count');
-                if (badge) badge.textContent = drafts.length;
-            } catch (err) { console.error(err); }
-        }
-        loadSidebarStats();
+        let supabaseClient;
+        let currentUser;
 
-        // Lógica para ocultar estadísticas si no hay datos reales
-        async function checkStats() {
+        async function initApp() {
             try {
-                const res = await fetch('/api/historias');
-                const historias = await res.json();
+                const response = await fetch('/api/config');
+                const config = await response.json();
+                supabaseClient = supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
                 
-                if (!historias || historias.length === 0) {
-                    // Si no hay historias, ocultar secciones de estadísticas
-                    document.querySelectorAll('.stat-card, .charts-grid, .drafts-hero').forEach(el => {
-                        el.style.display = 'none';
-                    });
-                    
-                    // Mostrar mensaje de estado vacío
-                    const container = document.querySelector('.main-container');
-                    const emptyState = document.createElement('div');
-                    emptyState.className = 'empty-state animate-in';
-                    emptyState.innerHTML = `
-                        <div class="empty-state-icon"><i class="fas fa-chart-line"></i></div>
-                        <h3>Sin datos aún</h3>
-                        <p>Publica tu primera historia para empezar a ver estadísticas reales de tus lectores.</p>
-                        <a href="studio-peliprex" class="empty-btn">
-                            <i class="fas fa-feather-alt"></i> EMPEZAR A ESCRIBIR
-                        </a>
-                    `;
-                    container.appendChild(emptyState);
-                } else {
-                    // Si hay historias, podríamos cargar datos reales aquí si existieran en la DB
-                    // Por ahora, al menos nos aseguramos de que no se muestren datos inventados si la DB está vacía
+                const session = await ReturnConfig.checkAuth(supabaseClient);
+                if (session) {
+                    currentUser = session.user;
+                    loadSidebarStats();
+                    loadRealStats();
                 }
-            } catch (err) {
-                console.error('Error verificando estadísticas:', err);
+            } catch (error) {
+                console.error('Error inicializando la app:', error);
             }
         }
-        checkStats();
+        initApp();
+
+        // Cargar contador de borradores en sidebar
+        async function loadSidebarStats() {
+            if (!supabaseClient || !currentUser) return;
+            try {
+                const { count, error } = await supabaseClient
+                    .from('historias')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('user_id', currentUser.id)
+                    .eq('estado', 'borrador');
+                
+                const badge = document.getElementById('sidebar-draft-count');
+                if (badge) badge.textContent = count || 0;
+            } catch (err) { console.error(err); }
+        }
+
+        async function loadRealStats() {
+            if (!supabaseClient || !currentUser) return;
+            try {
+                const { data: historias, error } = await supabaseClient
+                    .from('historias')
+                    .select('*')
+                    .eq('user_id', currentUser.id)
+                    .eq('estado', 'publicado');
+
+                if (error) throw error;
+
+                const totalVistas = historias.reduce((acc, h) => acc + (h.vistas || 0), 0);
+                const totalValoraciones = historias.reduce((acc, h) => acc + (h.total_valoraciones || 0), 0);
+                const promedioGral = historias.length > 0 
+                    ? (historias.reduce((acc, h) => acc + parseFloat(h.valoracion_promedio || 0), 0) / historias.length).toFixed(1)
+                    : "0.0";
+
+                // Actualizar KPIs
+                document.querySelector('.stat-card:nth-child(1) .stat-value').textContent = totalVistas.toLocaleString();
+                document.querySelector('.stat-card:nth-child(2) .stat-value').textContent = historias.length;
+                document.querySelector('.stat-card:nth-child(3) .stat-value').textContent = totalValoraciones.toLocaleString();
+                document.querySelector('.stat-card:nth-child(4) .stat-value').textContent = promedioGral + '★';
+
+                // Actualizar Ranking de Historias
+                const rankingContainer = document.querySelector('.ranking-list');
+                rankingContainer.innerHTML = '';
+                
+                const sortedHistorias = [...historias].sort((a, b) => (b.vistas || 0) - (a.vistas || 0)).slice(0, 5);
+                
+                if (sortedHistorias.length === 0) {
+                    rankingContainer.innerHTML = '<p class="text-center py-10 text-text-muted">No hay historias publicadas para mostrar ranking.</p>';
+                } else {
+                    sortedHistorias.forEach((h, index) => {
+                        const rankClass = index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : 'default';
+                        const row = document.createElement('div');
+                        row.className = 'story-row';
+                        row.innerHTML = `
+                            <div class="story-rank ${rankClass}">${index + 1}</div>
+                            <div class="story-cover">
+                                <img src="${h.poster_url || ''}" onerror="this.src='https://via.placeholder.com/40x60?text=📖'" style="width:100%;height:100%;object-fit:cover;border-radius:4px;">
+                            </div>
+                            <div class="story-info">
+                                <div class="story-name">${h.titulo}</div>
+                                <div class="story-meta">${h.categoria} • ${h.idioma === 'es' ? 'Español' : h.idioma}</div>
+                            </div>
+                            <div class="story-stats">
+                                <div class="story-views">${(h.vistas || 0).toLocaleString()}</div>
+                                <div class="story-views-label">vistas</div>
+                            </div>
+                        `;
+                        rankingContainer.appendChild(row);
+                    });
+                }
+
+                // Actualizar Actividad Reciente (Simulada basada en datos reales de creación)
+                const timeline = document.querySelector('.timeline');
+                const recentItems = [...historias].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 5);
+                
+                if (recentItems.length > 0) {
+                    const timelineHeader = timeline.querySelector('.chart-header');
+                    timeline.innerHTML = '';
+                    timeline.appendChild(timelineHeader);
+                    
+                    recentItems.forEach(h => {
+                        const item = document.createElement('div');
+                        item.className = 'timeline-item';
+                        const date = new Date(h.created_at).toLocaleDateString();
+                        item.innerHTML = `
+                            <div class="timeline-dot emerald"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">"${h.titulo}" publicado</div>
+                                <div class="timeline-desc">Tu obra ya está disponible y acumulando lectores.</div>
+                                <div class="timeline-time">${date}</div>
+                            </div>
+                        `;
+                        timeline.appendChild(item);
+                    });
+                }
+
+            } catch (err) {
+                console.error('Error cargando estadísticas:', err);
+            }
+        }
 
         const menuToggle = document.getElementById('menu-toggle');
         const sidebarEl = document.getElementById('sidebar');

@@ -25,6 +25,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" />
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="returnConfig.js"></script>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700;800&family=DM+Mono:wght@400;500&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap');
@@ -732,11 +734,38 @@
     <script>
         lucide.createIcons();
 
+        let supabaseClient;
+        let currentUser;
+
+        async function initApp() {
+            try {
+                const response = await fetch('/api/config');
+                const config = await response.json();
+                supabaseClient = supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
+                
+                const session = await ReturnConfig.checkAuth(supabaseClient);
+                if (session) {
+                    currentUser = session.user;
+                    loadDrafts();
+                }
+            } catch (error) {
+                console.error('Error inicializando la app:', error);
+            }
+        }
+        initApp();
+
         // Cargar borradores reales
         async function loadDrafts() {
+            if (!supabaseClient || !currentUser) return;
             try {
-                const res = await fetch('/api/borradores');
-                const drafts = await res.json();
+                const { data: drafts, error } = await supabaseClient
+                    .from('historias')
+                    .select('*')
+                    .eq('user_id', currentUser.id)
+                    .eq('estado', 'borrador')
+                    .order('updated_at', { ascending: false });
+
+                if (error) throw error;
                 
                 // Actualizar contador en sidebar
                 const sidebarBadge = document.getElementById('sidebar-draft-count');
@@ -749,6 +778,21 @@
 
                 if (drafts.length === 0) {
                     document.querySelector('.drafts-count').textContent = '0 historias en progreso';
+                    
+                    // Mostrar estado vacío elegante
+                    const emptyState = document.createElement('div');
+                    emptyState.className = 'col-span-full flex flex-col items-center justify-center py-20 text-center';
+                    emptyState.innerHTML = `
+                        <div class="w-24 h-24 mb-6 rounded-full bg-navy-surface flex items-center justify-center border border-navy-border shadow-lg">
+                            <i class="ri-quill-pen-line text-5xl text-emerald"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-2">Aún no tienes ninguna historia creada</h3>
+                        <p class="text-text-muted mb-8 max-w-md">Tus borradores aparecerán aquí. ¡Es un buen momento para empezar una nueva aventura!</p>
+                        <a href="nueva-historia.html" class="px-8 py-3 bg-emerald hover:bg-emerald-dark text-navy-deep font-bold rounded-xl transition-all transform hover:scale-105 shadow-lg shadow-emerald-glow">
+                            Crear ahora
+                        </a>
+                    `;
+                    grid.appendChild(emptyState);
                     grid.appendChild(lastCard);
                     return;
                 }
@@ -763,7 +807,7 @@
                     card.onclick = () => openDraft(draft.id);
                     
                     card.innerHTML = `
-                        <img class="poster-image" src="${draft.poster_url || 'https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=400&h=600&auto=format&fit=crop'}" alt="${draft.titulo}" loading="lazy">
+                        <img class="poster-image" src="${draft.poster_url || 'https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=400&h=600&auto=format&fit=crop'}" alt="${draft.titulo}" onerror="this.src='https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=400&h=600&auto=format&fit=crop'" loading="lazy">
                         <div class="poster-overlay"></div>
                         <div class="poster-badge draft">Borrador</div>
                         <div class="poster-menu-btn" onclick="openContextMenu(event, '${draft.id}', '${draft.titulo}')">
@@ -783,9 +827,9 @@
                 grid.appendChild(lastCard);
             } catch (err) {
                 console.error('Error cargando borradores:', err);
+                showToast('Error al cargar borradores', 'error');
             }
         }
-        loadDrafts();
 
         let currentDraftId = '';
         function openContextMenu(event, id, title) {
@@ -870,15 +914,16 @@
         }
 
         async function deleteDraft() {
-            const password = prompt('Ingresa tu token de acceso para confirmar la eliminación:');
-            if (!password) return;
-
             if (confirm('¿Eliminar el borrador "' + currentDraftTitle + '"? Esta acción no se puede deshacer.')) {
                 try {
-                    const res = await fetch(`/eliminar/${currentDraftId}?password=${password}`, { method: 'DELETE' });
-                    const data = await res.json();
-                    if (data.error) {
-                        alert('Error: ' + data.error);
+                    const { error } = await supabaseClient
+                        .from('historias')
+                        .delete()
+                        .eq('id', currentDraftId)
+                        .eq('user_id', currentUser.id);
+
+                    if (error) {
+                        alert('Error: ' + error.message);
                     } else {
                         showToast('Borrador eliminado', 'error');
                         loadDrafts();

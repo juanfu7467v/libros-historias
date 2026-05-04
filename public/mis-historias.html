@@ -25,6 +25,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" />
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="returnConfig.js"></script>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700;800&family=DM+Mono:wght@400;500&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap');
@@ -726,186 +728,12 @@
 
         <!-- Grid de Historias -->
         <div class="stories-grid animate-in delay-2" id="storiesGrid">
-            
-            <!-- Historia 1: Top 1 - Las Crónicas del Tiempo -->
-            <div class="poster-card" onclick="openStory('story-1')" data-genre="fantasia" data-status="trending" data-title="Las Crónicas del Tiempo">
-                <img class="poster-image" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='450'%3E%3Cdefs%3E%3ClinearGradient id='g1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%237C3AED'/%3E%3Cstop offset='40%25' style='stop-color:%2300C853'/%3E%3Cstop offset='100%25' style='stop-color:%23FFD700'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='300' height='450' fill='url(%23g1)'/%3E%3Ctext x='150' y='180' text-anchor='middle' fill='white' font-size='50' font-family='serif'%3E📖%3C/text%3E%3Ctext x='150' y='260' text-anchor='middle' fill='white' font-size='15' font-family='sans-serif' font-weight='bold'%3ECr%C3%B3nicas%3C/text%3E%3Ctext x='150' y='282' text-anchor='middle' fill='white' font-size='15' font-family='sans-serif' font-weight='bold'%3Edel Tiempo%3C/text%3E%3Ctext x='150' y='350' text-anchor='middle' fill='rgba(255,255,255,0.6)' font-size='30'%3E🐉%3C/text%3E%3C/svg%3E" alt="Las Crónicas del Tiempo" loading="lazy">
-                <div class="poster-overlay"></div>
-                <div class="poster-top-badge">
-                    <div class="rank-badge">#1</div>
-                    <div class="rating-badge"><i class="fas fa-star"></i> 4.9</div>
-                </div>
-                <div class="poster-menu-btn" onclick="openContextMenu(event, 'Las Crónicas del Tiempo')">
-                    <i class="fas fa-ellipsis-v"></i>
-                </div>
-                <div class="poster-info">
-                    <div class="poster-title">Las Crónicas del Tiempo</div>
-                    <div class="poster-meta">
-                        <span><span class="status-dot trending"></span> En tendencia</span>
-                        <span><i class="fas fa-feather-alt"></i> Fantasía</span>
-                    </div>
-                    <div class="poster-stats">
-                        <span><i class="fas fa-eye"></i> 8.4K</span>
-                        <span><i class="fas fa-star"></i> 4.9</span>
-                        <span><i class="fas fa-file-alt"></i> 12 cap.</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Historia 2: Bajo el Cielo de Octubre -->
-            <div class="poster-card" onclick="openStory('story-2')" data-genre="romance" data-status="published" data-title="Bajo el Cielo de Octubre">
-                <img class="poster-image" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='450'%3E%3Cdefs%3E%3ClinearGradient id='g2' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23E53935'/%3E%3Cstop offset='50%25' style='stop-color:%23FF5252'/%3E%3Cstop offset='100%25' style='stop-color:%23FFD700'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='300' height='450' fill='url(%23g2)'/%3E%3Ctext x='150' y='180' text-anchor='middle' fill='white' font-size='50' font-family='serif'%3E💕%3C/text%3E%3Ctext x='150' y='260' text-anchor='middle' fill='white' font-size='14' font-family='sans-serif' font-weight='bold'%3EBajo el Cielo%3C/text%3E%3Ctext x='150' y='282' text-anchor='middle' fill='white' font-size='14' font-family='sans-serif' font-weight='bold'%3Ede Octubre%3C/text%3E%3C/svg%3E" alt="Bajo el Cielo de Octubre" loading="lazy">
-                <div class="poster-overlay"></div>
-                <div class="poster-top-badge">
-                    <div class="rating-badge"><i class="fas fa-star"></i> 4.7</div>
-                </div>
-                <div class="poster-menu-btn" onclick="openContextMenu(event, 'Bajo el Cielo de Octubre')">
-                    <i class="fas fa-ellipsis-v"></i>
-                </div>
-                <div class="poster-info">
-                    <div class="poster-title">Bajo el Cielo de Octubre</div>
-                    <div class="poster-meta">
-                        <span><span class="status-dot published"></span> Publicado</span>
-                        <span><i class="fas fa-heart"></i> Romance</span>
-                    </div>
-                    <div class="poster-stats">
-                        <span><i class="fas fa-eye"></i> 6.1K</span>
-                        <span><i class="fas fa-star"></i> 4.7</span>
-                        <span><i class="fas fa-file-alt"></i> 8 cap.</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Historia 3: El Último Suspiro -->
-            <div class="poster-card" onclick="openStory('story-3')" data-genre="misterio" data-status="published" data-title="El Último Suspiro">
-                <img class="poster-image" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='450'%3E%3Cdefs%3E%3ClinearGradient id='g3' x1='0%25' y1='0%25' x2='0%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2315294A'/%3E%3Cstop offset='100%25' style='stop-color:%230A1628'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='300' height='450' fill='url(%23g3)'/%3E%3Ctext x='150' y='180' text-anchor='middle' fill='white' font-size='50' font-family='serif'%3E🔍%3C/text%3E%3Ctext x='150' y='260' text-anchor='middle' fill='white' font-size='16' font-family='sans-serif' font-weight='bold'%3EEl Último%3C/text%3E%3Ctext x='150' y='282' text-anchor='middle' fill='white' font-size='16' font-family='sans-serif' font-weight='bold'%3ESuspiro%3C/text%3E%3C/svg%3E" alt="El Último Suspiro" loading="lazy">
-                <div class="poster-overlay"></div>
-                <div class="poster-top-badge">
-                    <div class="rating-badge"><i class="fas fa-star"></i> 4.5</div>
-                </div>
-                <div class="poster-menu-btn" onclick="openContextMenu(event, 'El Último Suspiro')">
-                    <i class="fas fa-ellipsis-v"></i>
-                </div>
-                <div class="poster-info">
-                    <div class="poster-title">El Último Suspiro</div>
-                    <div class="poster-meta">
-                        <span><span class="status-dot published"></span> Publicado</span>
-                        <span><i class="fas fa-search"></i> Misterio</span>
-                    </div>
-                    <div class="poster-stats">
-                        <span><i class="fas fa-eye"></i> 4.8K</span>
-                        <span><i class="fas fa-star"></i> 4.5</span>
-                        <span><i class="fas fa-file-alt"></i> 5 cap.</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Historia 4: Fragmentos de Luna -->
-            <div class="poster-card" onclick="openStory('story-4')" data-genre="poesia" data-status="new" data-title="Fragmentos de Luna">
-                <img class="poster-image" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='450'%3E%3Cdefs%3E%3ClinearGradient id='g4' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%233B82F6'/%3E%3Cstop offset='50%25' style='stop-color:%237C3AED'/%3E%3Cstop offset='100%25' style='stop-color:%23A78BFA'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='300' height='450' fill='url(%23g4)'/%3E%3Ctext x='150' y='180' text-anchor='middle' fill='white' font-size='50' font-family='serif'%3E🌙%3C/text%3E%3Ctext x='150' y='260' text-anchor='middle' fill='white' font-size='15' font-family='sans-serif' font-weight='bold'%3EFragmentos%3C/text%3E%3Ctext x='150' y='282' text-anchor='middle' fill='white' font-size='15' font-family='sans-serif' font-weight='bold'%3Ede Luna%3C/text%3E%3C/svg%3E" alt="Fragmentos de Luna" loading="lazy">
-                <div class="poster-overlay"></div>
-                <div class="poster-top-badge">
-                    <div class="rating-badge"><i class="fas fa-star"></i> Nuevo</div>
-                </div>
-                <div class="poster-menu-btn" onclick="openContextMenu(event, 'Fragmentos de Luna')">
-                    <i class="fas fa-ellipsis-v"></i>
-                </div>
-                <div class="poster-info">
-                    <div class="poster-title">Fragmentos de Luna</div>
-                    <div class="poster-meta">
-                        <span><span class="status-dot new"></span> Nuevo</span>
-                        <span><i class="fas fa-feather-alt"></i> Poesía</span>
-                    </div>
-                    <div class="poster-stats">
-                        <span><i class="fas fa-eye"></i> 3.2K</span>
-                        <span><i class="fas fa-star"></i> Nuevo</span>
-                        <span><i class="fas fa-file-alt"></i> 1 cap.</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Historia 5: Sombras del Pasado -->
-            <div class="poster-card" onclick="openStory('story-5')" data-genre="misterio" data-status="published" data-title="Sombras del Pasado">
-                <img class="poster-image" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='450'%3E%3Cdefs%3E%3ClinearGradient id='g5' x1='0%25' y1='0%25' x2='0%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%230A1628'/%3E%3Cstop offset='50%25' style='stop-color:%2315294A'/%3E%3Cstop offset='100%25' style='stop-color:%23000'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='300' height='450' fill='url(%23g5)'/%3E%3Ctext x='150' y='180' text-anchor='middle' fill='white' font-size='50' font-family='serif'%3E👻%3C/text%3E%3Ctext x='150' y='260' text-anchor='middle' fill='white' font-size='14' font-family='sans-serif' font-weight='bold'%3ESombras%3C/text%3E%3Ctext x='150' y='282' text-anchor='middle' fill='white' font-size='14' font-family='sans-serif' font-weight='bold'%3Edel Pasado%3C/text%3E%3C/svg%3E" alt="Sombras del Pasado" loading="lazy">
-                <div class="poster-overlay"></div>
-                <div class="poster-top-badge">
-                    <div class="rating-badge"><i class="fas fa-star"></i> 4.3</div>
-                </div>
-                <div class="poster-menu-btn" onclick="openContextMenu(event, 'Sombras del Pasado')">
-                    <i class="fas fa-ellipsis-v"></i>
-                </div>
-                <div class="poster-info">
-                    <div class="poster-title">Sombras del Pasado</div>
-                    <div class="poster-meta">
-                        <span><span class="status-dot published"></span> Publicado</span>
-                        <span><i class="fas fa-ghost"></i> Terror</span>
-                    </div>
-                    <div class="poster-stats">
-                        <span><i class="fas fa-eye"></i> 1.7K</span>
-                        <span><i class="fas fa-star"></i> 4.3</span>
-                        <span><i class="fas fa-file-alt"></i> 3 cap.</span>
-                    </div>
-                </div>
-            </div>
+            <!-- Se cargará dinámicamente -->
         </div>
 
         <!-- List View (oculto por defecto) -->
         <div id="listView" style="display:none;">
-            <div class="story-list-item" onclick="openStory('story-1')">
-                <div class="story-list-cover"><div style="width:100%;height:100%;background:linear-gradient(135deg,#7C3AED,#00C853);display:flex;align-items:center;justify-content:center;font-size:20px;">📖</div></div>
-                <div class="story-list-info">
-                    <div class="story-list-title">Las Crónicas del Tiempo</div>
-                    <div class="story-list-meta">Fantasía • 12 capítulos • Publicado hace 3 meses</div>
-                </div>
-                <div class="story-list-stats">
-                    <div class="story-list-views">8,420</div>
-                    <div class="story-list-label">vistas</div>
-                </div>
-            </div>
-            <div class="story-list-item" onclick="openStory('story-2')">
-                <div class="story-list-cover"><div style="width:100%;height:100%;background:linear-gradient(135deg,#E53935,#FFD700);display:flex;align-items:center;justify-content:center;font-size:20px;">💕</div></div>
-                <div class="story-list-info">
-                    <div class="story-list-title">Bajo el Cielo de Octubre</div>
-                    <div class="story-list-meta">Romance • 8 capítulos • Publicado hace 2 meses</div>
-                </div>
-                <div class="story-list-stats">
-                    <div class="story-list-views">6,150</div>
-                    <div class="story-list-label">vistas</div>
-                </div>
-            </div>
-            <div class="story-list-item" onclick="openStory('story-3')">
-                <div class="story-list-cover"><div style="width:100%;height:100%;background:linear-gradient(180deg,#15294A,#0A1628);display:flex;align-items:center;justify-content:center;font-size:20px;">🔍</div></div>
-                <div class="story-list-info">
-                    <div class="story-list-title">El Último Suspiro</div>
-                    <div class="story-list-meta">Misterio • 5 capítulos • Publicado hace 1 mes</div>
-                </div>
-                <div class="story-list-stats">
-                    <div class="story-list-views">4,890</div>
-                    <div class="story-list-label">vistas</div>
-                </div>
-            </div>
-            <div class="story-list-item" onclick="openStory('story-4')">
-                <div class="story-list-cover"><div style="width:100%;height:100%;background:linear-gradient(135deg,#3B82F6,#A78BFA);display:flex;align-items:center;justify-content:center;font-size:20px;">🌙</div></div>
-                <div class="story-list-info">
-                    <div class="story-list-title">Fragmentos de Luna</div>
-                    <div class="story-list-meta">Poesía • 1 capítulo • Publicado hace 2 semanas</div>
-                </div>
-                <div class="story-list-stats">
-                    <div class="story-list-views">3,200</div>
-                    <div class="story-list-label">vistas</div>
-                </div>
-            </div>
-            <div class="story-list-item" onclick="openStory('story-5')">
-                <div class="story-list-cover"><div style="width:100%;height:100%;background:linear-gradient(180deg,#0A1628,#000);display:flex;align-items:center;justify-content:center;font-size:20px;">👻</div></div>
-                <div class="story-list-info">
-                    <div class="story-list-title">Sombras del Pasado</div>
-                    <div class="story-list-meta">Terror • 3 capítulos • Publicado hace 1 semana</div>
-                </div>
-                <div class="story-list-stats">
-                    <div class="story-list-views">1,750</div>
-                    <div class="story-list-label">vistas</div>
-                </div>
-            </div>
+            <!-- Se cargará dinámicamente -->
         </div>
     </div>
 
@@ -943,6 +771,142 @@
     <script>
         lucide.createIcons();
 
+        let supabaseClient;
+        let currentUser;
+
+        async function initApp() {
+            try {
+                const response = await fetch('/api/config');
+                const config = await response.json();
+                supabaseClient = supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
+                
+                const session = await ReturnConfig.checkAuth(supabaseClient);
+                if (session) {
+                    currentUser = session.user;
+                    loadSidebarStats();
+                    loadStories();
+                }
+            } catch (error) {
+                console.error('Error inicializando la app:', error);
+            }
+        }
+        initApp();
+
+        // Cargar contador de borradores en sidebar
+        async function loadSidebarStats() {
+            if (!supabaseClient || !currentUser) return;
+            try {
+                const { count, error } = await supabaseClient
+                    .from('historias')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('user_id', currentUser.id)
+                    .eq('estado', 'borrador');
+                
+                const badge = document.getElementById('sidebar-draft-count');
+                if (badge) badge.textContent = count || 0;
+            } catch (err) { console.error(err); }
+        }
+
+        async function loadStories() {
+            if (!supabaseClient || !currentUser) return;
+            try {
+                const { data: stories, error } = await supabaseClient
+                    .from('historias')
+                    .select('*')
+                    .eq('user_id', currentUser.id)
+                    .eq('estado', 'publicado')
+                    .order('fecha_publicacion', { ascending: false });
+
+                if (error) throw error;
+
+                const grid = document.getElementById('storiesGrid');
+                const list = document.getElementById('listView');
+                grid.innerHTML = '';
+                list.innerHTML = '';
+
+                if (stories.length === 0) {
+                    document.querySelector('.stats-bar').style.display = 'none';
+                    const emptyState = document.createElement('div');
+                    emptyState.className = 'col-span-full flex flex-col items-center justify-center py-20 text-center';
+                    emptyState.innerHTML = `
+                        <div class="w-24 h-24 mb-6 rounded-full bg-navy-surface flex items-center justify-center border border-navy-border shadow-lg">
+                            <i class="ri-book-open-line text-5xl text-emerald"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-2">Aún no tienes ninguna historia creada</h3>
+                        <p class="text-text-muted mb-8 max-w-md">Tus historias publicadas aparecerán aquí. ¡Comparte tu talento con el mundo!</p>
+                        <a href="nueva-historia.html" class="px-8 py-3 bg-emerald hover:bg-emerald-dark text-navy-deep font-bold rounded-xl transition-all transform hover:scale-105 shadow-lg shadow-emerald-glow">
+                            Crear ahora
+                        </a>
+                    `;
+                    grid.appendChild(emptyState);
+                    return;
+                }
+
+                // Actualizar métricas rápidas
+                const totalVistas = stories.reduce((acc, s) => acc + (s.vistas || 0), 0);
+                document.querySelector('.stats-bar').innerHTML = `
+                    <div class="stat-pill"><span>${stories.length}</span> obras publicadas</div>
+                    <div class="stat-pill"><span>${totalVistas.toLocaleString()}</span> lectores totales</div>
+                    <div class="stat-pill"><span>4.7★</span> promedio</div>
+                `;
+
+                stories.forEach(story => {
+                    // Grid Card
+                    const card = document.createElement('div');
+                    card.className = 'poster-card animate-in';
+                    card.setAttribute('data-title', story.titulo);
+                    card.setAttribute('data-genre', story.categoria);
+                    card.onclick = () => openStory(story.id);
+                    card.innerHTML = `
+                        <img class="poster-image" src="${story.poster_url || ''}" onerror="this.src='https://via.placeholder.com/300x450?text=${encodeURIComponent(story.titulo)}'" alt="${story.titulo}" loading="lazy">
+                        <div class="poster-overlay"></div>
+                        <div class="poster-top-badge">
+                            <div class="rating-badge"><i class="fas fa-star"></i> ${story.valoracion_promedio || '0.0'}</div>
+                        </div>
+                        <div class="poster-menu-btn" onclick="openContextMenu(event, '${story.id}', '${story.titulo}')">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </div>
+                        <div class="poster-info">
+                            <div class="poster-title">${story.titulo}</div>
+                            <div class="poster-meta">
+                                <span><span class="status-dot published"></span> Publicado</span>
+                                <span><i class="fas fa-feather-alt"></i> ${story.categoria}</span>
+                            </div>
+                            <div class="poster-stats">
+                                <span><i class="fas fa-eye"></i> ${(story.vistas || 0).toLocaleString()}</span>
+                                <span><i class="fas fa-star"></i> ${story.valoracion_promedio || '0.0'}</span>
+                                <span><i class="fas fa-file-alt"></i> ${story.orden_indice || 0} cap.</span>
+                            </div>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+
+                    // List Item
+                    const listItem = document.createElement('div');
+                    listItem.className = 'story-list-item';
+                    listItem.onclick = () => openStory(story.id);
+                    listItem.innerHTML = `
+                        <div class="story-list-cover">
+                            <img src="${story.poster_url || ''}" onerror="this.src='https://via.placeholder.com/40x60?text=📖'" style="width:100%;height:100%;object-fit:cover;border-radius:4px;">
+                        </div>
+                        <div class="story-list-info">
+                            <div class="story-list-title">${story.titulo}</div>
+                            <div class="story-list-meta">${story.categoria} • ${story.orden_indice || 0} capítulos • Publicado el ${new Date(story.fecha_publicacion).toLocaleDateString()}</div>
+                        </div>
+                        <div class="story-list-stats">
+                            <div class="story-list-views">${(story.vistas || 0).toLocaleString()}</div>
+                            <div class="story-list-label">vistas</div>
+                        </div>
+                    `;
+                    list.appendChild(listItem);
+                });
+
+            } catch (err) {
+                console.error('Error cargando historias:', err);
+                showToast('Error al cargar historias', 'error');
+            }
+        }
+
         // ═══ SIDEBAR ═══
         const menuToggle = document.getElementById('menu-toggle');
         const sidebarEl = document.getElementById('sidebar');
@@ -959,10 +923,12 @@
         });
 
         // ═══ CONTEXT MENU ═══
+        let currentStoryId = '';
         let currentStoryTitle = '';
         const contextMenu = document.getElementById('contextMenu');
-        function openContextMenu(event, title) {
+        function openContextMenu(event, id, title) {
             event.stopPropagation();
+            currentStoryId = id;
             currentStoryTitle = title;
             contextMenu.style.display = 'block';
             contextMenu.classList.add('show');
@@ -974,59 +940,78 @@
         function editStory() { showToast('Editando: ' + currentStoryTitle, 'success'); }
         function viewStats() { showToast('Abriendo estadísticas de: ' + currentStoryTitle, 'success'); setTimeout(() => window.location.href = 'estadisticas', 500); }
         function shareStory() { showToast('Enlace copiado al portapapeles ✓', 'success'); }
-        function unpublishStory() { showToast('Historia despublicada: ' + currentStoryTitle, 'error'); }
-        function deleteStory() { if (confirm('¿Eliminar "' + currentStoryTitle + '"? Esta acción no se puede deshacer.')) { showToast('Historia eliminada', 'error'); } }
+        
+        async function unpublishStory() { 
+            if (confirm('¿Mover "' + currentStoryTitle + '" a borradores?')) {
+                try {
+                    const { error } = await supabaseClient
+                        .from('historias')
+                        .update({ estado: 'borrador' })
+                        .eq('id', currentStoryId)
+                        .eq('user_id', currentUser.id);
+                    
+                    if (error) throw error;
+                    showToast('Historia movida a borradores', 'success');
+                    loadStories();
+                    loadSidebarStats();
+                } catch (err) {
+                    alert('Error: ' + err.message);
+                }
+            }
+        }
 
-        window.editStory = editStory;
-        window.viewStats = viewStats;
-        window.shareStory = shareStory;
-        window.unpublishStory = unpublishStory;
-        window.deleteStory = deleteStory;
-        window.openContextMenu = openContextMenu;
-
-        // ═══ OPEN STORY ═══
+        async function deleteStory() { 
+            if (confirm('¿Eliminar "' + currentStoryTitle + '"? Esta acción no se puede deshacer.')) { 
+                try {
+                    const { error } = await supabaseClient
+                        .from('historias')
+                        .delete()
+                        .eq('id', currentStoryId)
+                        .eq('user_id', currentUser.id);
+                    
+                    if (error) throw error;
+                    showToast('Historia eliminada', 'error');
+                    loadStories();
+                } catch (err) {
+                    alert('Error: ' + err.message);
+                }
+            } 
+        }
+        
         function openStory(id) { showToast('Abriendo historia...', 'success'); }
-        window.openStory = openStory;
 
-        // ═══ CATEGORY FILTER ═══
-        function setCategory(filter, el) {
-            document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
-            el.classList.add('active');
-            const cards = document.querySelectorAll('.poster-card[data-genre]');
+        // ═══ FILTRAR ═══
+        function filterStories() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.poster-card');
             cards.forEach(card => {
-                if (filter === 'all' || filter === 'trending') {
-                    if (filter === 'trending') { card.style.display = card.getAttribute('data-status') === 'trending' ? '' : 'none'; }
-                    else { card.style.display = ''; }
-                } else { card.style.display = card.getAttribute('data-genre') === filter ? '' : 'none'; }
+                const title = card.getAttribute('data-title').toLowerCase();
+                const genre = card.getAttribute('data-genre').toLowerCase();
+                if (title.includes(query) || genre.includes(query)) { card.style.display = ''; }
+                else { card.style.display = 'none'; }
             });
         }
-        window.setCategory = setCategory;
 
-        // ═══ TOGGLE VIEW ═══
+        // ═══ TABS ═══
+        function switchTab(tab, el) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+            const cards = document.querySelectorAll('.poster-card');
+            cards.forEach(card => {
+                if (tab === 'all') { card.style.display = ''; }
+                else { card.style.display = card.getAttribute('data-genre').toLowerCase() === tab.toLowerCase() ? '' : 'none'; }
+            });
+        }
+
+        // ═══ TOGGLE VISTA ═══
         function toggleView(view) {
             const btnGrid = document.getElementById('btn-grid');
             const btnList = document.getElementById('btn-list');
             const grid = document.getElementById('storiesGrid');
             const list = document.getElementById('listView');
-            if (view === 'grid') {
-                btnGrid.classList.add('active'); btnList.classList.remove('active');
-                grid.style.display = 'grid'; list.style.display = 'none';
-            } else {
-                btnList.classList.add('active'); btnGrid.classList.remove('active');
-                grid.style.display = 'none'; list.style.display = 'block';
-            }
+            if (view === 'grid') { btnGrid.classList.add('active'); btnList.classList.remove('active'); grid.style.display = 'grid'; list.style.display = 'none'; }
+            else { btnList.classList.add('active'); btnGrid.classList.remove('active'); grid.style.display = 'none'; list.style.display = 'block'; }
         }
-        window.toggleView = toggleView;
-
-        // ═══ FILTER STORIES ═══
-        function filterStories() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            document.querySelectorAll('.poster-card[data-title]').forEach(card => {
-                const title = card.getAttribute('data-title').toLowerCase();
-                card.style.display = title.includes(query) ? '' : 'none';
-            });
-        }
-        window.filterStories = filterStories;
 
         // ═══ TOAST ═══
         function showToast(msg, type) {
@@ -1039,9 +1024,11 @@
             setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s'; setTimeout(() => toast.remove(), 300); }, 3000);
         }
 
-        // ═══ ANIMATIONS ═══
+        // ═══ ANIMACIONES ═══
         const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
-        const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) { entry.target.style.opacity = '1'; entry.target.style.transform = 'translateY(0)'; } }); }, observerOptions);
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) { entry.target.style.opacity = '1'; entry.target.style.transform = 'translateY(0)'; } });
+        }, observerOptions);
         document.querySelectorAll('.animate-in').forEach(el => observer.observe(el));
     </script>
 </body>
