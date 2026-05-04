@@ -901,7 +901,7 @@
         // ═══ ACCIONES DEL MENÚ ═══
         function editDraft() {
             showToast('Abriendo editor para: ' + currentDraftTitle, 'success');
-            setTimeout(() => window.location.href = 'studio-peliprex', 500);
+            setTimeout(() => window.location.href = `nueva-historia?id=${currentDraftId}`, 500);
         }
 
         function duplicateDraft() {
@@ -937,7 +937,7 @@
         // ═══ ABRIR BORRADOR ═══
         function openDraft(id) {
             showToast('Abriendo borrador...', 'success');
-            setTimeout(() => window.location.href = 'studio-peliprex', 500);
+            setTimeout(() => window.location.href = `nueva-historia?id=${id}`, 500);
         }
 
         // ═══ TOGGLE VISTA ═══

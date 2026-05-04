@@ -16,8 +16,6 @@ if (!supabaseUrl || !supabaseKey) {
   console.error('Faltan variables de entorno de Supabase');
 }
 
-// Usamos Service Role Key para operaciones administrativas si es necesario, 
-// pero la mayoría de las operaciones ahora se delegan al cliente con RLS.
 const supabase = createClient(supabaseUrl, supabaseKey, {
   auth: {
     autoRefreshToken: true,
@@ -47,11 +45,14 @@ const htmlPages = [
   'mis-historias',
   'borradores',
   'estadisticas',
+  'login',
+  'leer'
 ];
 
 htmlPages.forEach((page) => {
   fastify.get(`/${page}`, (req, reply) => {
-    const fileName = page === 'estadisticas' ? 'estadísticas.html' : `${page}.html`;
+    let fileName = `${page}.html`;
+    if (page === 'estadisticas') fileName = 'estadísticas.html';
     return reply.sendFile(fileName);
   });
 });
@@ -88,6 +89,21 @@ fastify.get('/api/config', async (request, reply) => {
 
 // ── Health check ──────────────────────────────────────────────────────────────
 fastify.get('/health', async () => ({ status: 'ok', timestamp: new Date().toISOString() }));
+
+// ── Manejo de errores 404 para la API ─────────────────────────────────────────
+// Esto evita que las rutas no encontradas devuelvan el error 404 genérico de Fastify
+// y ayuda a diagnosticar si el frontend está llamando a endpoints inexistentes.
+fastify.setNotFoundHandler((request, reply) => {
+  if (request.raw.url.startsWith('/api/') || request.raw.url === '/guardar') {
+    reply.code(404).send({
+      message: `Route ${request.method}:${request.raw.url} not found`,
+      error: "Not Found",
+      statusCode: 404
+    });
+  } else {
+    reply.sendFile('inicio.html'); // Redirigir a inicio si no es API
+  }
+});
 
 // ── Arrancar servidor ─────────────────────────────────────────────────────────
 fastify.listen({ port: 8080, host: '0.0.0.0' }, (err) => {

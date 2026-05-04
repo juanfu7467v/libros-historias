@@ -629,7 +629,17 @@
 
         async function loadWriterProfile() {
             try {
-                // Buscar la última historia del usuario para autocompletar el perfil
+                // 1. Intentar cargar desde localStorage para rapidez
+                const savedProfile = localStorage.getItem('writer_profile_' + currentUser.id);
+                if (savedProfile) {
+                    const p = JSON.parse(savedProfile);
+                    document.getElementById('campo-autora').value = p.autora_nombre || '';
+                    document.getElementById('campo-email').value = p.autora_email || currentUser.email;
+                    document.getElementById('campo-idioma').value = p.idioma || 'es';
+                    document.getElementById('campo-biografia').value = p.nota_autora || '';
+                }
+
+                // 2. Buscar la última historia del usuario para autocompletar/actualizar el perfil
                 const { data, error } = await supabaseClient
                     .from('historias')
                     .select('autora_nombre, autora_email, idioma, nota_autora')
@@ -643,7 +653,10 @@
                     document.getElementById('campo-email').value = p.autora_email || currentUser.email;
                     document.getElementById('campo-idioma').value = p.idioma || 'es';
                     document.getElementById('campo-biografia').value = p.nota_autora || '';
-                } else {
+                    
+                    // Guardar en localStorage para la próxima vez
+                    localStorage.setItem('writer_profile_' + currentUser.id, JSON.stringify(p));
+                } else if (!savedProfile) {
                     document.getElementById('campo-email').value = currentUser.email || '';
                 }
             } catch (err) { console.error(err); }
@@ -749,10 +762,16 @@
         }
 
         function showError(fieldId, errorId) {
-            document.getElementById(fieldId).closest('.form-group').classList.add('error');
+            const field = document.getElementById(fieldId);
+            if (field && field.closest('.form-group')) {
+                field.closest('.form-group').classList.add('error');
+            }
         }
         function hideError(fieldId, errorId) {
-            document.getElementById(fieldId).closest('.form-group').classList.remove('error');
+            const field = document.getElementById(fieldId);
+            if (field && field.closest('.form-group')) {
+                field.closest('.form-group').classList.remove('error');
+            }
         }
 
         async function saveStory(estado) {
