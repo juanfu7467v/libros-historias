@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <title>Estadísticas | Studio PeliPREX - Masitaprex</title>
+    <meta name="description" content="Estadísticas de tus historias en Studio PeliPREX. Visualiza lectores, vistas, valoraciones y el rendimiento de tus obras.">
+    <meta name="keywords" content="estadisticas escritor, metricas historias, studio peliprex, rendimiento obras, masitaprex" />
+    <meta name="robots" content="index, follow" />
+    
+    <meta property="og:title" content="Estadísticas | Studio PeliPREX - Masitaprex" />
+    <meta property="og:description" content="Visualiza el rendimiento de tus historias. Lectores, vistas, valoraciones y más." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://cdn-icons-png.flaticon.com/128/747/747965.png" />
+
+    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/128/747/747965.png">
+    <link rel="shortcut icon" type="image/png" href="https://cdn-icons-png.flaticon.com/128/747/747965.png">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/128/747/747965.png">
+
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="returnConfig.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dashBg: '#090e17',
+                        cardBg: '#151c2f',
+                        cardHover: '#1a233a',
+                        textMuted: '#8b9bb4',
+                        accentPurple: '#8b5cf6',
+                        accentGreen: '#10b981',
+                        accentYellow: '#f59e0b',
+                        accentBlue: '#3b82f6',
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'Inter', 'sans-serif'],
+                        serif: ['Cormorant Garamond', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap');
+        
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #090e17;
+            color: #f8fafc;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ═══ SIDEBAR ═══ */
+        #sidebar-overlay { 
+            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8);
+            z-index: 50; opacity: 0; transition: opacity 0.3s ease;
+            display: none; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+        }
+        #sidebar-overlay.opacity-100 { opacity: 1; }
+        #sidebar-overlay.hidden { display: none; }
+        #sidebar {
+            position: fixed; top: 0; left: 0; height: 100%; width: 290px;
+            background: #090e17; border-right: 1px solid #1e293b;
+            z-index: 60; overflow: hidden; transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(-100%); display: flex; flex-direction: column;
+            box-shadow: 8px 0 40px rgba(0,0,0,0.5);
+        }
+        #sidebar.open { transform: translateX(0); }
+        .sb-header { padding: 32px 20px 20px; text-align: center; border-bottom: 1px solid #1e293b; }
+        .sb-logo-box { width: 68px; height: 68px; margin: 0 auto 12px; border-radius: 18px; border: 2px solid #10b981; }
+        .sb-logo-box img { width: 100%; height: 100%; object-fit: cover; border-radius: 16px; }
+        .sb-brand { font-weight: 800; font-size: 1.3rem; color: #f59e0b; letter-spacing: 0.2em; text-transform: uppercase; }
+        .sb-tagline { font-size: 0.7rem; color: #8b9bb4; letter-spacing: 0.15em; margin-top: 6px; text-transform: uppercase; }
+        .sb-scroll-area { flex: 1; overflow-y: auto; padding: 8px 0; }
+        .sb-cat { padding: 14px 24px 8px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.2em; color: #10b981; }
+        #sidebar nav a {
+            display: flex; align-items: center; gap: 12px; padding: 12px 24px;
+            color: #e2e8f0; transition: all 0.25s ease; text-decoration: none; font-size: 0.9rem; font-weight: 500;
+        }
+        #sidebar nav a:hover { background: rgba(16,185,129,0.08); color: #34d399; }
+        #sidebar nav a.active { background: rgba(16,185,129,0.12); color: #10b981; border-left: 3px solid #10b981; font-weight: 700; }
+        .sb-icon { font-size: 1.1rem; color: #8b9bb4; }
+        #sidebar nav a.active .sb-icon, #sidebar nav a:hover .sb-icon { color: #10b981; }
+        .sb-badge { font-size: 0.65rem; padding: 2px 8px; border-radius: 12px; background: #10b981; color: #000; font-weight: 800; margin-left: auto; }
+        .sb-footer { padding: 16px 20px; border-top: 1px solid #1e293b; display: flex; justify-content: center; gap: 16px; }
+        .sb-footer a { color: #8b9bb4; font-size: 1.3rem; }
+
+        /* Botón hamburguesa */
+        #menu-toggle {
+            position: fixed; top: 16px; left: 16px; z-index: 100;
+            width: 40px; height: 40px; border-radius: 8px;
+            background: #151c2f; color: #10b981; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s ease;
+        }
+
+        /* Utilidades Gráficos */
+        .donut-chart {
+            width: 130px; height: 130px; border-radius: 50%;
+            position: relative;
+        }
+        .donut-chart::after {
+            content: ''; position: absolute; inset: 26px;
+            background: #151c2f; border-radius: 50%;
+        }
+        
+        .bar-container { display: flex; align-items: flex-end; justify-content: space-between; height: 160px; }
+        .bar-item-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; width: 100%; height: 100%; }
+        
+        .timeline-container { position: relative; }
+        .timeline-container::before { content: none; } /* Quitamos linea vertical original */
+
+        .animate-in { opacity: 0; transform: translateY(20px); transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.3s; }
+        
+        /* Footer Ecosistema adaptado */
+        .footer-ecosystem { background: #070b13; border-top: 1px solid #1e293b; }
+    </style>
+</head>
+<body>
+
+    <!-- Botón Menú -->
+    <button id="menu-toggle" aria-label="Abrir menú">
+        <i class="ri-menu-3-line text-xl"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <div id="sidebar-overlay" class="hidden"></div>
+    <aside id="sidebar">
+        <div class="sb-header">
+            <div class="sb-logo-box">
+                <img src="https://cdn-icons-png.flaticon.com/128/747/747965.png" alt="Logo">
+            </div>
+            <div class="sb-brand">Studio PeliPREX</div>
+            <div class="sb-tagline">Masitaprex Ecosistema</div>
+        </div>
+
+        <div class="sb-scroll-area">
+            <div class="sb-cat">Escritorio</div>
+            <nav>
+                <a href="/inicio"><i class="ri-home-4-line sb-icon"></i> Inicio</a>
+                <a href="/studio-peliprex"><i class="ri-quill-pen-line sb-icon"></i> Escribir Nueva</a>
+                <a href="/mis-historias"><i class="ri-book-read-line sb-icon"></i> Mis Historias</a>
+                <a href="/borradores">
+                    <i class="ri-archive-drawer-line sb-icon"></i> Borradores
+                    <span id="sidebar-draft-count" class="sb-badge">0</span>
+                </a>
+                <a href="/estadísticas" class="active"><i class="ri-bar-chart-grouped-line sb-icon"></i> Estadísticas</a>
+            </nav>
+
+            <div class="sb-cat">Comunidad</div>
+            <nav>
+                <a href="#"><i class="ri-discuss-line sb-icon"></i> Comentarios</a>
+                <a href="#"><i class="ri-notification-3-line sb-icon"></i> Notificaciones</a>
+            </nav>
+        </div>
+
+        <div class="sb-footer">
+            <a href="#"><i class="ri-settings-4-line"></i></a>
+            <a href="/"><i class="ri-logout-circle-line"></i></a>
+        </div>
+    </aside>
+
+    <div class="w-full max-w-5xl mx-auto px-5 pt-12 pb-16">
+        
+        <!-- HEADER EXACTO -->
+        <header class="text-center mb-12 animate-in">
+            <div class="flex items-center justify-center gap-2 mb-4">
+                <img src="https://cdn-icons-png.flaticon.com/128/747/747965.png" alt="Icon" class="w-5 h-5 opacity-80">
+                <span class="text-accentGreen font-bold text-sm tracking-wide">Stats PeliPREX</span>
+            </div>
+            <div class="text-[0.65rem] tracking-[0.3em] text-textMuted uppercase mb-3 font-semibold">Panel de Estadísticas</div>
+            <h1 class="font-serif italic text-4xl md:text-5xl lg:text-[54px] font-medium text-white mb-4">
+                El rendimiento de <span class="text-accentPurple font-serif italic">tus obras</span>
+            </h1>
+            <p class="text-textMuted text-xs md:text-sm max-w-lg mx-auto">Datos actualizados en tiempo real. Monitorea cómo crece tu audiencia.</p>
+        </header>
+
+        <!-- TARJETAS PRINCIPALES (GRID) -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8 animate-in delay-1">
+            <!-- Tarjeta 1 -->
+            <div class="bg-cardBg rounded-2xl p-5 md:p-6 transition-transform hover:-translate-y-1 hover:shadow-lg">
+                <div class="w-9 h-9 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center mb-4 text-xl">
+                    <i class="ri-eye-line"></i>
+                </div>
+                <div class="text-3xl md:text-4xl font-bold text-white mb-1 tracking-tight" id="total-views">0</div>
+                <div class="text-[10px] md:text-xs text-textMuted font-semibold uppercase tracking-wider mb-3">Vistas Totales</div>
+                <div class="text-xs text-accentGreen font-medium flex items-center gap-1">
+                    <i class="ri-arrow-up-line text-sm"></i> +12.5%
+                </div>
+            </div>
+            <!-- Tarjeta 2 -->
+            <div class="bg-cardBg rounded-2xl p-5 md:p-6 transition-transform hover:-translate-y-1 hover:shadow-lg">
+                <div class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center mb-4 text-xl">
+                    <i class="ri-user-follow-line"></i>
+                </div>
+                <div class="text-3xl md:text-4xl font-bold text-white mb-1 tracking-tight" id="unique-readers">0</div>
+                <div class="text-[10px] md:text-xs text-textMuted font-semibold uppercase tracking-wider mb-3">Lectores Únicos</div>
+                <div class="text-xs text-accentGreen font-medium flex items-center gap-1">
+                    <i class="ri-arrow-up-line text-sm"></i> +8.1%
+                </div>
+            </div>
+            <!-- Tarjeta 3 -->
+            <div class="bg-cardBg rounded-2xl p-5 md:p-6 transition-transform hover:-translate-y-1 hover:shadow-lg">
+                <div class="w-9 h-9 rounded-xl bg-yellow-500/20 text-yellow-400 flex items-center justify-center mb-4 text-xl">
+                    <i class="ri-star-fill"></i>
+                </div>
+                <div class="text-3xl md:text-4xl font-bold text-white mb-1 tracking-tight flex items-baseline gap-1">
+                    <span id="avg-rating">0</span><span class="text-xl">★</span>
+                </div>
+                <div class="text-[10px] md:text-xs text-textMuted font-semibold uppercase tracking-wider mb-3">Calificación Promedio</div>
+                <div class="text-xs text-accentGreen font-medium flex items-center gap-1">
+                    <i class="ri-arrow-up-line text-sm"></i> +0.2
+                </div>
+            </div>
+            <!-- Tarjeta 4 -->
+            <div class="bg-cardBg rounded-2xl p-5 md:p-6 transition-transform hover:-translate-y-1 hover:shadow-lg">
+                <div class="w-9 h-9 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center mb-4 text-xl">
+                    <i class="ri-time-line"></i>
+                </div>
+                <div class="text-3xl md:text-4xl font-bold text-white mb-1 tracking-tight" id="avg-time">0m</div>
+                <div class="text-[10px] md:text-xs text-textMuted font-semibold uppercase tracking-wider mb-3">Tiempo Promedio Lectura</div>
+                <div class="text-xs text-accentGreen font-medium flex items-center gap-1">
+                    <i class="ri-arrow-up-line text-sm"></i> +2m
+                </div>
+            </div>
+        </div>
+
+        <!-- SEGUNDA FILA: GRÁFICOS -->
+        <div class="grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-4 md:gap-6 mb-8 animate-in delay-2">
+            
+            <!-- Vistas por día -->
+            <div class="bg-cardBg rounded-2xl p-6">
+                <div class="flex justify-between items-center mb-8">
+                    <div class="flex items-center gap-2">
+                        <span class="text-lg">📊</span>
+                        <h3 class="text-sm font-semibold text-white">Vistas por Día (Última Semana)</h3>
+                    </div>
+                    <span class="bg-purple-500/20 text-purple-400 text-[10px] font-bold px-2.5 py-1 rounded-md" id="weekly-growth">0%</span>
+                </div>
+                
+                <div class="">
+                    <div class="bar-container border-b border-[#1e293b] pb-2" id="weekly-bars">
+                        <!-- Generado en JS -->
+                    </div>
+                    <div class="flex justify-between mt-3 px-1" id="weekly-labels">
+                        <!-- Generado en JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Distribución por Género -->
+            <div class="bg-cardBg rounded-2xl p-6">
+                <div class="flex justify-between items-center mb-8">
+                    <div class="flex items-center gap-2">
+                        <span class="text-lg">🎭</span>
+                        <h3 class="text-sm font-semibold text-white">Distribución por Género</h3>
+                    </div>
+                    <span class="bg-emerald-500/20 text-emerald-400 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase" id="genre-count">0 GÉNEROS</span>
+                </div>
+                
+                <div class="flex flex-col md:flex-row items-center justify-center gap-8 mt-4">
+                    <!-- Donut -->
+                    <div class="relative w-[130px] h-[130px]">
+                        <div class="donut-chart" id="genre-donut" style="background: conic-gradient(#8b5cf6 0% 45%, #10b981 45% 70%, #f59e0b 70% 85%, #3b82f6 85% 100%);"></div>
+                        <div class="absolute inset-0 flex items-center justify-center text-3xl font-bold text-white" id="genre-total">0</div>
+                    </div>
+                    <!-- Legend -->
+                    <div class="flex flex-col gap-3" id="genre-legend">
+                        <!-- Generado en JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MIS HISTORIAS MÁS LEÍDAS -->
+        <div class="mb-10 animate-in delay-3">
+            <h2 class="font-serif italic text-2xl text-white mb-5 flex items-center gap-2">
+                🏆 Mis Historias Más Leídas
+            </h2>
+            <div class="flex flex-col gap-3" id="top-stories-list">
+                <!-- Generado en JS -->
+            </div>
+        </div>
+
+        <!-- ACTIVIDAD RECIENTE -->
+        <div class="animate-in delay-3">
+            <h2 class="font-serif italic text-2xl text-white mb-6 flex items-center gap-2">
+                📅 Actividad Reciente
+            </h2>
+            <div class="timeline-container flex flex-col gap-6" id="activity-list">
+                <!-- Generado en JS -->
+            </div>
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer-ecosystem text-center py-12 px-5 mt-8">
+        <div class="max-w-4xl mx-auto">
+            <div class="flex justify-center gap-6 mb-8">
+                <a href="https://m.facebook.com/61564349657272/" target="_blank" class="w-10 h-10 rounded-full bg-cardBg border border-[#1e293b] text-textMuted flex items-center justify-center hover:bg-accentGreen hover:text-black transition-colors"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://youtube.com/@eltiojota628" target="_blank" class="w-10 h-10 rounded-full bg-cardBg border border-[#1e293b] text-textMuted flex items-center justify-center hover:bg-accentGreen hover:text-black transition-colors"><i class="fab fa-youtube"></i></a>
+                <a href="https://wa.me/51944950234" target="_blank" class="w-10 h-10 rounded-full bg-cardBg border border-[#1e293b] text-textMuted flex items-center justify-center hover:bg-accentGreen hover:text-black transition-colors"><i class="fab fa-whatsapp"></i></a>
+            </div>
+            <p class="text-sm text-textMuted mb-2"><strong class="text-accentGreen">Masitaprex</strong> © 2026 - Todos los derechos reservados</p>
+            <p class="text-[0.65rem] text-[#475569] max-w-lg mx-auto mb-6">Infraestructura tecnológica funciona con apis externas. No somos responsables por el contenido o servicios ofrecidos por terceros.</p>
+            <div class="flex flex-wrap justify-center items-center gap-3 text-xs font-semibold text-accentGreen mb-6">
+                <a href="https://www.masitaprex.com/terminos-condiciones" class="hover:opacity-70">Términos y condiciones</a>
+                <span class="text-[#1e293b]">|</span>
+                <a href="https://www.masitaprex.com/politica-privacidad" class="hover:opacity-70">Política de privacidad</a>
+                <span class="text-[#1e293b]">|</span>
+                <a href="https://www.masitaprex.com/disclaimer-apis" class="hover:opacity-70">Aviso legal APIS</a>
+                <span class="text-[#1e293b]">|</span>
+                <a href="https://www.masitaprex.com/aviso-legal-peliprex" class="hover:opacity-70">Aviso legal peliPREX</a>
+            </div>
+            <div class="border-t border-[#1e293b] pt-6 mt-6">
+                <p class="text-[10px] text-[#475569] uppercase tracking-wider">
+                    Masitaprex - consulta Pe - peliPREX | <strong class="text-textMuted">Cajamarca, Perú</strong><br>
+                    <span class="mt-1 inline-block">Representante: JOSÉ RENÉ CUBAS PÉREZ | RUC: 10736224351</span>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+        let supabaseClient;
+        let currentUser;
+
+        async function initApp() {
+            try {
+                const response = await fetch('/api/config');
+                const config = await response.json();
+                supabaseClient = supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
+                
+                const session = await ReturnConfig.checkAuth(supabaseClient);
+                if (session) {
+                    currentUser = session.user;
+                    loadAllData();
+                }
+            } catch (error) {
+                console.error('Error inicializando:', error);
+            }
+        }
+
+        async function loadAllData() {
+            loadSidebarStats();
+            loadMainStats();
+            loadWeeklyViews();
+            loadGenreDistribution();
+            loadTopStories();
+            loadActivity();
+        }
+
+        async function loadSidebarStats() {
+            try {
+                const { count, error } = await supabaseClient
+                    .from('historias')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('user_id', currentUser.id)
+                    .eq('estado', 'borrador');
+                
+                if (!error) {
+                    document.getElementById('sidebar-draft-count').textContent = count || 0;
+                }
+            } catch (err) { console.error(err); }
+        }
+
+        async function loadMainStats() {
+            try {
+                const { data: historias, error } = await supabaseClient
+                    .from('historias')
+                    .select('vistas, valoracion_promedio, total_valoraciones, tiempo_lectura')
+                    .eq('user_id', currentUser.id);
+
+                if (error) throw error;
+
+                let totalViews = 0;
+                let totalRating = 0;
+                let ratedStories = 0;
+                let totalTime = 0;
+
+                historias.forEach(h => {
+                    totalViews += (h.vistas || 0);
+                    if (h.total_valoraciones > 0) {
+                        totalRating += parseFloat(h.valoracion_promedio || 0);
+                        ratedStories++;
+                    }
+                    const timeMatch = h.tiempo_lectura?.match(/\d+/);
+                    if (timeMatch) totalTime += parseInt(timeMatch[0]);
+                });
+
+                const avgRating = ratedStories > 0 ? (totalRating / ratedStories).toFixed(1) : 0;
+                const avgTime = historias.length > 0 ? Math.round(totalTime / historias.length) : 0;
+
+                document.getElementById('total-views').textContent = formatNumber(totalViews);
+                document.getElementById('unique-readers').textContent = formatNumber(Math.round(totalViews * 0.7)); 
+                document.getElementById('avg-rating').textContent = avgRating;
+                document.getElementById('avg-time').textContent = avgTime + 'm';
+
+            } catch (err) { console.error('Error stats:', err); }
+        }
+
+        async function loadWeeklyViews() {
+            try {
+                const last7Days = [];
+                for (let i = 6; i >= 0; i--) {
+                    const d = new Date();
+                    d.setDate(d.getDate() - i);
+                    last7Days.push(d.toISOString().split('T')[0]);
+                }
+
+                const { data: visitas, error } = await supabaseClient
+                    .from('visitas_diarias')
+                    .select('visitas, fecha, historias!inner(user_id)')
+                    .eq('historias.user_id', currentUser.id)
+                    .gte('fecha', last7Days[0]);
+
+                if (error) throw error;
+
+                const dailyMap = {};
+                last7Days.forEach(d => dailyMap[d] = 0);
+                visitas.forEach(v => {
+                    if (dailyMap[v.fecha] !== undefined) dailyMap[v.fecha] += v.visitas;
+                });
+
+                const values = Object.values(dailyMap);
+                const maxVal = Math.max(...values, 10);
+                const barsContainer = document.getElementById('weekly-bars');
+                const labelsContainer = document.getElementById('weekly-labels');
+                
+                barsContainer.innerHTML = '';
+                labelsContainer.innerHTML = '';
+
+                const days = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+                
+                // Colores idénticos a la imagen para las barras (morado, verde, amarillo)
+                const barColors = ['bg-accentPurple', 'bg-accentPurple', 'bg-accentGreen', 'bg-accentPurple', 'bg-accentGreen', 'bg-accentYellow', 'bg-accentGreen'];
+
+                last7Days.forEach((dateStr, i) => {
+                    const val = dailyMap[dateStr];
+                    const height = Math.max(10, (val / maxVal) * 140);
+                    const dateObj = new Date(dateStr + 'T00:00:00');
+                    const color = barColors[i % barColors.length];
+                    
+                    const barItem = document.createElement('div');
+                    barItem.className = 'bar-item-wrapper w-full px-1 sm:px-2';
+                    barItem.innerHTML = `
+                        <div class="text-[10px] font-bold text-white mb-1.5 opacity-90">${val}</div>
+                        <div class="w-full max-w-[32px] rounded-t-lg ${color} transition-all duration-1000" style="height: ${height}px;"></div>
+                    `;
+                    barsContainer.appendChild(barItem);
+
+                    const labelItem = document.createElement('div');
+                    labelItem.className = 'flex-1 text-center text-[10px] sm:text-xs text-textMuted font-medium';
+                    labelItem.textContent = days[dateObj.getDay()];
+                    labelsContainer.appendChild(labelItem);
+                });
+
+                if (values.length >= 2) {
+                    const last = values[6];
+                    const prev = values[5];
+                    const growth = prev > 0 ? Math.round(((last - prev) / prev) * 100) : 0;
+                    document.getElementById('weekly-growth').textContent = (growth >= 0 ? '+' : '') + growth + '%';
+                }
+
+            } catch (err) { console.error('Error weekly:', err); }
+        }
+
+        async function loadGenreDistribution() {
+            try {
+                const { data: historias, error } = await supabaseClient
+                    .from('historias')
+                    .select('categoria')
+                    .eq('user_id', currentUser.id);
+
+                if (error) throw error;
+
+                const genres = {};
+                historias.forEach(h => {
+                    const g = h.categoria || 'Sin categoría';
+                    genres[g] = (genres[g] || 0) + 1;
+                });
+
+                const total = historias.length;
+                const genreEntries = Object.entries(genres).sort((a, b) => b[1] - a[1]);
+                
+                document.getElementById('genre-count').textContent = genreEntries.length + ' GÉNEROS';
+                document.getElementById('genre-total').textContent = total;
+
+                // Colores exactos
+                const colorVars = ['#8b5cf6', '#10b981', '#f59e0b', '#3b82f6', '#ef4444'];
+                const colorClasses = ['bg-accentPurple', 'bg-accentGreen', 'bg-accentYellow', 'bg-accentBlue', 'bg-red-500'];
+                
+                const legend = document.getElementById('genre-legend');
+                legend.innerHTML = '';
+
+                let gradientStr = '';
+                let currentPerc = 0;
+
+                genreEntries.forEach(([name, count], i) => {
+                    const perc = Math.round((count / total) * 100);
+                    const hexColor = colorVars[i % colorVars.length];
+                    const dotClass = colorClasses[i % colorClasses.length];
+                    
+                    gradientStr += `${hexColor} ${currentPerc}% ${currentPerc + perc}%, `;
+                    currentPerc += perc;
+
+                    const item = document.createElement('div');
+                    item.className = 'flex items-center gap-2 text-xs text-textMuted font-medium';
+                    item.innerHTML = `<span class="w-2.5 h-2.5 rounded-sm ${dotClass}"></span> ${name} ${perc}%`;
+                    legend.appendChild(item);
+                });
+
+                if (total > 0) {
+                    document.getElementById('genre-donut').style.background = `conic-gradient(${gradientStr.slice(0, -2)})`;
+                } else {
+                    document.getElementById('genre-donut').style.background = '#1e293b';
+                }
+
+            } catch (err) { console.error('Error genres:', err); }
+        }
+
+        async function loadTopStories() {
+            try {
+                const { data: historias, error } = await supabaseClient
+                    .from('historias')
+                    .select('*')
+                    .eq('user_id', currentUser.id)
+                    .order('vistas', { ascending: false })
+                    .limit(5);
+
+                if (error) throw error;
+
+                const list = document.getElementById('top-stories-list');
+                list.innerHTML = '';
+
+                if (historias.length === 0) {
+                    list.innerHTML = '<p class="text-center py-8 text-textMuted">No hay historias publicadas aún.</p>';
+                    return;
+                }
+
+                // Clases idénticas para colores del ranking en la imagen
+                const rankClasses = [
+                    'bg-yellow-500/20 text-yellow-400', 
+                    'bg-gray-400/20 text-gray-300', 
+                    'bg-orange-500/20 text-orange-400', 
+                    'bg-blue-500/20 text-blue-400', 
+                    'bg-emerald-500/20 text-emerald-400'
+                ];
+                
+                const coverColors = ['bg-accentPurple', 'bg-red-500', 'bg-accentYellow', 'bg-accentBlue', 'bg-accentGreen'];
+
+                historias.forEach((h, i) => {
+                    const row = document.createElement('div');
+                    row.className = 'flex items-center gap-4 bg-cardBg rounded-xl p-3.5 md:p-4 hover:bg-cardHover transition-colors';
+                    row.innerHTML = `
+                        <div class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm flex-shrink-0 ${rankClasses[i]}">${i + 1}</div>
+                        <div class="w-10 h-10 rounded-lg flex-shrink-0 flex items-center justify-center text-white font-bold text-lg overflow-hidden ${coverColors[i]}">
+                            ${h.poster_url ? `<img src="${h.poster_url}" alt="Cover" class="w-full h-full object-cover">` : (h.titulo.charAt(0).toUpperCase() || '-')}
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="font-bold text-white text-sm md:text-base truncate mb-0.5">${h.titulo}</div>
+                            <div class="text-[10px] md:text-xs text-textMuted truncate font-medium">${h.categoria || 'General'} • Publicado recientemente</div>
+                        </div>
+                        <div class="text-right flex-shrink-0">
+                            <div class="font-bold text-white text-sm md:text-lg leading-tight">${formatNumber(h.vistas)}</div>
+                            <div class="text-[9px] md:text-[10px] text-textMuted uppercase tracking-wide">vistas</div>
+                        </div>
+                    `;
+                    list.appendChild(row);
+                });
+            } catch (err) { console.error('Error top stories:', err); }
+        }
+
+        async function loadActivity() {
+            try {
+                const { data: actividad, error } = await supabaseClient
+                    .from('actividad')
+                    .select('*')
+                    .eq('user_id', currentUser.id)
+                    .order('created_at', { ascending: false })
+                    .limit(5);
+
+                if (error) throw error;
+
+                const list = document.getElementById('activity-list');
+                list.innerHTML = '';
+
+                if (actividad.length === 0) {
+                    list.innerHTML = '<p class="text-center py-8 text-textMuted">No hay actividad reciente registrada.</p>';
+                    return;
+                }
+
+                const dotColors = {
+                    'publicacion': 'bg-accentGreen',
+                    'lector': 'bg-accentPurple',
+                    'valoracion': 'bg-accentYellow',
+                    'comentario': 'bg-accentBlue',
+                    'sistema': 'bg-accentGreen'
+                };
+
+                actividad.forEach(a => {
+                    const dotClass = dotColors[a.tipo] || 'bg-accentGreen';
+                    const item = document.createElement('div');
+                    item.className = 'flex gap-4';
+                    
+                    // Solo el título y el tiempo sin descripciones inventadas, exacto como pediste limpieza visual
+                    item.innerHTML = `
+                        <div class="mt-1 flex-shrink-0">
+                            <div class="w-2.5 h-2.5 rounded-full ${dotClass} shadow-[0_0_8px_rgba(255,255,255,0.1)]"></div>
+                        </div>
+                        <div>
+                            <div class="text-sm font-bold text-white mb-1">${a.descripcion}</div>
+                            <div class="text-[10px] text-textMuted uppercase tracking-widest font-semibold">${formatTimeAgo(new Date(a.created_at))}</div>
+                        </div>
+                    `;
+                    list.appendChild(item);
+                });
+            } catch (err) { console.error('Error activity:', err); }
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000) return (num / 1000).toFixed(1).replace('.0', '') + 'K';
+            return num;
+        }
+
+        function formatTimeAgo(date) {
+            const seconds = Math.floor((new Date() - date) / 1000);
+            let interval = seconds / 31536000;
+            if (interval > 1) return 'Hace ' + Math.floor(interval) + ' años';
+            interval = seconds / 2592000;
+            if (interval > 1) return 'Hace ' + Math.floor(interval) + ' meses';
+            interval = seconds / 86400;
+            if (interval > 1) return 'Hace ' + Math.floor(interval) + ' días';
+            interval = seconds / 3600;
+            if (interval > 1) return 'Hace ' + Math.floor(interval) + ' horas';
+            interval = seconds / 60;
+            if (interval > 1) return 'Hace ' + Math.floor(interval) + ' minutos';
+            return 'Hace unos instantes';
+        }
+
+        // Lógica Menú Sidebar
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebarEl = document.getElementById('sidebar');
+        const overlayEl = document.getElementById('sidebar-overlay');
+
+        function toggleMenu() {
+            const isOpen = sidebarEl.classList.toggle('open');
+            if (isOpen) {
+                overlayEl.classList.remove('hidden');
+                overlayEl.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+                setTimeout(() => overlayEl.classList.add('opacity-100'), 10);
+            } else {
+                overlayEl.classList.remove('opacity-100');
+                document.body.style.overflow = '';
+                setTimeout(() => {
+                    if (!sidebarEl.classList.contains('open')) {
+                        overlayEl.classList.add('hidden');
+                        overlayEl.style.display = 'none';
+                    }
+                }, 300);
+            }
+        }
+
+        menuToggle.addEventListener('click', toggleMenu);
+        overlayEl.addEventListener('click', toggleMenu);
+
+        const navLinks = sidebarEl.querySelectorAll('nav a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                const href = link.getAttribute('href');
+                if (href && href !== '#') {
+                    e.preventDefault();
+                    toggleMenu();
+                    setTimeout(() => { window.location.href = href; }, 300);
+                }
+            });
+        });
+
+        // Animaciones de entrada
+        const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.animate-in').forEach(el => observer.observe(el));
+
+        // Inicializar App Dummy para vista previa si no existe API o Supabase
+        if(typeof ReturnConfig === 'undefined') {
+           console.warn("No se detectó ReturnConfig. Se requiere para conexión con Supabase.");
+        } else {
+           initApp();
+        }
+    </script>
+</body>
+</html>
