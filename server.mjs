@@ -4,6 +4,7 @@ import fastifyFormbody from '@fastify/formbody';
 import { createClient } from '@supabase/supabase-js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import ws from 'ws'; // <--- CORRECCIÓN: Importación necesaria para Node < 22
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const fastify = Fastify({ logger: true });
@@ -16,10 +17,14 @@ if (!supabaseUrl || !supabaseKey) {
   console.error('Faltan variables de entorno de Supabase');
 }
 
+// CORRECCIÓN: Se añade el transport 'ws' para evitar el crash en Node 20
 const supabase = createClient(supabaseUrl, supabaseKey, {
   auth: {
     autoRefreshToken: true,
     persistSession: false
+  },
+  realtime: {
+    transport: ws,
   }
 });
 
@@ -91,8 +96,6 @@ fastify.get('/api/config', async (request, reply) => {
 fastify.get('/health', async () => ({ status: 'ok', timestamp: new Date().toISOString() }));
 
 // ── Manejo de errores 404 para la API ─────────────────────────────────────────
-// Esto evita que las rutas no encontradas devuelvan el error 404 genérico de Fastify
-// y ayuda a diagnosticar si el frontend está llamando a endpoints inexistentes.
 fastify.setNotFoundHandler((request, reply) => {
   if (request.raw.url.startsWith('/api/') || request.raw.url === '/guardar') {
     reply.code(404).send({
