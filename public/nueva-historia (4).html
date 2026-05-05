@@ -1,0 +1,1563 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <title>Studio PeliPREX - Creador de Historias | Masitaprex</title>
+    <meta name="description" content="Studio PeliPREX - Gestor de Contenido Original. Crea y publica tus historias, novelas y cuentos en PeliPREX HD.">
+    <meta name="keywords" content="peliprex, studio, crear historias, publicar, masitaprex, escritora, novelas, cuentos" />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:title" content="Studio PeliPREX - Creador de Historias | Masitaprex" />
+    <meta property="og:description" content="Crea y publica tus historias originales en PeliPREX HD. Gestor de Contenido Original v2.0." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://cdn-icons-png.flaticon.com/128/747/747965.png" />
+    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/128/747/747965.png">
+    <link rel="shortcut icon" type="image/png" href="https://cdn-icons-png.flaticon.com/128/747/747965.png">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/128/747/747965.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700;800&family=DM+Mono:wght@400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="returnConfig.js"></script>
+
+    <style>
+        :root {
+            --navy-deep: #0A1628;
+            --navy-surface: #0F1F3D;
+            --navy-card: #15294A;
+            --navy-border: #1E3A5F;
+            --emerald: #00C853;
+            --emerald-light: #69F0AE;
+            --emerald-dark: #00A844;
+            --emerald-glow: rgba(0, 200, 83, 0.2);
+            --emerald-glow-strong: rgba(0, 200, 83, 0.35);
+            --gold: #FFD700;
+            --gold-light: #FFED4A;
+            --gold-dim: #B8960F;
+            --gold-glow: rgba(255, 215, 0, 0.15);
+            --ruby: #E53935;
+            --ruby-light: #FF5252;
+            --ruby-glow: rgba(229, 57, 53, 0.2);
+            --white: #F8FAFC;
+            --text-primary: #E2E8F0;
+            --text-muted: #94A3B8;
+            --text-subtle: #64748B;
+            --border-subtle: rgba(255,255,255,0.06);
+            --border-active: rgba(0,200,83,0.25);
+            --shadow-card: 0 8px 32px rgba(0,0,0,0.4);
+            --shadow-emerald: 0 4px 20px rgba(0,200,83,0.2);
+            --radius: 20px;
+            --radius-sm: 10px;
+            --font-family: 'Outfit', 'Inter', sans-serif;
+            --font-display: 'Playfair Display', serif;
+            --font-serif: 'Cormorant Garamond', serif;
+            --font-mono: 'DM Mono', monospace;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { font-size: 16px; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
+
+        body {
+            font-family: var(--font-family);
+            background: var(--navy-deep);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Grain texture */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none; z-index: -1; opacity: 0.6;
+        }
+
+        /* Ambient orbs */
+        .ambient-1 {
+            position: fixed; top: -20%; left: -10%;
+            width: 60vw; height: 60vw; border-radius: 50%;
+            background: radial-gradient(circle, rgba(0,200,83,0.04) 0%, transparent 65%);
+            pointer-events: none; z-index: -1;
+            animation: floatAmbient 10s ease-in-out infinite;
+        }
+        .ambient-2 {
+            position: fixed; bottom: -20%; right: -10%;
+            width: 50vw; height: 50vw; border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,215,0,0.05) 0%, transparent 65%);
+            pointer-events: none; z-index: -1;
+            animation: floatAmbient 12s ease-in-out infinite reverse;
+        }
+        .ambient-3 {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 80vw; height: 80vh;
+            background: radial-gradient(ellipse, rgba(0,200,83,0.02) 0%, transparent 70%);
+            pointer-events: none; z-index: -1;
+        }
+        @keyframes floatAmbient {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(20px, -20px) scale(1.05); }
+            66% { transform: translate(-15px, 15px) scale(0.95); }
+        }
+
+        /* ═══ SIDEBAR ═══ */
+        #sidebar-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 50; opacity: 0;
+            transition: opacity 0.3s ease;
+            display: none;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+        }
+        #sidebar-overlay.opacity-100 { opacity: 1; }
+        #sidebar-overlay.hidden { display: none; }
+        #sidebar {
+            position: fixed; top: 0; left: 0;
+            height: 100%; width: 290px;
+            background: linear-gradient(180deg, #0A1628 0%, #0F1F3D 100%) !important;
+            border-right: 1px solid var(--border-active);
+            z-index: 60; overflow: hidden;
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(-100%);
+            display: flex; flex-direction: column;
+            box-shadow: 8px 0 40px rgba(0,0,0,0.5);
+        }
+        #sidebar.open { transform: translateX(0); }
+        .sb-header {
+            padding: 32px 20px 20px;
+            background: linear-gradient(160deg, #0A1628 0%, #0F1F3D 100%);
+            border-bottom: 1px solid var(--border-active);
+            text-align: center; position: relative; overflow: hidden; flex-shrink: 0;
+        }
+        .sb-header::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--emerald), var(--gold), transparent);
+            animation: shimmerHeader 3s infinite;
+        }
+        @keyframes shimmerHeader { 0%,100%{transform:translateX(-100%);} 50%{transform:translateX(100%);} }
+        .sb-logo-box {
+            width: 68px; height: 68px; margin: 0 auto 12px;
+            border-radius: 18px; overflow: hidden;
+            border: 2px solid var(--border-active);
+            box-shadow: 0 0 25px var(--emerald-glow);
+            transition: transform 0.3s ease; background: rgba(0,200,83,0.05);
+        }
+        .sb-logo-box:hover { transform: scale(1.1) rotate(5deg); }
+        .sb-logo-box img { width: 100%; height: 100%; object-fit: cover; }
+        .sb-brand {
+            font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.3rem;
+            color: var(--gold) !important; letter-spacing: 0.2em; text-transform: uppercase;
+            text-shadow: 0 0 20px rgba(255,215,0,0.4);
+        }
+        .sb-tagline { font-size: 0.7rem; font-weight: 500; color: var(--text-muted); letter-spacing: 0.15em; margin-top: 6px; text-transform: uppercase; }
+        .sb-scroll-area { flex: 1; overflow-y: auto; padding: 8px 0; }
+        .sb-scroll-area::-webkit-scrollbar { width: 3px; }
+        .sb-scroll-area::-webkit-scrollbar-track { background: transparent; }
+        .sb-scroll-area::-webkit-scrollbar-thumb { background: var(--emerald-dark); border-radius: 3px; }
+        .sb-cat { padding: 14px 24px 8px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.2em; color: var(--emerald); }
+        #sidebar nav a {
+            display: flex; align-items: center; gap: 12px; padding: 12px 24px;
+            color: var(--text-primary) !important; transition: all 0.25s ease;
+            text-decoration: none; font-size: 0.9rem; font-weight: 500; position: relative; overflow: hidden;
+        }
+        #sidebar nav a::before {
+            content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+            width: 3px; background: var(--emerald); transform: scaleY(0); transition: transform 0.25s ease;
+        }
+        #sidebar nav a:hover { background: rgba(0,200,83,0.08); color: var(--emerald-light) !important; transform: translateX(4px); }
+        #sidebar nav a:hover::before { transform: scaleY(1); }
+        #sidebar nav a.active { background: linear-gradient(90deg, rgba(0,200,83,0.12) 0%, transparent 100%); color: var(--emerald) !important; font-weight: 700; }
+        #sidebar nav a.active::before { transform: scaleY(1); }
+        .sb-icon { width: 20px; height: 20px; flex-shrink: 0; font-size: 1.1rem; text-align: center; color: var(--text-muted); transition: color 0.25s ease; }
+        #sidebar nav a:hover .sb-icon, #sidebar nav a.active .sb-icon { color: var(--emerald); }
+        .sb-badge {
+            font-size: 0.65rem; padding: 2px 8px; border-radius: 12px;
+            background: linear-gradient(135deg, var(--emerald-dark), var(--emerald));
+            color: #000; font-weight: 800; letter-spacing: 0.05em;
+            animation: pulse 2s infinite; margin-left: auto;
+        }
+        @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.7;} }
+        .sb-footer { padding: 16px 20px; border-top: 1px solid var(--border-subtle); display: flex; gap: 16px; justify-content: center; background: rgba(0,0,0,0.2); flex-shrink: 0; }
+        .sb-footer a { color: var(--text-muted) !important; font-size: 1.3rem; transition: all 0.25s ease; }
+        .sb-footer a:hover { color: var(--emerald) !important; transform: translateY(-3px); }
+
+        /* Hamburger button */
+        #menu-toggle {
+            position: fixed; top: 16px; left: 16px; z-index: 100;
+            background: rgba(15,31,61,0.9);
+            border: 1px solid var(--border-active);
+            color: var(--emerald);
+            width: 44px; height: 44px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            backdrop-filter: blur(8px);
+        }
+        #menu-toggle:hover { transform: scale(1.05); background: var(--navy-surface); box-shadow: 0 0 15px var(--emerald-glow); }
+
+        /* ═══ HERO HEADER ═══ */
+        .page-hero {
+            width: 100%;
+            padding: 90px 24px 0;
+            text-align: center;
+            position: relative;
+        }
+        .hero-eyebrow {
+            display: inline-flex; align-items: center; gap: 8px;
+            font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.2em;
+            text-transform: uppercase; color: var(--emerald);
+            background: rgba(0,200,83,0.08); border: 1px solid rgba(0,200,83,0.2);
+            padding: 6px 16px; border-radius: 100px; margin-bottom: 20px;
+        }
+        .hero-eyebrow::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--emerald); animation: pulseGlow 2s infinite; }
+        @keyframes pulseGlow { 0%,100%{box-shadow:0 0 0 0 var(--emerald-glow);} 50%{box-shadow:0 0 0 6px transparent;} }
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(2.4rem, 6vw, 4rem);
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            color: var(--white);
+            margin-bottom: 12px;
+        }
+        .hero-title em { font-style: italic; color: var(--emerald); }
+        .hero-sub {
+            font-size: 1rem; color: var(--text-muted); max-width: 480px; margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+
+        /* ═══ STEPS HEADER — THE STAR ═══ */
+        .steps-header {
+            width: 100%; max-width: 700px;
+            margin: 0 auto 56px;
+            padding: 0 24px;
+            position: relative;
+        }
+        /* Horizontal connector line */
+        .steps-track {
+            position: absolute;
+            top: 36px; /* center of circle */
+            left: calc(24px + 60px); /* from padding + circle-half */
+            right: calc(24px + 60px);
+            height: 2px;
+            background: linear-gradient(90deg, var(--navy-border) 0%, var(--navy-border) 100%);
+            z-index: 0;
+        }
+        .steps-track-fill {
+            position: absolute;
+            top: 0; left: 0; height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--emerald), var(--emerald-light));
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 2px;
+        }
+        .steps-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            position: relative;
+            z-index: 1;
+        }
+        .step-node {
+            display: flex; flex-direction: column; align-items: center; gap: 12px;
+            flex: 0 0 auto;
+            cursor: default;
+        }
+        .step-node:first-child { align-items: flex-start; }
+        .step-node:last-child { align-items: flex-end; }
+        .step-node:nth-child(2) { align-items: center; }
+
+        .step-ring {
+            width: 72px; height: 72px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        /* Outer glow ring */
+        .step-ring::before {
+            content: '';
+            position: absolute; inset: -4px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            transition: all 0.4s ease;
+        }
+        /* Default state */
+        .step-node .step-ring {
+            background: rgba(255,255,255,0.03);
+            border: 2px solid var(--navy-border);
+        }
+        .step-number {
+            font-family: var(--font-display);
+            font-size: 1.6rem; font-weight: 700;
+            color: var(--text-subtle);
+            line-height: 1;
+            transition: all 0.4s ease;
+        }
+        .step-check { display: none; font-size: 1.4rem; color: var(--navy-deep); }
+
+        /* Active state */
+        .step-node.active .step-ring {
+            background: linear-gradient(135deg, rgba(0,200,83,0.15), rgba(0,200,83,0.05));
+            border-color: var(--emerald);
+            box-shadow: 0 0 0 8px rgba(0,200,83,0.08), 0 8px 24px rgba(0,200,83,0.25);
+        }
+        .step-node.active .step-ring::before {
+            border-color: rgba(0,200,83,0.3);
+            animation: spinRing 4s linear infinite;
+            border-top-color: var(--emerald);
+        }
+        @keyframes spinRing { to { transform: rotate(360deg); } }
+        .step-node.active .step-number { color: var(--emerald); transform: scale(1.1); }
+
+        /* Completed state */
+        .step-node.completed .step-ring {
+            background: linear-gradient(135deg, var(--emerald), var(--emerald-dark));
+            border-color: var(--emerald);
+            box-shadow: 0 6px 20px rgba(0,200,83,0.4);
+        }
+        .step-node.completed .step-number { display: none; }
+        .step-node.completed .step-check { display: block; }
+
+        /* Step meta */
+        .step-meta { text-align: center; }
+        .step-node:first-child .step-meta { text-align: left; }
+        .step-node:last-child .step-meta { text-align: right; }
+        .step-label-num {
+            font-family: var(--font-mono); font-size: 0.65rem;
+            letter-spacing: 0.15em; text-transform: uppercase;
+            color: var(--text-subtle); margin-bottom: 2px;
+        }
+        .step-label-name {
+            font-size: 0.9rem; font-weight: 700;
+            color: var(--text-muted);
+            transition: color 0.3s ease;
+        }
+        .step-node.active .step-label-name { color: var(--emerald); }
+        .step-node.completed .step-label-name { color: var(--emerald-light); }
+        .step-label-desc {
+            font-size: 0.75rem; color: var(--text-subtle);
+            margin-top: 2px; line-height: 1.4;
+            display: none;
+        }
+        @media (min-width: 600px) { .step-label-desc { display: block; } }
+
+        /* ═══ MAIN CONTENT AREA ═══ */
+        .main-container {
+            width: 100%; max-width: 720px;
+            padding: 0 20px 60px;
+            z-index: 1;
+        }
+
+        /* ═══ FORM SECTIONS (no containers) ═══ */
+        .form-section { display: none; animation: sectionIn 0.45s cubic-bezier(0.4,0,0.2,1); }
+        .form-section.active { display: block; }
+        @keyframes sectionIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Section divider title */
+        .section-title {
+            font-family: var(--font-display);
+            font-size: 1.5rem; font-weight: 600;
+            font-style: italic;
+            color: var(--white);
+            display: flex; align-items: center; gap: 14px;
+            margin-bottom: 36px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .section-title-icon {
+            width: 44px; height: 44px;
+            border-radius: 12px;
+            background: rgba(0,200,83,0.1);
+            border: 1px solid rgba(0,200,83,0.2);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--emerald); font-size: 1.1rem; flex-shrink: 0;
+        }
+        .section-subtitle { font-size: 0.85rem; font-weight: 400; font-style: normal; color: var(--text-muted); margin-left: auto; }
+
+        /* ═══ NATIVE FORM FIELDS ═══ */
+        .field-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0 32px;
+        }
+        .field-row.single { grid-template-columns: 1fr; }
+
+        .field-group {
+            position: relative;
+            margin-bottom: 36px;
+        }
+        .field-group.full { grid-column: span 2; }
+
+        /* Floating label style */
+        .field-label {
+            display: block;
+            font-size: 0.78rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.12em;
+            color: var(--text-subtle);
+            margin-bottom: 10px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .field-label i { color: var(--emerald); font-size: 0.85rem; }
+
+        /* Tooltip */
+        .field-tooltip {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 16px; height: 16px; border-radius: 50%;
+            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-subtle); font-size: 0.7rem; cursor: help;
+            position: relative; margin-left: 2px;
+        }
+        .field-tooltip:hover .tooltip-bubble { opacity: 1; pointer-events: auto; transform: translateY(0); }
+        .tooltip-bubble {
+            position: absolute; bottom: calc(100% + 8px); left: 50%;
+            transform: translateX(-50%) translateY(4px);
+            background: var(--navy-card);
+            border: 1px solid var(--navy-border);
+            border-radius: 10px; padding: 10px 14px;
+            font-size: 0.75rem; font-weight: 400; text-transform: none; letter-spacing: normal;
+            color: var(--text-muted); white-space: nowrap; max-width: 240px; white-space: normal;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+            opacity: 0; pointer-events: none;
+            transition: all 0.2s ease; z-index: 200;
+        }
+        .tooltip-bubble::after {
+            content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+            border: 6px solid transparent; border-top-color: var(--navy-border);
+        }
+
+        /* Field hint */
+        .field-hint {
+            font-size: 0.75rem; color: var(--text-subtle);
+            margin-top: 8px; display: flex; align-items: center; gap: 5px;
+            line-height: 1.4;
+        }
+        .field-hint i { color: var(--emerald); flex-shrink: 0; }
+
+        /* Input / Select / Textarea — native feel */
+        .field-input,
+        .field-select,
+        .field-textarea {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid var(--navy-border);
+            border-radius: 0;
+            padding: 14px 4px;
+            color: var(--white);
+            font-family: var(--font-family);
+            font-size: 1.05rem;
+            font-weight: 500;
+            outline: none;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+            -webkit-appearance: none;
+            appearance: none;
+            caret-color: var(--emerald);
+        }
+        .field-input::placeholder { color: var(--text-subtle); font-weight: 400; font-size: 0.95rem; }
+        .field-input:focus,
+        .field-select:focus,
+        .field-textarea:focus {
+            border-bottom-color: var(--emerald);
+            box-shadow: 0 2px 0 0 var(--emerald-glow);
+        }
+        .field-input:focus::placeholder { opacity: 0.5; }
+
+        /* Select arrow */
+        .select-wrapper { position: relative; }
+        .select-wrapper::after {
+            content: '\f107';
+            font-family: 'Font Awesome 6 Free'; font-weight: 900;
+            position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+            color: var(--emerald); pointer-events: none; font-size: 0.9rem;
+        }
+        .field-select { padding-right: 32px; cursor: pointer; background: transparent; }
+        .field-select option { background: var(--navy-card); color: var(--white); }
+
+        /* Textarea */
+        .field-textarea {
+            height: 110px; resize: none;
+            border: 1px solid var(--navy-border);
+            border-radius: 14px;
+            padding: 16px 18px;
+            line-height: 1.7;
+            font-size: 0.98rem;
+        }
+        .field-textarea:focus {
+            border-color: var(--emerald);
+            box-shadow: 0 0 0 4px rgba(0,200,83,0.1);
+        }
+
+        /* Focus line animation */
+        .field-underline {
+            position: relative;
+        }
+        .field-underline::after {
+            content: '';
+            position: absolute; bottom: 0; left: 50%;
+            width: 0; height: 2px;
+            background: var(--emerald);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        .field-underline:focus-within::after { width: 100%; }
+
+        /* Error states */
+        .field-group.has-error .field-input,
+        .field-group.has-error .field-select,
+        .field-group.has-error .field-textarea { border-color: var(--ruby); }
+        .field-group.has-error .field-label { color: var(--ruby-light); }
+        .field-error {
+            font-size: 0.78rem; color: var(--ruby-light);
+            display: none; align-items: center; gap: 6px;
+            margin-top: 8px;
+        }
+        .field-group.has-error .field-error { display: flex; }
+
+        /* Poster preview */
+        .poster-frame {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 140px 1fr;
+            gap: 24px;
+            align-items: start;
+            padding: 20px 0;
+        }
+        .poster-thumb {
+            aspect-ratio: 2/3;
+            border-radius: 14px;
+            background: rgba(255,255,255,0.03);
+            border: 2px dashed var(--navy-border);
+            overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-subtle); font-size: 0.8rem; text-align: center;
+            transition: all 0.3s ease;
+        }
+        .poster-thumb.loaded { border-style: solid; border-color: var(--emerald); box-shadow: 0 4px 20px rgba(0,200,83,0.15); }
+        .poster-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .poster-info { padding-top: 4px; }
+        .poster-info h4 { font-size: 0.85rem; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; }
+        .poster-info p { font-size: 0.78rem; color: var(--text-subtle); line-height: 1.5; }
+        .poster-tips {
+            margin-top: 12px; display: flex; flex-direction: column; gap: 6px;
+        }
+        .poster-tip {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 0.75rem; color: var(--text-subtle);
+        }
+        .poster-tip i { color: var(--emerald); font-size: 0.7rem; }
+
+        /* ═══ QUILL EDITOR ═══ */
+        .editor-shell {
+            border: 1px solid var(--navy-border);
+            border-radius: 16px; overflow: hidden;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+            margin-top: 4px;
+        }
+        .editor-shell:focus-within {
+            border-color: var(--emerald);
+            box-shadow: 0 0 0 4px rgba(0,200,83,0.1);
+        }
+        .ql-toolbar.ql-snow {
+            background: rgba(255,255,255,0.03) !important;
+            border: none !important;
+            border-bottom: 1px solid var(--navy-border) !important;
+            padding: 10px 16px !important;
+        }
+        .ql-container.ql-snow {
+            border: none !important;
+            background: rgba(255,255,255,0.02);
+        }
+        .ql-editor {
+            min-height: 320px;
+            font-family: var(--font-serif) !important;
+            font-size: 1.15rem !important;
+            line-height: 1.8 !important;
+            color: var(--text-primary) !important;
+            padding: 24px 28px !important;
+        }
+        .ql-editor.ql-blank::before {
+            color: var(--text-subtle) !important;
+            font-style: italic !important;
+            font-family: var(--font-serif) !important;
+            font-size: 1.15rem !important;
+        }
+        .ql-snow .ql-stroke { stroke: var(--text-muted) !important; }
+        .ql-snow .ql-fill { fill: var(--text-muted) !important; }
+        .ql-snow .ql-picker { color: var(--text-muted) !important; }
+        .ql-snow .ql-picker-options { background: var(--navy-card) !important; border-color: var(--navy-border) !important; }
+        .ql-toolbar button:hover .ql-stroke { stroke: var(--emerald) !important; }
+        .ql-toolbar button.ql-active .ql-stroke { stroke: var(--emerald) !important; }
+        .ql-toolbar button:hover .ql-fill { fill: var(--emerald) !important; }
+        .ql-toolbar button.ql-active .ql-fill { fill: var(--emerald) !important; }
+
+        /* Word count */
+        .editor-footer {
+            display: flex; justify-content: flex-end; align-items: center; gap: 16px;
+            padding: 10px 16px;
+            background: rgba(255,255,255,0.02);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.75rem; color: var(--text-subtle);
+            font-family: var(--font-mono);
+        }
+        .word-count { color: var(--emerald); font-weight: 600; }
+
+        /* Tags input style */
+        .tags-display {
+            display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;
+            min-height: 32px;
+        }
+        .tag-pill {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(0,200,83,0.1); border: 1px solid rgba(0,200,83,0.2);
+            color: var(--emerald-light); font-size: 0.8rem; font-weight: 600;
+            padding: 4px 12px; border-radius: 100px;
+        }
+        .tag-pill i { font-size: 0.65rem; cursor: pointer; opacity: 0.7; }
+
+        /* ═══ ACTION BUTTONS ═══ */
+        .form-actions {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-top: 48px; padding-top: 32px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            gap: 16px; flex-wrap: wrap;
+        }
+        .actions-right { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+
+        .btn {
+            display: inline-flex; align-items: center; gap: 10px;
+            padding: 15px 28px; border-radius: 14px; font-weight: 700;
+            font-size: 0.9rem; cursor: pointer; transition: all 0.25s ease;
+            border: none; font-family: var(--font-family);
+            letter-spacing: 0.02em; white-space: nowrap;
+        }
+        .btn-prev {
+            background: rgba(255,255,255,0.04);
+            color: var(--text-muted);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .btn-prev:hover { background: rgba(255,255,255,0.08); color: var(--white); }
+
+        .btn-next {
+            background: linear-gradient(135deg, var(--emerald), var(--emerald-dark));
+            color: #000; font-weight: 800;
+            box-shadow: 0 4px 16px rgba(0,200,83,0.3);
+        }
+        .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,200,83,0.4); background: linear-gradient(135deg, var(--emerald-light), var(--emerald)); }
+
+        .btn-draft {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .btn-draft:hover { border-color: rgba(255,255,255,0.25); color: var(--white); }
+
+        .btn-publish {
+            background: linear-gradient(135deg, var(--gold), #E6A800);
+            color: var(--navy-deep); font-weight: 800;
+            box-shadow: 0 4px 16px rgba(255,215,0,0.25);
+        }
+        .btn-publish:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,215,0,0.35); }
+
+        /* ═══ CHARACTER / WORD COUNTERS ═══ */
+        .char-counter {
+            font-family: var(--font-mono); font-size: 0.7rem;
+            color: var(--text-subtle); text-align: right; margin-top: 6px;
+        }
+        .char-counter span { color: var(--emerald); }
+
+        /* ═══ SECTION DIVIDERS ═══ */
+        .field-divider {
+            height: 1px; background: rgba(255,255,255,0.04);
+            margin: 8px 0 32px;
+        }
+
+        /* ═══ WRITER CARD (decorative, section 1) ═══ */
+        .writer-deco {
+            display: flex; align-items: center; gap: 20px;
+            padding: 20px 0 32px;
+            margin-bottom: 8px;
+        }
+        .writer-avatar-ring {
+            width: 56px; height: 56px; border-radius: 50%;
+            background: rgba(0,200,83,0.08);
+            border: 2px solid rgba(0,200,83,0.2);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem; flex-shrink: 0; color: var(--emerald);
+        }
+        .writer-deco-text h3 { font-family: var(--font-display); font-size: 1.05rem; font-style: italic; color: var(--white); margin-bottom: 4px; }
+        .writer-deco-text p { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; }
+
+        /* ═══ MODAL ═══ */
+        .modal-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            display: none; align-items: center; justify-content: center; padding: 20px;
+        }
+        .modal-content {
+            background: linear-gradient(160deg, var(--navy-card), var(--navy-surface));
+            border: 1px solid var(--navy-border);
+            border-radius: 28px; padding: 48px 40px; max-width: 440px; width: 100%;
+            text-align: center; box-shadow: 0 30px 60px rgba(0,0,0,0.7);
+            animation: modalIn 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative; overflow: hidden;
+        }
+        .modal-content::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--emerald), var(--gold), transparent);
+        }
+        @keyframes modalIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .modal-icon {
+            width: 88px; height: 88px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(0,200,83,0.2), rgba(0,200,83,0.05));
+            border: 2px solid rgba(0,200,83,0.3);
+            color: var(--emerald);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2.5rem; margin: 0 auto 28px;
+            box-shadow: 0 0 40px rgba(0,200,83,0.2);
+        }
+        .modal-title { font-family: var(--font-display); font-size: 2rem; font-weight: 700; font-style: italic; margin-bottom: 12px; }
+        .modal-desc { color: var(--text-muted); margin-bottom: 36px; line-height: 1.7; font-size: 0.95rem; }
+        .modal-btn {
+            width: 100%; padding: 18px; border-radius: 14px;
+            background: linear-gradient(135deg, var(--emerald), var(--emerald-dark));
+            color: #000; font-weight: 800; font-size: 0.95rem;
+            text-transform: uppercase; letter-spacing: 0.08em;
+            cursor: pointer; border: none; transition: all 0.25s;
+            font-family: var(--font-family);
+            box-shadow: 0 4px 16px rgba(0,200,83,0.3);
+        }
+        .modal-btn:hover { background: linear-gradient(135deg, var(--emerald-light), var(--emerald)); transform: scale(1.02); }
+
+        /* ═══ FOOTER ═══ */
+        .footer-ecosystem {
+            width: 100%; padding: 60px 20px;
+            background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.4));
+            border-top: 1px solid var(--border-subtle);
+            text-align: center; color: var(--text-muted); font-size: 0.85rem;
+        }
+        .footer-ecosystem h3 { color: var(--text-primary); margin-bottom: 24px; font-family: var(--font-display); font-weight: 700; font-style: italic; font-size: 1.3rem; }
+        .footer-social-icons { display: flex; justify-content: center; gap: 16px; margin-bottom: 32px; }
+        .footer-social-icons a {
+            width: 44px; height: 44px; border-radius: 50%;
+            background: var(--navy-surface); border: 1px solid var(--navy-border);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-muted); font-size: 1.2rem; transition: all 0.3s ease;
+        }
+        .footer-social-icons a:hover { background: var(--emerald); color: var(--navy-deep); transform: translateY(-5px); box-shadow: 0 5px 15px var(--emerald-glow); }
+        .footer-version { margin-top: 16px; font-family: var(--font-mono); font-size: 0.7rem; color: var(--text-subtle); }
+
+        /* ═══ RESPONSIVE ═══ */
+        @media (max-width: 620px) {
+            .steps-header { padding: 0 12px; }
+            .steps-track { left: calc(12px + 44px); right: calc(12px + 44px); top: 28px; }
+            .step-ring { width: 56px; height: 56px; }
+            .step-number { font-size: 1.3rem; }
+            .step-check { font-size: 1.1rem; }
+            .field-row { grid-template-columns: 1fr; }
+            .field-group.full { grid-column: span 1; }
+            .poster-frame { grid-template-columns: 100px 1fr; gap: 16px; }
+            .hero-title { font-size: 2.1rem; }
+            .form-actions { flex-direction: column-reverse; align-items: stretch; }
+            .actions-right { justify-content: stretch; }
+            .actions-right .btn { flex: 1; justify-content: center; }
+            .btn-prev { width: 100%; justify-content: center; }
+        }
+        @media (min-width: 621px) and (max-width: 900px) {
+            .steps-track { top: 32px; }
+        }
+        @media (min-width: 901px) {
+            .main-container { padding: 0 40px 80px; }
+            .steps-header { padding: 0 40px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-1"></div>
+    <div class="ambient-2"></div>
+    <div class="ambient-3"></div>
+
+    <!-- Hamburger -->
+    <button id="menu-toggle" aria-label="Abrir menú">
+        <i data-lucide="menu"></i>
+    </button>
+
+    <!-- Overlay -->
+    <div id="sidebar-overlay" class="hidden"></div>
+
+    <!-- ═══ SIDEBAR ═══ -->
+    <aside id="sidebar">
+        <div class="sb-header">
+            <div class="sb-logo-box">
+                <img src="https://cdn-icons-png.flaticon.com/128/747/747965.png" alt="Masitaprex">
+            </div>
+            <div class="sb-brand">Masitaprex</div>
+            <div class="sb-tagline">Infraestructura Tecnológica • LATAM</div>
+        </div>
+        <div class="sb-scroll-area">
+            <nav>
+                <div class="sb-cat">General</div>
+                <a href="inicio"><i class="fas fa-home sb-icon"></i><span>Inicio</span></a>
+                <div class="sb-cat">Studio PeliPREX</div>
+                <a href="nueva-historia" class="active"><i class="fas fa-pen-fancy sb-icon"></i><span>Nueva Historia</span></a>
+                <a href="mis-historias"><i class="fas fa-book-open sb-icon"></i><span>Mis Historias</span></a>
+                <a href="borradores"><i class="fas fa-file-alt sb-icon"></i><span>Borradores</span><span class="sb-badge" id="sidebar-draft-count">0</span></a>
+                <a href="estadisticas"><i class="fas fa-chart-bar sb-icon"></i><span>Estadísticas</span></a>
+                <div class="sb-cat">Entretenimiento</div>
+                <a href="https://www.masitaprex.com/PeliPREX"><i class="fas fa-film sb-icon"></i><span>Películas gratis</span></a>
+            </nav>
+        </div>
+        <div class="sb-footer">
+            <a href="https://m.facebook.com/61564349657272/" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://youtube.com/@eltiojota628" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+            <a href="https://wa.me/51944950234" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        </div>
+    </aside>
+
+    <!-- ═══ PAGE HERO ═══ -->
+    <div class="page-hero">
+        <div class="hero-eyebrow">
+            <i class="fas fa-feather-alt" style="font-size:0.7rem"></i>
+            Studio PeliPREX
+        </div>
+        <h1 class="hero-title">Crea tu próxima<br><em>gran historia</em></h1>
+        <p class="hero-sub">Escribe, inspira y publica tu contenido original para lectores de todo el mundo.</p>
+    </div>
+
+    <!-- ═══ STEPS HEADER ═══ -->
+    <div class="steps-header">
+        <div class="steps-track">
+            <div class="steps-track-fill" id="progress-fill"></div>
+        </div>
+        <div class="steps-row">
+            <!-- Step 1 -->
+            <div class="step-node active" id="step-1">
+                <div class="step-ring">
+                    <span class="step-number">1</span>
+                    <i class="fas fa-check step-check"></i>
+                </div>
+                <div class="step-meta">
+                    <div class="step-label-num">Paso 01</div>
+                    <div class="step-label-name">Perfil</div>
+                    <div class="step-label-desc">Tu identidad como autor/a</div>
+                </div>
+            </div>
+            <!-- Step 2 -->
+            <div class="step-node" id="step-2">
+                <div class="step-ring">
+                    <span class="step-number">2</span>
+                    <i class="fas fa-check step-check"></i>
+                </div>
+                <div class="step-meta">
+                    <div class="step-label-num">Paso 02</div>
+                    <div class="step-label-name">La Obra</div>
+                    <div class="step-label-desc">Título, género y portada</div>
+                </div>
+            </div>
+            <!-- Step 3 -->
+            <div class="step-node" id="step-3">
+                <div class="step-ring">
+                    <span class="step-number">3</span>
+                    <i class="fas fa-check step-check"></i>
+                </div>
+                <div class="step-meta">
+                    <div class="step-label-num">Paso 03</div>
+                    <div class="step-label-name">Contenido</div>
+                    <div class="step-label-desc">Escribe tu historia aquí</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ MAIN CONTAINER ═══ -->
+    <div class="main-container">
+
+        <!-- ════════════════════════════
+             SECCIÓN 1: PERFIL
+        ════════════════════════════ -->
+        <div class="form-section active" id="section-1">
+
+            <div class="writer-deco">
+                <div class="writer-avatar-ring">
+                    <i class="fas fa-user-pen"></i>
+                </div>
+                <div class="writer-deco-text">
+                    <h3>Tu voz importa</h3>
+                    <p>Cuéntanos quién eres como escritor/a. Esta información aparecerá junto a tu obra publicada.</p>
+                </div>
+            </div>
+
+            <div class="section-title">
+                <div class="section-title-icon"><i class="fas fa-id-card"></i></div>
+                Perfil del Escritor
+                <span class="section-subtitle">Paso 1 de 3</span>
+            </div>
+
+            <div class="field-row">
+                <!-- Nombre artístico -->
+                <div class="field-group">
+                    <label class="field-label" for="campo-autora">
+                        <i class="fas fa-feather-alt"></i>
+                        Nombre Artístico
+                        <span class="field-tooltip">?
+                            <span class="tooltip-bubble">Tu nombre de pluma o seudónimo con el que aparecerás como autor/a en todas tus publicaciones.</span>
+                        </span>
+                    </label>
+                    <div class="field-underline">
+                        <input type="text" class="field-input" id="campo-autora"
+                               placeholder="Ej: Isabel Allende, J.K. Rowling…"
+                               autocomplete="name">
+                    </div>
+                    <div class="field-hint"><i class="fas fa-lightbulb"></i> Puede ser tu nombre real o un seudónimo creativo.</div>
+                    <div class="field-error" id="error-autora"><i class="fas fa-circle-exclamation"></i> Este campo es obligatorio</div>
+                </div>
+                <!-- Email -->
+                <div class="field-group">
+                    <label class="field-label" for="campo-email">
+                        <i class="fas fa-envelope"></i>
+                        Email de Contacto
+                        <span class="field-tooltip">?
+                            <span class="tooltip-bubble">Solo para comunicaciones de Studio PeliPREX. No se muestra al público.</span>
+                        </span>
+                    </label>
+                    <div class="field-underline">
+                        <input type="email" class="field-input" id="campo-email"
+                               placeholder="tu@email.com"
+                               autocomplete="email">
+                    </div>
+                    <div class="field-hint"><i class="fas fa-lock"></i> Privado. No visible para otros lectores.</div>
+                    <div class="field-error" id="error-email"><i class="fas fa-circle-exclamation"></i> Ingresa un email válido</div>
+                </div>
+                <!-- Biografía -->
+                <div class="field-group full">
+                    <label class="field-label" for="campo-biografia">
+                        <i class="fas fa-quote-left"></i>
+                        Biografía Corta
+                        <span class="field-tooltip">?
+                            <span class="tooltip-bubble">Un párrafo breve sobre ti: quién eres, qué te inspira a escribir. Max 300 caracteres.</span>
+                        </span>
+                    </label>
+                    <textarea class="field-textarea" id="campo-biografia"
+                              placeholder="Soy escritora apasionada por los mundos fantásticos y las historias que hacen latir fuerte el corazón…"
+                              maxlength="300" oninput="updateCharCount(this,'bio-count',300)"></textarea>
+                    <div class="char-counter"><span id="bio-count">0</span> / 300 caracteres</div>
+                    <div class="field-hint"><i class="fas fa-pen"></i> Aparece en tu perfil de autor/a. Hazla memorable.</div>
+                </div>
+                <!-- Género favorito -->
+                <div class="field-group">
+                    <label class="field-label" for="campo-genero-fav">
+                        <i class="fas fa-star"></i>
+                        Género Favorito
+                    </label>
+                    <div class="select-wrapper">
+                        <select class="field-select" id="campo-genero-fav">
+                            <option value="">— Elige un género —</option>
+                            <option value="Fantasia">✨ Fantasía</option>
+                            <option value="Romance">💕 Romance</option>
+                            <option value="Misterio">🔍 Misterio</option>
+                            <option value="Accion">⚔️ Acción</option>
+                            <option value="Poesia">🌸 Poesía</option>
+                        </select>
+                    </div>
+                    <div class="field-hint"><i class="fas fa-palette"></i> El género al que más te dedicas como escritor/a.</div>
+                </div>
+                <!-- Idioma -->
+                <div class="field-group">
+                    <label class="field-label" for="campo-idioma">
+                        <i class="fas fa-globe-americas"></i>
+                        Idioma Principal
+                    </label>
+                    <div class="select-wrapper">
+                        <select class="field-select" id="campo-idioma">
+                            <option value="es">🇪🇸 Español</option>
+                            <option value="en">🇺🇸 Inglés</option>
+                            <option value="pt">🇧🇷 Portugués</option>
+                        </select>
+                    </div>
+                    <div class="field-hint"><i class="fas fa-language"></i> El idioma en que escribes esta historia.</div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <div></div>
+                <div class="actions-right">
+                    <button class="btn btn-next" onclick="nextStep(2)">
+                        Siguiente — La Obra
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ════════════════════════════
+             SECCIÓN 2: OBRA
+        ════════════════════════════ -->
+        <div class="form-section" id="section-2">
+
+            <div class="section-title">
+                <div class="section-title-icon"><i class="fas fa-book-open"></i></div>
+                Detalles de la Obra
+                <span class="section-subtitle">Paso 2 de 3</span>
+            </div>
+
+            <div class="field-row single">
+                <!-- Título -->
+                <div class="field-group full">
+                    <label class="field-label" for="campo-titulo">
+                        <i class="fas fa-heading"></i>
+                        Título de la Historia
+                        <span class="field-tooltip">?
+                            <span class="tooltip-bubble">Elige un título llamativo, memorable y que refleje la esencia de tu historia. Puede cambiarse luego.</span>
+                        </span>
+                    </label>
+                    <div class="field-underline">
+                        <input type="text" class="field-input" id="campo-titulo"
+                               placeholder="Ej: La Última Guardiana del Tiempo, Amor entre Cenizas…"
+                               style="font-family: var(--font-display); font-style: italic; font-size: 1.3rem;">
+                    </div>
+                    <div class="field-hint"><i class="fas fa-star"></i> Un buen título engancha al lector desde el primer vistazo.</div>
+                    <div class="field-error" id="error-titulo"><i class="fas fa-circle-exclamation"></i> El título es obligatorio</div>
+                </div>
+            </div>
+
+            <div class="field-divider"></div>
+
+            <div class="field-row">
+                <!-- Categoría -->
+                <div class="field-group">
+                    <label class="field-label" for="campo-categoria">
+                        <i class="fas fa-tag"></i>
+                        Categoría
+                        <span class="field-tooltip">?
+                            <span class="tooltip-bubble">El género literario principal de tu historia. Ayuda a los lectores a encontrarla más fácilmente.</span>
+                        </span>
+                    </label>
+                    <div class="select-wrapper">
+                        <select class="field-select" id="campo-categoria">
+                            <option value="">— Seleccionar —</option>
+                            <option value="Fantasía">✨ Fantasía</option>
+                            <option value="Romance">💕 Romance</option>
+                            <option value="Misterio">🔍 Misterio</option>
+                            <option value="Acción">⚔️ Acción</option>
+                            <option value="Poesía">🌸 Poesía</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- Público -->
+                <div class="field-group">
+                    <label class="field-label" for="campo-publico">
+                        <i class="fas fa-users"></i>
+                        Público Objetivo
+                        <span class="field-tooltip">?
+                            <span class="tooltip-bubble">Clasifica el contenido según la audiencia adecuada. Las historias 18+ requieren registro de edad.</span>
+                        </span>
+                    </label>
+                    <div class="select-wrapper">
+                        <select class="field-select" id="campo-publico">
+                            <option value="TP">🌈 Todo Público</option>
+                            <option value="13+">🔞 Mayores de 13</option>
+                            <option value="18+">🔞 Adultos (18+)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field-divider"></div>
+
+            <!-- Portada -->
+            <div class="field-group full">
+                <label class="field-label" for="campo-poster">
+                    <i class="fas fa-image"></i>
+                    URL del Poster / Portada
+                    <span class="field-tooltip">?
+                        <span class="tooltip-bubble">Pega la URL directa de tu imagen de portada (termina en .jpg, .png, .webp). Sube tu imagen a Imgur, Cloudinary o Google Drive y obtén el enlace directo.</span>
+                    </span>
+                </label>
+                <div class="field-underline">
+                    <input type="url" class="field-input" id="campo-poster"
+                           placeholder="https://i.imgur.com/tu-portada.jpg"
+                           oninput="updatePosterPreview(this.value)">
+                </div>
+                <div class="field-error" id="error-poster"><i class="fas fa-circle-exclamation"></i> La portada es obligatoria</div>
+            </div>
+
+            <!-- Poster preview -->
+            <div class="poster-frame">
+                <div class="poster-thumb" id="posterPreview">
+                    <div style="padding:12px; text-align:center;">
+                        <i class="fas fa-image" style="font-size:1.5rem; margin-bottom:8px; display:block; opacity:0.4;"></i>
+                        <span style="font-size:0.72rem; opacity:0.5;">Vista previa</span>
+                    </div>
+                </div>
+                <div class="poster-info">
+                    <h4>Tips para tu portada</h4>
+                    <p>Una buena portada aumenta hasta 3x las lecturas de tu historia.</p>
+                    <div class="poster-tips">
+                        <div class="poster-tip"><i class="fas fa-check-circle"></i> Usa proporción vertical 2:3 (estilo libro)</div>
+                        <div class="poster-tip"><i class="fas fa-check-circle"></i> Resolución mínima 400 × 600 px</div>
+                        <div class="poster-tip"><i class="fas fa-check-circle"></i> Evita texto muy pequeño</div>
+                        <div class="poster-tip"><i class="fas fa-external-link-alt"></i> Sube fotos gratis en <a href="https://imgur.com" target="_blank" style="color:var(--emerald);">Imgur.com</a></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field-divider"></div>
+
+            <!-- Sinopsis -->
+            <div class="field-group full">
+                <label class="field-label" for="campo-sinopsis">
+                    <i class="fas fa-align-left"></i>
+                    Sinopsis / Resumen
+                    <span class="field-tooltip">?
+                        <span class="tooltip-bubble">Escribe 2-4 oraciones que atrapen al lector. No reveles el final. ¡Genérale curiosidad!</span>
+                    </span>
+                </label>
+                <textarea class="field-textarea" id="campo-sinopsis"
+                          placeholder="En un mundo donde los sueños se pueden robar, una joven descubrirá que el amor más peligroso es el que nunca debió comenzar…"
+                          maxlength="500" style="height:130px;"
+                          oninput="updateCharCount(this,'sinopsis-count',500)"></textarea>
+                <div class="char-counter"><span id="sinopsis-count">0</span> / 500 caracteres</div>
+                <div class="field-hint"><i class="fas fa-magic"></i> Una sinopsis poderosa es la diferencia entre un lector que pasa y uno que se queda.</div>
+                <div class="field-error" id="error-sinopsis"><i class="fas fa-circle-exclamation"></i> La sinopsis es obligatoria</div>
+            </div>
+
+            <div class="form-actions">
+                <button class="btn btn-prev" onclick="prevStep(1)">
+                    <i class="fas fa-arrow-left"></i> Volver
+                </button>
+                <div class="actions-right">
+                    <button class="btn btn-next" onclick="nextStep(3)">
+                        Escribir la Historia <i class="fas fa-pen-nib"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ════════════════════════════
+             SECCIÓN 3: CONTENIDO
+        ════════════════════════════ -->
+        <div class="form-section" id="section-3">
+
+            <div class="section-title">
+                <div class="section-title-icon"><i class="fas fa-pen-nib"></i></div>
+                Escribe tu Historia
+                <span class="section-subtitle">Paso 3 de 3</span>
+            </div>
+
+            <!-- Quill editor -->
+            <div class="field-group full">
+                <label class="field-label">
+                    <i class="fas fa-scroll"></i>
+                    Contenido Principal
+                    <span class="field-tooltip">?
+                        <span class="tooltip-bubble">Usa el editor para dar formato a tu texto. Puedes agregar títulos, negritas, cursivas y listas. El editor guarda el formato HTML.</span>
+                    </span>
+                </label>
+                <div class="editor-shell" id="editor-shell">
+                    <div id="editor-container"></div>
+                    <div class="editor-footer">
+                        <span id="read-time">~0 min lectura</span>
+                        <span class="word-count" id="word-count">0 palabras</span>
+                    </div>
+                </div>
+                <div class="field-hint" style="margin-top:10px;"><i class="fas fa-lightbulb"></i> Consejo: escribe al menos 500 palabras para una historia satisfactoria. ¡Las primeras líneas son las más importantes!</div>
+                <div class="field-error" id="error-contenido" style="margin-top:8px;"><i class="fas fa-circle-exclamation"></i> No puedes publicar una historia vacía</div>
+            </div>
+
+            <div class="field-divider" style="margin-top:16px;"></div>
+
+            <div class="field-row">
+                <!-- Tags -->
+                <div class="field-group">
+                    <label class="field-label" for="campo-tags">
+                        <i class="fas fa-tags"></i>
+                        Etiquetas (Tags)
+                        <span class="field-tooltip">?
+                            <span class="tooltip-bubble">Palabras clave separadas por coma. Ayudan a que lectores interesados encuentren tu historia. Ej: magia, amor, bosque, misterio</span>
+                        </span>
+                    </label>
+                    <div class="field-underline">
+                        <input type="text" class="field-input" id="campo-tags"
+                               placeholder="magia, misterio, aventura, amor…"
+                               oninput="renderTags(this.value)">
+                    </div>
+                    <div id="tags-display" class="tags-display"></div>
+                    <div class="field-hint"><i class="fas fa-hashtag"></i> Máximo 5-7 etiquetas relevantes.</div>
+                </div>
+                <!-- Derechos -->
+                <div class="field-group">
+                    <label class="field-label" for="campo-derechos">
+                        <i class="fas fa-shield-halved"></i>
+                        Derechos de Autor
+                        <span class="field-tooltip">?
+                            <span class="tooltip-bubble">"Todos los derechos reservados" protege tu obra. "Creative Commons" permite compartirla con crédito. "Dominio Público" la libera completamente.</span>
+                        </span>
+                    </label>
+                    <div class="select-wrapper">
+                        <select class="field-select" id="campo-derechos">
+                            <option value="Todos los derechos reservados">© Todos los derechos reservados</option>
+                            <option value="Dominio Público">🌍 Dominio Público</option>
+                            <option value="Creative Commons">🔓 Creative Commons</option>
+                        </select>
+                    </div>
+                    <div class="field-hint"><i class="fas fa-scale-balanced"></i> Te recomendamos "Todos los derechos reservados" para proteger tu obra.</div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button class="btn btn-prev" onclick="prevStep(2)">
+                    <i class="fas fa-arrow-left"></i> Volver
+                </button>
+                <div class="actions-right">
+                    <button class="btn btn-draft" id="btn-draft" onclick="saveStory('borrador')">
+                        <i class="fas fa-floppy-disk"></i> Guardar borrador
+                    </button>
+                    <button class="btn btn-publish" id="btn-publish" onclick="saveStory('publicado')">
+                        <i class="fas fa-paper-plane"></i> Publicar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /main-container -->
+
+    <!-- ═══ MODAL DE ÉXITO ═══ -->
+    <div class="modal-overlay" id="successModal">
+        <div class="modal-content">
+            <div class="modal-icon"><i class="fas fa-check"></i></div>
+            <h2 class="modal-title" id="modalTitle">¡Excelente!</h2>
+            <p class="modal-desc" id="modalDesc">Tu historia ha sido procesada correctamente.</p>
+            <button class="modal-btn" onclick="window.location.href='mis-historias'">
+                <i class="fas fa-book-open"></i> &nbsp;Ver mis historias
+            </button>
+        </div>
+    </div>
+
+    <!-- ═══ FOOTER ═══ -->
+    <footer class="footer-ecosystem">
+        <div style="max-width: 960px; margin: 0 auto;">
+            <h3>Síguenos en nuestras redes</h3>
+            <div class="footer-social-icons">
+                <a href="https://m.facebook.com/61564349657272/" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://youtube.com/@eltiojota628" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                <a href="https://wa.me/51944950234" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            </div>
+            <p><strong style="color: var(--emerald-light);">Masitaprex</strong> © 2026 — Todos los derechos reservados</p>
+            <div class="footer-version">V 2.4.0</div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        let supabaseClient;
+        let currentUser;
+        let currentStep = 1;
+        let editingId = null;
+
+        /* ═══ QUILL EDITOR ═══ */
+        const quill = new Quill('#editor-container', {
+            theme: 'snow',
+            placeholder: 'Había una vez, en un mundo donde los sueños tenían nombre…',
+            modules: {
+                toolbar: [
+                    [{ 'header': [1, 2, 3, false] }],
+                    ['bold', 'italic', 'underline'],
+                    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                    ['clean']
+                ]
+            }
+        });
+
+        /* Word / reading time counter */
+        quill.on('text-change', function() {
+            const text = quill.getText().trim();
+            const words = text ? text.split(/\s+/).filter(w => w.length > 0).length : 0;
+            document.getElementById('word-count').textContent = words.toLocaleString() + ' palabras';
+            const readMin = Math.max(1, Math.ceil(words / 200));
+            document.getElementById('read-time').textContent = '~' + readMin + ' min lectura';
+            // Clear error
+            document.getElementById('error-contenido').style.display = 'none';
+        });
+
+        /* ═══ INIT APP ═══ */
+        async function initApp() {
+            try {
+                const response = await fetch('/api/config');
+                const config = await response.json();
+                supabaseClient = supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
+                const session = await ReturnConfig.checkAuth(supabaseClient);
+                if (session) {
+                    currentUser = session.user;
+                    loadSidebarStats();
+                    const urlParams = new URLSearchParams(window.location.search);
+                    editingId = urlParams.get('id');
+                    if (editingId) { loadStoryToEdit(editingId); }
+                    else { loadWriterProfile(); }
+                }
+            } catch (error) { console.error('Error init:', error); }
+        }
+        initApp();
+
+        /* ═══ LOAD WRITER PROFILE ═══ */
+        async function loadWriterProfile() {
+            try {
+                const savedProfile = localStorage.getItem('writer_profile_' + currentUser.id);
+                if (savedProfile) {
+                    const p = JSON.parse(savedProfile);
+                    document.getElementById('campo-autora').value = p.autora_nombre || '';
+                    document.getElementById('campo-email').value = p.autora_email || currentUser.email;
+                    document.getElementById('campo-idioma').value = p.idioma || 'es';
+                    document.getElementById('campo-biografia').value = p.nota_autora || '';
+                    updateCharCount(document.getElementById('campo-biografia'), 'bio-count', 300);
+                }
+                const { data, error } = await supabaseClient
+                    .from('historias')
+                    .select('autora_nombre, autora_email, idioma, nota_autora')
+                    .eq('user_id', currentUser.id)
+                    .order('created_at', { ascending: false })
+                    .limit(1);
+                if (data && data.length > 0) {
+                    const p = data[0];
+                    document.getElementById('campo-autora').value = p.autora_nombre || '';
+                    document.getElementById('campo-email').value = p.autora_email || currentUser.email;
+                    document.getElementById('campo-idioma').value = p.idioma || 'es';
+                    document.getElementById('campo-biografia').value = p.nota_autora || '';
+                    updateCharCount(document.getElementById('campo-biografia'), 'bio-count', 300);
+                    localStorage.setItem('writer_profile_' + currentUser.id, JSON.stringify(p));
+                } else if (!savedProfile) {
+                    document.getElementById('campo-email').value = currentUser.email || '';
+                }
+            } catch (err) { console.error(err); }
+        }
+
+        /* ═══ LOAD STORY TO EDIT ═══ */
+        async function loadStoryToEdit(id) {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('historias').select('*').eq('id', id).eq('user_id', currentUser.id).single();
+                if (error) throw error;
+                if (data) {
+                    document.querySelector('.hero-title').innerHTML = 'Editar tu<br><em>Historia</em>';
+                    document.getElementById('campo-autora').value = data.autora_nombre || '';
+                    document.getElementById('campo-email').value = data.autora_email || '';
+                    document.getElementById('campo-idioma').value = data.idioma || 'es';
+                    document.getElementById('campo-biografia').value = data.nota_autora || '';
+                    updateCharCount(document.getElementById('campo-biografia'), 'bio-count', 300);
+                    document.getElementById('campo-titulo').value = data.titulo || '';
+                    document.getElementById('campo-categoria').value = data.categoria || '';
+                    document.getElementById('campo-publico').value = data.publico || 'TP';
+                    document.getElementById('campo-poster').value = data.poster_url || '';
+                    updatePosterPreview(data.poster_url);
+                    document.getElementById('campo-sinopsis').value = data.sinopsis || '';
+                    updateCharCount(document.getElementById('campo-sinopsis'), 'sinopsis-count', 500);
+                    quill.root.innerHTML = data.contenido_html || '';
+                    document.getElementById('campo-tags').value = data.tags || '';
+                    renderTags(data.tags || '');
+                    document.getElementById('campo-derechos').value = data.derechos || 'Todos los derechos reservados';
+                    if (data.estado === 'publicado') {
+                        document.getElementById('btn-publish').innerHTML = '<i class="fas fa-floppy-disk"></i> Actualizar';
+                    }
+                }
+            } catch (err) { alert('Error al cargar la historia: ' + err.message); }
+        }
+
+        /* ═══ SIDEBAR STATS ═══ */
+        async function loadSidebarStats() {
+            const { count } = await supabaseClient.from('historias').select('*', { count: 'exact', head: true }).eq('user_id', currentUser.id).eq('estado', 'borrador');
+            const badge = document.getElementById('sidebar-draft-count');
+            if (badge) badge.textContent = count || 0;
+        }
+
+        /* ═══ POSTER PREVIEW ═══ */
+        function updatePosterPreview(url) {
+            const box = document.getElementById('posterPreview');
+            if (url && url.startsWith('http')) {
+                box.innerHTML = `<img src="${url}" alt="Portada" onerror="this.parentElement.innerHTML='<div style=\\'padding:12px;text-align:center;\\'><i class=\\'fas fa-triangle-exclamation\\' style=\\'font-size:1.5rem;opacity:0.5;display:block;margin-bottom:6px;\\'></i><span style=\\'font-size:0.72rem;opacity:0.5;\\'>URL inválida</span></div>'">`;
+                box.classList.add('loaded');
+            } else {
+                box.innerHTML = '<div style="padding:12px;text-align:center;"><i class="fas fa-image" style="font-size:1.5rem;margin-bottom:8px;display:block;opacity:0.4;"></i><span style="font-size:0.72rem;opacity:0.5;">Vista previa</span></div>';
+                box.classList.remove('loaded');
+            }
+        }
+
+        /* ═══ CHAR COUNTER ═══ */
+        function updateCharCount(el, countId, max) {
+            const count = el.value.length;
+            const counter = document.getElementById(countId);
+            if (counter) counter.textContent = count;
+        }
+
+        /* ═══ TAGS RENDER ═══ */
+        function renderTags(val) {
+            const display = document.getElementById('tags-display');
+            if (!display) return;
+            const tags = val.split(',').map(t => t.trim()).filter(t => t.length > 0);
+            display.innerHTML = tags.map(t => `<span class="tag-pill">#${t}</span>`).join('');
+        }
+
+        /* ═══ STEP NAVIGATION ═══ */
+        function nextStep(step) {
+            if (step === 2 && !validateStep1()) return;
+            if (step === 3 && !validateStep2()) return;
+            document.getElementById(`section-${currentStep}`).classList.remove('active');
+            document.getElementById(`section-${step}`).classList.add('active');
+            document.getElementById(`step-${step}`).classList.add('active');
+            if (step > 1) document.getElementById(`step-${step - 1}`).classList.add('completed');
+            currentStep = step;
+            const progress = ((step - 1) / 2) * 100;
+            document.getElementById('progress-fill').style.width = `${progress}%`;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function prevStep(step) {
+            document.getElementById(`section-${currentStep}`).classList.remove('active');
+            document.getElementById(`section-${step}`).classList.add('active');
+            document.getElementById(`step-${currentStep}`).classList.remove('active');
+            document.getElementById(`step-${currentStep}`).classList.remove('completed');
+            currentStep = step;
+            const progress = ((step - 1) / 2) * 100;
+            document.getElementById('progress-fill').style.width = `${progress}%`;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        /* ═══ VALIDATION ═══ */
+        function validateStep1() {
+            let valid = true;
+            const autora = document.getElementById('campo-autora').value.trim();
+            const email = document.getElementById('campo-email').value.trim();
+            if (!autora) { setError('campo-autora', 'error-autora', true); valid = false; }
+            else { setError('campo-autora', 'error-autora', false); }
+            if (!email || !email.includes('@')) { setError('campo-email', 'error-email', true); valid = false; }
+            else { setError('campo-email', 'error-email', false); }
+            return valid;
+        }
+
+        function validateStep2() {
+            let valid = true;
+            const titulo = document.getElementById('campo-titulo').value.trim();
+            const poster = document.getElementById('campo-poster').value.trim();
+            const sinopsis = document.getElementById('campo-sinopsis').value.trim();
+            if (!titulo) { setError('campo-titulo', 'error-titulo', true); valid = false; }
+            else { setError('campo-titulo', 'error-titulo', false); }
+            if (!poster) { setError('campo-poster', 'error-poster', true); valid = false; }
+            else { setError('campo-poster', 'error-poster', false); }
+            if (!sinopsis) { setError('campo-sinopsis', 'error-sinopsis', true); valid = false; }
+            else { setError('campo-sinopsis', 'error-sinopsis', false); }
+            return valid;
+        }
+
+        function setError(fieldId, errorId, hasError) {
+            const field = document.getElementById(fieldId);
+            const group = field ? field.closest('.field-group') : null;
+            if (group) {
+                if (hasError) group.classList.add('has-error');
+                else group.classList.remove('has-error');
+            }
+        }
+
+        /* ═══ SAVE STORY ═══ */
+        async function saveStory(estado) {
+            const contenido = quill.root.innerHTML.trim();
+            if (contenido === '<p><br></p>' || !contenido) {
+                document.getElementById('error-contenido').style.display = 'flex';
+                return;
+            }
+            const btn = estado === 'publicado' ? document.getElementById('btn-publish') : document.getElementById('btn-draft');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando…';
+            btn.disabled = true;
+
+            const storyData = {
+                user_id: currentUser.id,
+                autora_nombre: document.getElementById('campo-autora').value,
+                autora_email: document.getElementById('campo-email').value,
+                idioma: document.getElementById('campo-idioma').value,
+                nota_autora: document.getElementById('campo-biografia').value,
+                titulo: document.getElementById('campo-titulo').value,
+                categoria: document.getElementById('campo-categoria').value,
+                publico: document.getElementById('campo-publico').value,
+                poster_url: document.getElementById('campo-poster').value,
+                sinopsis: document.getElementById('campo-sinopsis').value,
+                contenido_html: contenido,
+                tags: document.getElementById('campo-tags').value,
+                derechos: document.getElementById('campo-derechos').value,
+                estado: estado,
+                updated_at: new Date().toISOString()
+            };
+
+            if (estado === 'publicado' && !editingId) {
+                storyData.fecha_publicacion = new Date().toISOString();
+            }
+
+            try {
+                let error;
+                if (editingId) {
+                    const { error: err } = await supabaseClient.from('historias').update(storyData).eq('id', editingId).eq('user_id', currentUser.id);
+                    error = err;
+                } else {
+                    const { error: err } = await supabaseClient.from('historias').insert([storyData]);
+                    error = err;
+                }
+                if (error) throw error;
+                document.getElementById('modalTitle').textContent = estado === 'publicado' ? '¡Publicado con éxito!' : '¡Borrador guardado!';
+                document.getElementById('modalDesc').textContent = estado === 'publicado'
+                    ? 'Tu historia ya está disponible para lectores en todo el mundo. ¡Felicitaciones, escritor/a!'
+                    : 'Tu progreso está guardado. Puedes continuar escribiendo cuando quieras.';
+                document.getElementById('successModal').style.display = 'flex';
+            } catch (err) {
+                alert('Error al guardar: ' + err.message);
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        /* ═══ SIDEBAR ═══ */
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebarEl = document.getElementById('sidebar');
+        const overlayEl = document.getElementById('sidebar-overlay');
+
+        function toggleMenu() {
+            const isOpen = sidebarEl.classList.toggle('open');
+            if (isOpen) {
+                overlayEl.classList.remove('hidden');
+                overlayEl.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+                setTimeout(() => overlayEl.classList.add('opacity-100'), 10);
+            } else {
+                overlayEl.classList.remove('opacity-100');
+                document.body.style.overflow = '';
+                setTimeout(() => {
+                    if (!sidebarEl.classList.contains('open')) {
+                        overlayEl.classList.add('hidden');
+                        overlayEl.style.display = 'none';
+                    }
+                }, 300);
+            }
+        }
+        menuToggle.addEventListener('click', toggleMenu);
+        overlayEl.addEventListener('click', toggleMenu);
+    </script>
+</body>
+</html>
