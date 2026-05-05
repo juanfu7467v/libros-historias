@@ -155,8 +155,8 @@
         /* ═══ CONTENEDOR PRINCIPAL ═══ */
         .main-container {
             position: relative; z-index: 10;
-            width: 100%; max-width: 560px;
-            margin: 0 auto; padding: 0 16px 40px;
+            width: 100%; max-width: 100%;
+            margin: 0 auto; padding: 0 24px 40px;
         }
 
         /* Header */
@@ -491,7 +491,7 @@
         .footer-ecosystem .footer-version { color: var(--text-subtle); font-size: 0.65rem; margin-top: 6px; font-family: var(--font-mono); letter-spacing: 0.5px; }
 
         @media (min-width: 640px) {
-            .main-container { max-width: 600px; padding: 0 20px 50px; }
+            .main-container { padding: 0 32px 50px; }
             .hero-title { font-size: clamp(2.5rem, 6vw, 3.2rem); }
             .stats-grid { gap: 16px; }
             .stat-card { padding: 24px 20px; }
@@ -501,15 +501,27 @@
             .bar { width: 60px; }
         }
         @media (min-width: 1024px) {
-            .main-container { max-width: 720px; padding: 0 30px 60px; }
+            .main-container { padding: 0 48px 60px; }
             .hero-title { font-size: clamp(2.8rem, 5vw, 3.6rem); }
             .stats-grid { grid-template-columns: repeat(4, 1fr); gap: 18px; }
-            .features-grid { grid-template-columns: repeat(2, 1fr); gap: 18px; }
+            .features-grid { grid-template-columns: repeat(3, 1fr); gap: 18px; }
             .bar { width: 70px; }
+            .problem-card { max-width: 100%; }
+            .recovery-visual { max-width: 100%; }
         }
         @media (min-width: 1440px) {
-            .main-container { max-width: 820px; }
+            .main-container { padding: 0 80px 60px; }
             .hero-title { font-size: 3.8rem; }
+            .stats-grid { gap: 24px; }
+            .features-grid { grid-template-columns: repeat(3, 1fr); gap: 24px; }
+            .stat-card { padding: 28px 24px; }
+            .feature-item { padding: 22px; }
+        }
+        @media (min-width: 1920px) {
+            .main-container { padding: 0 120px 60px; }
+            .hero-title { font-size: 4.2rem; }
+            .stats-grid { gap: 28px; }
+            .features-grid { gap: 28px; }
         }
     </style>
 </head>
@@ -771,7 +783,7 @@
 
     <!-- ═══ FOOTER IDÉNTICO AL ECOSISTEMA ═══ -->
     <footer class="footer-ecosystem">
-        <div style="max-width: 960px; margin: 0 auto;">
+        <div style="max-width: 100%; margin: 0 auto; padding: 0 24px;">
             <h3>Síguenos en nuestras redes</h3>
             <div class="footer-social-icons">
                 <a href="https://m.facebook.com/61564349657272/" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
