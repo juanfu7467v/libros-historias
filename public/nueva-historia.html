@@ -242,7 +242,7 @@
             line-height: 1.6;
         }
 
-        /* ═══ STEPS HEADER — CORREGIDO: LÍNEA POR FUERA DE LOS CÍRCULOS ═══ */
+        /* ═══ STEPS HEADER — CORREGIDO: LÍNEA DETRÁS DE LOS CÍRCULOS Y NÚMEROS ═══ */
         .steps-header {
             width: 100%; max-width: 700px;
             margin: 0 auto 56px;
@@ -278,18 +278,25 @@
             display: flex; flex-direction: column; align-items: center; gap: 14px;
             flex: 0 0 auto;
             cursor: default;
+            position: relative;
+            z-index: 2; /* Aseguramos que el nodo esté por encima de la línea */
         }
         .step-node:first-child { align-items: flex-start; }
         .step-node:last-child { align-items: flex-end; }
         .step-node:nth-child(2) { align-items: center; }
 
         .step-ring {
-            width: 72px; height: 72px;
+            width: 72px;
+            height: 72px;
             border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             position: relative;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 2;
+            z-index: 3; /* El círculo por encima de la línea */
+            background: var(--navy-deep); /* Fondo sólido para tapar la línea */
+            border: 2px solid var(--navy-border);
         }
         .step-ring::before {
             content: '';
@@ -297,26 +304,11 @@
             border-radius: 50%;
             border: 2px solid transparent;
             transition: all 0.4s ease;
+            pointer-events: none;
         }
-        /* Default state */
-        .step-node .step-ring {
-            background: rgba(255,255,255,0.03);
-            border: 2px solid var(--navy-border);
-        }
-        .step-number {
-            font-family: var(--font-display);
-            font-size: 1.6rem; font-weight: 700;
-            color: var(--text-subtle);
-            line-height: 1;
-            transition: all 0.4s ease;
-            position: relative;
-            z-index: 3;
-        }
-        .step-check { display: none; font-size: 1.4rem; color: var(--navy-deep); position: relative; z-index: 3; }
-
-        /* Active state */
+        /* Estado activo */
         .step-node.active .step-ring {
-            background: linear-gradient(135deg, rgba(0,200,83,0.15), rgba(0,200,83,0.05));
+            background: var(--navy-deep);
             border-color: var(--emerald);
             box-shadow: 0 0 0 10px rgba(0,200,83,0.06), 0 8px 24px rgba(0,200,83,0.25);
         }
@@ -328,7 +320,7 @@
         @keyframes spinRing { to { transform: rotate(360deg); } }
         .step-node.active .step-number { color: var(--emerald); transform: scale(1.1); }
 
-        /* Completed state */
+        /* Estado completado */
         .step-node.completed .step-ring {
             background: linear-gradient(135deg, var(--emerald), var(--emerald-dark));
             border-color: var(--emerald);
@@ -336,6 +328,17 @@
         }
         .step-node.completed .step-number { display: none; }
         .step-node.completed .step-check { display: block; }
+
+        .step-number {
+            font-family: var(--font-display);
+            font-size: 1.6rem; font-weight: 700;
+            color: var(--text-subtle);
+            line-height: 1;
+            transition: all 0.4s ease;
+            position: relative;
+            z-index: 3;
+        }
+        .step-check { display: none; font-size: 1.4rem; color: var(--navy-deep); position: relative; z-index: 3; }
 
         /* Step meta */
         .step-meta { text-align: center; }
@@ -839,7 +842,7 @@
         <p class="hero-sub">Escribe, inspira y publica tu contenido original para lectores de todo el mundo.</p>
     </div>
 
-    <!-- ═══ STEPS HEADER CORREGIDO ═══ -->
+    <!-- ═══ STEPS HEADER CORREGIDO (línea detrás de los círculos) ═══ -->
     <div class="steps-header">
         <div class="steps-track">
             <div class="steps-track-fill" id="progress-fill"></div>
