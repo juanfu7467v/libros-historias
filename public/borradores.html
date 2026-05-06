@@ -228,37 +228,58 @@
 
         /* Header */
         .dashboard-header {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 8px 0 20px; width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0 20px;
+            width: 100%;
+            position: relative;
         }
-        .header-left { display: flex; align-items: center; gap: 12px; }
-        .header-back {
-            width: 40px; height: 40px;
-            background: var(--navy-card); border: 1px solid var(--border-subtle);
-            border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            color: var(--text-muted); cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .header-back:hover { border-color: var(--emerald); color: var(--emerald); }
-        .logo-text { 
-            font-family: var(--font-serif); 
-            font-weight: 700; font-size: 22px; 
-            color: var(--white); letter-spacing: -0.5px;
+        
+        .logo-text {
+            font-family: var(--font-serif);
+            font-weight: 700;
+            font-size: 22px;
+            color: var(--white);
+            letter-spacing: -0.5px;
             font-style: italic;
+            text-align: center;
+            flex: 1;
         }
-        .logo-text span { color: var(--emerald); font-style: normal; font-family: var(--font-display); font-weight: 800; }
-        .header-actions { display: flex; align-items: center; gap: 10px; }
+        .logo-text span {
+            color: var(--emerald);
+            font-style: normal;
+            font-family: var(--font-display);
+            font-weight: 800;
+        }
+        
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
         .header-btn {
-            width: 40px; height: 40px;
-            background: var(--navy-card); border: 1px solid var(--border-subtle);
+            width: 40px;
+            height: 40px;
+            background: var(--navy-card);
+            border: 1px solid var(--border-subtle);
             border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            color: var(--text-muted); cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            cursor: pointer;
             transition: all 0.2s ease;
         }
-        .header-btn:hover { border-color: var(--emerald); color: var(--emerald-light); }
-        .header-btn.active { background: rgba(0,200,83,0.12); border-color: var(--emerald); color: var(--emerald); }
+        .header-btn:hover {
+            border-color: var(--emerald);
+            color: var(--emerald-light);
+        }
+        .header-btn.active {
+            background: rgba(0,200,83,0.12);
+            border-color: var(--emerald);
+            color: var(--emerald);
+        }
 
         /* Hero */
         .drafts-hero { margin-bottom: 24px; }
@@ -553,7 +574,7 @@
             to { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
 
-        /* ═══ FOOTER ═══ */
+        /* ═══ FOOTER ECOSISTEMA ═══ */
         .footer-ecosystem {
             width: 100%;
             background: var(--navy-surface);
@@ -593,6 +614,7 @@
             .drafts-grid { gap: 12px; }
             .poster-title { font-size: 11px; }
             .poster-meta { font-size: 9px; }
+            .logo-text { font-size: 18px; }
         }
         @media (min-width: 1024px) {
             .main-container { padding: 28px 24px 56px; max-width: 1100px; }
@@ -642,35 +664,27 @@
         </div>
     </aside>
 
-    <!-- Menú contextual -->
+    <!-- Menú contextual global -->
     <div class="context-menu" id="contextMenu">
-        <div class="context-menu-item" onclick="editDraft()"><i class="fas fa-pen"></i> Editar</div>
-        <div class="context-menu-item" onclick="duplicateDraft()"><i class="fas fa-copy"></i> Duplicar</div>
-        <div class="context-menu-item" onclick="publishDraft()"><i class="fas fa-rocket"></i> Publicar</div>
+        <div class="context-menu-item" onclick="window.editDraft()"><i class="fas fa-pen"></i> Editar</div>
+        <div class="context-menu-item" onclick="window.duplicateDraft()"><i class="fas fa-copy"></i> Duplicar</div>
+        <div class="context-menu-item" onclick="window.publishDraft()"><i class="fas fa-rocket"></i> Publicar</div>
         <div class="context-divider"></div>
-        <div class="context-menu-item danger" onclick="deleteDraft()"><i class="fas fa-trash-alt"></i> Eliminar</div>
+        <div class="context-menu-item danger" onclick="window.deleteDraft()"><i class="fas fa-trash-alt"></i> Eliminar</div>
     </div>
 
     <!-- ═══ CONTENIDO PRINCIPAL ═══ -->
     <div class="main-container">
         
-        <!-- Header -->
+        <!-- Header mejorado: sin flecha back, sin filtro, título centrado -->
         <header class="dashboard-header animate-in">
-            <div class="header-left">
-                <div class="header-back" onclick="window.location.href='studio-peliprex'">
-                    <i class="fas fa-arrow-left"></i>
-                </div>
-                <div class="logo-text"><span>Drafts</span> PeliPREX</div>
-            </div>
+            <div class="logo-text"><span>Drafts</span> PeliPREX</div>
             <div class="header-actions">
                 <div class="header-btn active" onclick="toggleView('grid')" id="btn-grid" title="Vista cuadrícula">
                     <i class="fas fa-th-large"></i>
                 </div>
                 <div class="header-btn" onclick="toggleView('list')" id="btn-list" title="Vista lista">
                     <i class="fas fa-list"></i>
-                </div>
-                <div class="header-btn" onclick="filterDrafts()" title="Filtrar">
-                    <i class="fas fa-filter"></i>
                 </div>
             </div>
         </header>
@@ -679,7 +693,7 @@
         <div class="drafts-hero animate-in delay-1">
             <p class="drafts-eyebrow">Studio PeliPREX</p>
             <h1 class="drafts-title">Tus <em>Borradores</em></h1>
-            <p class="drafts-count">3 historias en progreso • Última modificación: hace 2 horas</p>
+            <p class="drafts-count" id="draftsCountText">Cargando...</p>
         </div>
 
         <!-- Search -->
@@ -689,7 +703,7 @@
         </div>
 
         <!-- Grid de Borradores -->
-<div class="drafts-grid animate-in delay-2" id="draftsGrid">
+        <div class="drafts-grid animate-in delay-2" id="draftsGrid">
             <!-- Nuevo Borrador -->
             <div class="poster-card new-draft animate-in delay-2" onclick="window.location.href='studio-peliprex'">
                 <div class="new-draft-icon">
@@ -736,6 +750,8 @@
 
         let supabaseClient;
         let currentUser;
+        let currentDraftId = '';
+        let currentDraftTitle = '';
 
         async function initApp() {
             try {
@@ -747,14 +763,16 @@
                 if (session) {
                     currentUser = session.user;
                     loadDrafts();
+                } else {
+                    document.getElementById('draftsCountText').innerText = 'Inicia sesión para ver tus borradores';
                 }
             } catch (error) {
                 console.error('Error inicializando la app:', error);
+                document.getElementById('draftsCountText').innerText = 'Error de conexión';
             }
         }
         initApp();
 
-        // Cargar borradores reales
         async function loadDrafts() {
             if (!supabaseClient || !currentUser) return;
             try {
@@ -767,19 +785,14 @@
 
                 if (error) throw error;
                 
-                // Actualizar contador en sidebar
                 const sidebarBadge = document.getElementById('sidebar-draft-count');
                 if (sidebarBadge) sidebarBadge.textContent = drafts.length;
                 const grid = document.getElementById('draftsGrid');
-                
-                // Limpiar menos el último botón (Nuevo Borrador)
                 const lastCard = grid.lastElementChild;
                 grid.innerHTML = '';
 
                 if (drafts.length === 0) {
-                    document.querySelector('.drafts-count').textContent = '0 historias en progreso';
-                    
-                    // Mostrar estado vacío elegante
+                    document.getElementById('draftsCountText').innerText = '0 historias en progreso';
                     const emptyState = document.createElement('div');
                     emptyState.className = 'col-span-full flex flex-col items-center justify-center py-20 text-center';
                     emptyState.innerHTML = `
@@ -797,32 +810,35 @@
                     return;
                 }
 
-                document.querySelector('.drafts-count').textContent = `${drafts.length} historias en progreso`;
+                document.getElementById('draftsCountText').innerText = `${drafts.length} historias en progreso`;
 
                 drafts.forEach(draft => {
                     const card = document.createElement('div');
                     card.className = 'poster-card animate-in';
                     card.setAttribute('data-title', draft.titulo);
                     card.setAttribute('data-genre', draft.categoria);
-                    card.onclick = () => openDraft(draft.id);
+                    card.setAttribute('data-id', draft.id);
+                    card.onclick = (e) => {
+                        if(e.target.closest('.poster-menu-btn')) return;
+                        openDraft(draft.id);
+                    };
                     
                     card.innerHTML = `
                         <img class="poster-image" src="${draft.poster_url || 'https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=400&h=600&auto=format&fit=crop'}" alt="${draft.titulo}" onerror="this.src='https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=400&h=600&auto=format&fit=crop'" loading="lazy">
                         <div class="poster-overlay"></div>
                         <div class="poster-badge draft">Borrador</div>
-                        <div class="poster-menu-btn" onclick="openContextMenu(event, '${draft.id}', '${draft.titulo}')">
+                        <div class="poster-menu-btn" onclick="event.stopPropagation(); window.openContextMenu(event, '${draft.id}', '${draft.titulo.replace(/'/g, "\\'")}')">
                             <i class="fas fa-ellipsis-v"></i>
                         </div>
                         <div class="poster-info">
                             <div class="poster-title">${draft.titulo}</div>
                             <div class="poster-meta">
-                                <span><i class="fas fa-feather-alt"></i> ${draft.categoria}</span>
+                                <span><i class="fas fa-feather-alt"></i> ${draft.categoria || 'Sin categoría'}</span>
                                 <span><i class="fas fa-clock"></i> ${draft.tiempo_lectura || 'N/A'}</span>
                             </div>
                         </div>
                     `;
                     grid.appendChild(card);
-                    observer.observe(card);
                 });
                 grid.appendChild(lastCard);
             } catch (err) {
@@ -831,18 +847,131 @@
             }
         }
 
-        let currentDraftId = '';
-        function openContextMenu(event, id, title) {
+        window.openContextMenu = function(event, id, title) {
             event.stopPropagation();
             currentDraftId = id;
             currentDraftTitle = title;
+            const contextMenu = document.getElementById('contextMenu');
             contextMenu.style.display = 'block';
             contextMenu.classList.add('show');
             contextMenu.style.left = Math.min(event.clientX, window.innerWidth - 190) + 'px';
             contextMenu.style.top = Math.min(event.clientY, window.innerHeight - 220) + 'px';
+        };
+
+        document.addEventListener('click', () => {
+            const contextMenu = document.getElementById('contextMenu');
+            contextMenu.classList.remove('show');
+            setTimeout(() => { if (!contextMenu.classList.contains('show')) contextMenu.style.display = 'none'; }, 200);
+        });
+
+        window.editDraft = function() {
+            if(!currentDraftId) return;
+            showToast('Abriendo editor para: ' + currentDraftTitle, 'success');
+            setTimeout(() => window.location.href = `nueva-historia?id=${currentDraftId}`, 500);
+        };
+
+        window.duplicateDraft = function() {
+            showToast('Borrador "' + currentDraftTitle + '" duplicado ✓', 'success');
+        };
+
+        window.publishDraft = function() {
+            showToast('Publicando: ' + currentDraftTitle + '...', 'success');
+            setTimeout(() => window.location.href = 'mis-historias', 800);
+        };
+
+        window.deleteDraft = async function() {
+            if (!currentDraftId) return;
+            if (confirm('¿Eliminar el borrador "' + currentDraftTitle + '"? Esta acción no se puede deshacer.')) {
+                try {
+                    const { error } = await supabaseClient
+                        .from('historias')
+                        .delete()
+                        .eq('id', currentDraftId)
+                        .eq('user_id', currentUser.id);
+                    if (error) {
+                        alert('Error: ' + error.message);
+                    } else {
+                        showToast('Borrador eliminado', 'error');
+                        loadDrafts();
+                    }
+                } catch (err) {
+                    alert('Error de conexión');
+                }
+            }
+        };
+
+        function openDraft(id) {
+            showToast('Abriendo borrador...', 'success');
+            setTimeout(() => window.location.href = `nueva-historia?id=${id}`, 500);
+        }
+        window.openDraft = openDraft;
+
+        let listModeActive = false;
+        window.toggleView = function(view) {
+            const btnGrid = document.getElementById('btn-grid');
+            const btnList = document.getElementById('btn-list');
+            const grid = document.getElementById('draftsGrid');
+            
+            if (view === 'grid') {
+                btnGrid.classList.add('active');
+                btnList.classList.remove('active');
+                grid.style.display = 'grid';
+                grid.style.flexDirection = '';
+                grid.style.gap = '';
+                document.querySelectorAll('.poster-card').forEach(card => {
+                    if(!card.classList.contains('new-draft')) {
+                        card.style.aspectRatio = '2/3';
+                        card.style.height = 'auto';
+                        card.style.display = '';
+                        card.style.flexDirection = '';
+                    }
+                });
+            } else {
+                btnList.classList.add('active');
+                btnGrid.classList.remove('active');
+                grid.style.display = 'flex';
+                grid.style.flexDirection = 'column';
+                grid.style.gap = '10px';
+                document.querySelectorAll('.poster-card').forEach(card => {
+                    card.style.aspectRatio = 'auto';
+                    card.style.height = '100px';
+                    card.style.display = 'flex';
+                    card.style.flexDirection = 'row';
+                    if(card.classList.contains('new-draft')) {
+                        card.style.justifyContent = 'flex-start';
+                        card.style.alignItems = 'center';
+                        card.style.gap = '16px';
+                        card.style.paddingLeft = '20px';
+                    }
+                });
+            }
+        };
+
+        window.filterDrafts = function() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.poster-card[data-title]');
+            cards.forEach(card => {
+                const title = (card.getAttribute('data-title') || '').toLowerCase();
+                const genre = (card.getAttribute('data-genre') || '').toLowerCase();
+                if (title.includes(query) || genre.includes(query)) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        };
+
+        function showToast(msg, type) {
+            document.querySelectorAll('.toast').forEach(t => t.remove());
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+            toast.innerHTML = `<i class="fas ${icon}"></i><span>${msg}</span>`;
+            document.body.appendChild(toast);
+            setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s'; setTimeout(() => toast.remove(), 300); }, 3000);
         }
 
-        // ═══ SIDEBAR ═══
+        // Sidebar logic
         const menuToggle = document.getElementById('menu-toggle');
         const sidebarEl = document.getElementById('sidebar');
         const overlayEl = document.getElementById('sidebar-overlay');
@@ -872,7 +1001,7 @@
         navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 const href = link.getAttribute('href');
-                if (href && href !== '#') {
+                if (href && href !== '#' && !href.includes('javascript')) {
                     e.preventDefault();
                     toggleMenu();
                     setTimeout(() => { window.location.href = href; }, 300);
@@ -880,120 +1009,6 @@
             });
         });
 
-        // ═══ CONTEXT MENU ═══
-        let currentDraftTitle = '';
-        const contextMenu = document.getElementById('contextMenu');
-
-        function openContextMenu(event, title) {
-            event.stopPropagation();
-            currentDraftTitle = title;
-            contextMenu.style.display = 'block';
-            contextMenu.classList.add('show');
-            contextMenu.style.left = Math.min(event.clientX, window.innerWidth - 190) + 'px';
-            contextMenu.style.top = Math.min(event.clientY, window.innerHeight - 220) + 'px';
-        }
-
-        document.addEventListener('click', () => {
-            contextMenu.classList.remove('show');
-            setTimeout(() => { if (!contextMenu.classList.contains('show')) contextMenu.style.display = 'none'; }, 200);
-        });
-
-        // ═══ ACCIONES DEL MENÚ ═══
-        function editDraft() {
-            showToast('Abriendo editor para: ' + currentDraftTitle, 'success');
-            setTimeout(() => window.location.href = `nueva-historia?id=${currentDraftId}`, 500);
-        }
-
-        function duplicateDraft() {
-            showToast('Borrador "' + currentDraftTitle + '" duplicado ✓', 'success');
-        }
-
-        function publishDraft() {
-            showToast('Publicando: ' + currentDraftTitle + '...', 'success');
-            setTimeout(() => window.location.href = 'mis-historias', 800);
-        }
-
-        async function deleteDraft() {
-            if (confirm('¿Eliminar el borrador "' + currentDraftTitle + '"? Esta acción no se puede deshacer.')) {
-                try {
-                    const { error } = await supabaseClient
-                        .from('historias')
-                        .delete()
-                        .eq('id', currentDraftId)
-                        .eq('user_id', currentUser.id);
-
-                    if (error) {
-                        alert('Error: ' + error.message);
-                    } else {
-                        showToast('Borrador eliminado', 'error');
-                        loadDrafts();
-                    }
-                } catch (err) {
-                    alert('Error de conexión');
-                }
-            }
-        }
-
-        // ═══ ABRIR BORRADOR ═══
-        function openDraft(id) {
-            showToast('Abriendo borrador...', 'success');
-            setTimeout(() => window.location.href = `nueva-historia?id=${id}`, 500);
-        }
-
-        // ═══ TOGGLE VISTA ═══
-        function toggleView(view) {
-            const btnGrid = document.getElementById('btn-grid');
-            const btnList = document.getElementById('btn-list');
-            const grid = document.getElementById('draftsGrid');
-            
-            if (view === 'grid') {
-                btnGrid.classList.add('active');
-                btnList.classList.remove('active');
-                grid.style.gridTemplateColumns = '';
-                grid.style.display = 'grid';
-            } else {
-                btnList.classList.add('active');
-                btnGrid.classList.remove('active');
-                grid.style.display = 'flex';
-                grid.style.flexDirection = 'column';
-                grid.style.gap = '10px';
-                document.querySelectorAll('.poster-card').forEach(card => {
-                    card.style.aspectRatio = 'auto';
-                    card.style.height = '100px';
-                    card.style.display = 'flex';
-                    card.style.flexDirection = 'row';
-                });
-            }
-        }
-
-        // ═══ FILTRAR ═══
-        function filterDrafts() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const cards = document.querySelectorAll('.poster-card[data-title]');
-            
-            cards.forEach(card => {
-                const title = card.getAttribute('data-title').toLowerCase();
-                const genre = card.getAttribute('data-genre').toLowerCase();
-                if (title.includes(query) || genre.includes(query)) {
-                    card.style.display = '';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        }
-
-        // ═══ TOAST ═══
-        function showToast(msg, type) {
-            document.querySelectorAll('.toast').forEach(t => t.remove());
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
-            toast.innerHTML = `<i class="fas ${icon}"></i><span>${msg}</span>`;
-            document.body.appendChild(toast);
-            setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s'; setTimeout(() => toast.remove(), 300); }, 3000);
-        }
-
-        // ═══ ANIMACIONES ═══
         const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -1004,16 +1019,6 @@
             });
         }, observerOptions);
         document.querySelectorAll('.animate-in').forEach(el => observer.observe(el));
-
-        // Exponer funciones globalmente
-        window.editDraft = editDraft;
-        window.duplicateDraft = duplicateDraft;
-        window.publishDraft = publishDraft;
-        window.deleteDraft = deleteDraft;
-        window.openDraft = openDraft;
-        window.openContextMenu = openContextMenu;
-        window.toggleView = toggleView;
-        window.filterDrafts = filterDrafts;
     </script>
 </body>
 </html>
