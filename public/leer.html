@@ -7,161 +7,477 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="returnConfig.js"></script>
 
     <style>
         :root {
-            --navy-deep: #0A1628;
-            --navy-surface: #0F1F3D;
-            --navy-card: #15294A;
-            --navy-border: #1E3A5F;
-            --emerald: #00C853;
-            --emerald-light: #69F0AE;
-            --text-primary: #E2E8F0;
-            --text-muted: #94A3B8;
-            --white: #F8FAFC;
-            --font-family: 'Outfit', sans-serif;
+            --xuper-bg: #050a15;
+            --xuper-surface: #0d1425;
+            --xuper-card: rgba(255, 255, 255, 0.03);
+            --xuper-border: rgba(255, 255, 255, 0.08);
+            --xuper-accent: #00f2ff;
+            --xuper-accent-glow: rgba(0, 242, 255, 0.3);
+            --xuper-text: #f8fafc;
+            --xuper-text-muted: #94a3b8;
+            --font-main: 'Outfit', sans-serif;
             --font-serif: 'Cormorant Garamond', serif;
+            --font-heading: 'Space Grotesk', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: var(--font-family);
-            background: var(--navy-deep);
-            color: var(--text-primary);
+            font-family: var(--font-main);
+            background-color: var(--xuper-bg);
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(0, 242, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(0, 114, 255, 0.05) 0%, transparent 50%);
+            background-attachment: fixed;
+            color: var(--xuper-text);
             min-height: 100vh;
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
-        .reader-container {
-            max-width: 800px;
+        /* Fondo 3D Elegante */
+        .bg-mesh {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        /* Botón Regresar Superior Izquierda */
+        .nav-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            pointer-events: none;
+        }
+
+        .btn-back-modern {
+            pointer-events: auto;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--xuper-surface);
+            border: 1px solid var(--xuper-border);
+            border-radius: 14px;
+            color: var(--xuper-text);
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-back-modern:hover {
+            border-color: var(--xuper-accent);
+            color: var(--xuper-accent);
+            transform: translateX(-5px);
+            box-shadow: 0 0 20px var(--xuper-accent-glow);
+        }
+
+        /* Layout Principal */
+        .main-content {
+            width: 100%;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 100px 20px 60px;
         }
 
-        .story-header {
-            text-align: center;
+        /* Hero Section (Estilo Xuper TV) */
+        .story-hero {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 40px;
             margin-bottom: 60px;
+            align-items: start;
+        }
+
+        .poster-container {
+            position: sticky;
+            top: 100px;
         }
 
         .story-poster {
-            width: 200px;
-            height: 300px;
-            margin: 0 auto 30px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            width: 100%;
+            aspect-ratio: 2/3;
+            border-radius: 24px;
             object-fit: cover;
-            border: 1px solid var(--navy-border);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--xuper-border);
+            transition: transform 0.5s ease;
+        }
+
+        .story-poster:hover {
+            transform: scale(1.02);
+        }
+
+        .story-info {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
         .story-title {
-            font-family: var(--font-serif);
-            font-size: 3rem;
-            font-weight: 700;
-            color: var(--white);
-            margin-bottom: 10px;
+            font-family: var(--font-heading);
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
             line-height: 1.1;
+            letter-spacing: -0.02em;
+            background: linear-gradient(to bottom, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .story-meta {
-            color: var(--emerald-light);
-            font-weight: 600;
-            font-size: 1.1rem;
-            margin-bottom: 20px;
-        }
-
-        .story-content {
-            font-family: var(--font-serif);
-            font-size: 1.35rem;
-            color: var(--text-primary);
-            background: var(--navy-surface);
-            padding: 50px;
-            border-radius: 20px;
-            border: 1px solid var(--navy-border);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-        }
-
-        .story-content p { margin-bottom: 1.5em; }
-        
-        .story-footer {
-            margin-top: 60px;
-            text-align: center;
-            padding: 40px;
-            border-top: 1px solid var(--navy-border);
-        }
-
-        .btn-back {
-            display: inline-flex;
-            align-items: center;
+        .story-badges {
+            display: flex;
+            flex-wrap: wrap;
             gap: 10px;
-            padding: 12px 24px;
-            background: var(--navy-card);
-            border: 1px solid var(--navy-border);
-            color: var(--white);
-            border-radius: 12px;
-            text-decoration: none;
-            transition: all 0.2s;
+            margin-bottom: 10px;
         }
-        .btn-back:hover { background: var(--emerald); color: var(--navy-deep); border-color: var(--emerald); }
 
-        .loading-state {
+        .badge {
+            padding: 6px 16px;
+            background: var(--xuper-card);
+            border: 1px solid var(--xuper-border);
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--xuper-accent);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            backdrop-filter: blur(5px);
+        }
+
+        .story-stats {
+            display: flex;
+            gap: 30px;
+            padding: 20px 0;
+            border-top: 1px solid var(--xuper-border);
+            border-bottom: 1px solid var(--xuper-border);
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--xuper-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .story-description {
+            font-size: 1.1rem;
+            color: var(--xuper-text-muted);
+            max-width: 800px;
+            line-height: 1.8;
+        }
+
+        /* Contenido de la Historia */
+        .reader-section {
+            background: var(--xuper-surface);
+            border: 1px solid var(--xuper-border);
+            border-radius: 32px;
+            padding: 60px;
+            margin-top: 40px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .reader-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--xuper-accent), transparent);
+        }
+
+        .story-body {
+            font-family: var(--font-serif);
+            font-size: 1.4rem;
+            color: #e2e8f0;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .story-body p {
+            margin-bottom: 2rem;
+            text-align: justify;
+        }
+
+        /* Metadata Grid */
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .meta-card {
+            background: var(--xuper-card);
+            border: 1px solid var(--xuper-border);
+            padding: 20px;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .meta-icon {
+            color: var(--xuper-accent);
+            font-size: 1.2rem;
+            margin-bottom: 4px;
+        }
+
+        /* Tags */
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .tag-pill {
+            padding: 4px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: var(--xuper-text-muted);
+        }
+
+        /* Loading State */
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--xuper-bg);
+            z-index: 1000;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 80vh;
+            transition: opacity 0.5s ease;
         }
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid var(--navy-border);
-            border-top: 4px solid var(--emerald);
+
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 3px solid var(--xuper-border);
+            border-top-color: var(--xuper-accent);
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin-bottom: 20px;
         }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        @media (max-width: 768px) {
-            .story-title { font-size: 2.2rem; }
-            .story-content { padding: 30px 20px; font-size: 1.2rem; }
-            .story-poster { width: 150px; height: 225px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .story-hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .poster-container {
+                max-width: 260px;
+                margin: 0 auto;
+                position: relative;
+                top: 0;
+            }
+            .story-info {
+                align-items: center;
+            }
+            .story-badges, .story-stats {
+                justify-content: center;
+            }
+            .reader-section {
+                padding: 40px 24px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .main-content {
+                padding-top: 80px;
+            }
+            .story-title {
+                font-size: 2.2rem;
+            }
+            .reader-section {
+                padding: 30px 20px;
+                border-radius: 20px;
+            }
+            .story-body {
+                font-size: 1.2rem;
+            }
+            .story-stats {
+                gap: 15px;
+                width: 100%;
+                justify-content: space-between;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div id="app">
-        <div class="loading-state" id="loading">
-            <div class="spinner"></div>
-            <p>Abriendo el libro...</p>
-        </div>
+    <!-- Fondo 3D Decorativo -->
+    <div class="bg-mesh">
+        <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <defs>
+                <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+                    <path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="0.1"/>
+                </pattern>
+            </defs>
+            <rect width="100" height="100" fill="url(#grid)" />
+        </svg>
+    </div>
 
-        <div class="reader-container hidden" id="content">
-            <div class="story-header">
+    <!-- Header con Botón Regresar -->
+    <header class="nav-header">
+        <a href="inicio" class="btn-back-modern" title="Volver al Inicio">
+            <i class="fas fa-chevron-left"></i>
+        </a>
+    </header>
+
+    <div id="loading" class="loading-overlay">
+        <div class="loader"></div>
+        <p class="text-xuper-accent font-medium tracking-widest uppercase text-xs">Sincronizando con Studio PeliPREX...</p>
+    </div>
+
+    <main id="content" class="main-content hidden">
+        <!-- Hero Section -->
+        <section class="story-hero">
+            <div class="poster-container">
                 <img id="story-poster" src="" alt="Portada" class="story-poster">
+            </div>
+            
+            <div class="story-info">
+                <div class="story-badges" id="story-badges">
+                    <!-- Badges dinámicos -->
+                </div>
+                
                 <h1 id="story-title" class="story-title"></h1>
-                <div id="story-meta" class="story-meta"></div>
-                <div class="flex justify-center gap-4 mt-4">
-                    <span id="story-cat" class="px-3 py-1 bg-navy-card border border-navy-border rounded-full text-xs uppercase tracking-widest"></span>
-                    <span id="story-views" class="px-3 py-1 bg-navy-card border border-navy-border rounded-full text-xs uppercase tracking-widest"></span>
+                
+                <div class="story-stats">
+                    <div class="stat-item">
+                        <span id="story-views" class="stat-value">0</span>
+                        <span class="stat-label">Vistas</span>
+                    </div>
+                    <div class="stat-item">
+                        <span id="story-rating" class="stat-value">0.0</span>
+                        <span class="stat-label">Calificación</span>
+                    </div>
+                    <div class="stat-item">
+                        <span id="story-time" class="stat-value">--</span>
+                        <span class="stat-label">Lectura</span>
+                    </div>
+                </div>
+
+                <p id="story-sinopsis" class="story-description"></p>
+                
+                <div class="flex items-center gap-4 mt-4">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white font-bold text-xl shadow-lg" id="author-avatar">
+                        ?
+                    </div>
+                    <div>
+                        <p class="text-xs text-xuper-text-muted uppercase tracking-widest">Escrito por</p>
+                        <p id="story-author" class="font-bold text-lg text-white"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Reader Section -->
+        <section class="reader-section">
+            <article class="story-body" id="story-body">
+                <!-- Contenido dinámico -->
+            </article>
+        </section>
+
+        <!-- Info Adicional Grid -->
+        <section class="mt-12">
+            <h2 class="text-2xl font-bold mb-8 flex items-center gap-3">
+                <i class="fas fa-info-circle text-xuper-accent"></i>
+                Detalles de la Obra
+            </h2>
+            
+            <div class="meta-grid">
+                <div class="meta-card">
+                    <i class="fas fa-globe meta-icon"></i>
+                    <span class="stat-label">Idioma</span>
+                    <span id="meta-idioma" class="font-medium">Español</span>
+                </div>
+                <div class="meta-card">
+                    <i class="fas fa-users meta-icon"></i>
+                    <span class="stat-label">Público</span>
+                    <span id="meta-publico" class="font-medium">Todos</span>
+                </div>
+                <div class="meta-card">
+                    <i class="fas fa-calendar-alt meta-icon"></i>
+                    <span class="stat-label">Publicado</span>
+                    <span id="meta-fecha" class="font-medium">--</span>
+                </div>
+                <div class="meta-card">
+                    <i class="fas fa-copyright meta-icon"></i>
+                    <span class="stat-label">Derechos</span>
+                    <span id="meta-derechos" class="font-medium">Todos los derechos</span>
+                </div>
+                <div class="meta-card">
+                    <i class="fas fa-bookmark meta-icon"></i>
+                    <span class="stat-label">Estado</span>
+                    <span id="meta-estado" class="font-medium">Publicado</span>
+                </div>
+                <div class="meta-card">
+                    <i class="fas fa-list-ol meta-icon"></i>
+                    <span class="stat-label">Capítulo / Orden</span>
+                    <span id="meta-orden" class="font-medium">Obra completa</span>
                 </div>
             </div>
 
-            <article class="story-content" id="story-body">
-                <!-- Contenido de la historia -->
-            </article>
-
-            <div class="story-footer">
-                <h3 class="text-xl font-bold mb-4">Sobre el Autor/a</h3>
-                <p id="story-author-note" class="text-text-muted italic mb-8"></p>
-                <a href="inicio" class="btn-back">
-                    <i class="fas fa-home"></i> Volver al Inicio
-                </a>
+            <div class="meta-card mt-6">
+                <i class="fas fa-tags meta-icon"></i>
+                <span class="stat-label">Etiquetas</span>
+                <div id="story-tags" class="tags-container">
+                    <!-- Tags dinámicos -->
+                </div>
             </div>
-        </div>
-    </div>
+
+            <div class="meta-card mt-6">
+                <i class="fas fa-pen-nib meta-icon"></i>
+                <span class="stat-label">Nota de la Autora</span>
+                <p id="story-author-note" class="text-xuper-text-muted italic mt-2"></p>
+            </div>
+        </section>
+    </main>
 
     <script>
         let supabaseClient;
@@ -198,22 +514,17 @@
                 if (error) throw error;
                 if (!data) throw new Error('La historia no existe o no está disponible.');
 
-                // Actualizar vistas (opcional, pero recomendado para realismo)
+                // Actualizar vistas
                 try {
-                    const { data: rpcData, error: rpcError } = await supabaseClient.rpc('increment_views', { story_id: id });
+                    const { error: rpcError } = await supabaseClient.rpc('increment_views', { story_id: id });
                     if (rpcError) {
-                        console.warn('RPC increment_views no disponible, usando update manual:', rpcError);
-                        // Si el RPC no existe, intentamos update manual
                         await supabaseClient.from('historias').update({ vistas: (data.vistas || 0) + 1 }).eq('id', id);
                     }
                 } catch (rpcErr) {
                     console.warn('Error al actualizar vistas:', rpcErr);
-                    // Intento fallback silencioso
                     try {
                         await supabaseClient.from('historias').update({ vistas: (data.vistas || 0) + 1 }).eq('id', id);
-                    } catch (updateErr) {
-                        console.warn('No se pudo actualizar vistas:', updateErr);
-                    }
+                    } catch (e) {}
                 }
 
                 renderStory(data);
@@ -224,25 +535,68 @@
 
         function renderStory(story) {
             document.title = `${story.titulo} | Studio PeliPREX`;
-            document.getElementById('story-poster').src = story.poster_url || 'https://via.placeholder.com/200x300?text=Sin+Portada';
+            
+            // Hero
+            document.getElementById('story-poster').src = story.poster_url || 'https://via.placeholder.com/400x600?text=Sin+Portada';
             document.getElementById('story-title').textContent = story.titulo;
-            document.getElementById('story-meta').textContent = `Por ${story.autora_nombre || 'Autor Anónimo'}`;
-            document.getElementById('story-cat').textContent = story.categoria || 'Sin Categoría';
-            document.getElementById('story-views').textContent = `${(story.vistas || 0).toLocaleString()} vistas`;
-            document.getElementById('story-body').innerHTML = story.contenido_html;
-            document.getElementById('story-author-note').textContent = story.nota_autora || 'Este autor aún no ha compartido su biografía.';
+            document.getElementById('story-sinopsis').textContent = story.sinopsis || 'Sin sinopsis disponible.';
+            document.getElementById('story-author').textContent = story.autora_nombre || 'Autor Anónimo';
+            document.getElementById('author-avatar').textContent = (story.autora_nombre || 'A').charAt(0).toUpperCase();
+            
+            // Stats
+            document.getElementById('story-views').textContent = (story.vistas || 0).toLocaleString();
+            document.getElementById('story-rating').textContent = (story.valoracion_promedio || 0).toFixed(1);
+            document.getElementById('story-time').textContent = story.tiempo_lectura || '--';
 
-            document.getElementById('loading').classList.add('hidden');
-            document.getElementById('content').classList.remove('hidden');
+            // Badges
+            const badgesContainer = document.getElementById('story-badges');
+            badgesContainer.innerHTML = `<span class="badge">${story.categoria || 'General'}</span>`;
+            if (story.publico) badgesContainer.innerHTML += `<span class="badge" style="color: #ff4081; border-color: rgba(255,64,129,0.3)">${story.publico}</span>`;
+
+            // Body
+            document.getElementById('story-body').innerHTML = story.contenido_html;
+
+            // Meta Details
+            document.getElementById('meta-idioma').textContent = story.idioma === 'es' ? 'Español' : (story.idioma || 'Desconocido');
+            document.getElementById('meta-publico').textContent = story.publico || 'Todos';
+            document.getElementById('meta-fecha').textContent = new Date(story.fecha_publicacion).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+            document.getElementById('meta-derechos').textContent = story.derechos === 'todos' ? 'Todos los derechos reservados' : (story.derechos || 'No especificado');
+            document.getElementById('meta-estado').textContent = story.estado || 'Publicado';
+            document.getElementById('meta-orden').textContent = story.orden_indice === 0 ? 'Obra completa' : `Capítulo ${story.orden_indice}`;
+            
+            // Tags
+            const tagsContainer = document.getElementById('story-tags');
+            if (story.tags) {
+                story.tags.split(',').forEach(tag => {
+                    const span = document.createElement('span');
+                    span.className = 'tag-pill';
+                    span.textContent = `#${tag.trim()}`;
+                    tagsContainer.appendChild(span);
+                });
+            } else {
+                tagsContainer.innerHTML = '<span class="text-xuper-text-muted italic">Sin etiquetas</span>';
+            }
+
+            document.getElementById('story-author-note').textContent = story.nota_autora || 'El autor no ha dejado notas adicionales.';
+
+            // Show content
+            document.getElementById('loading').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('content').classList.remove('hidden');
+                window.scrollTo(0, 0);
+            }, 500);
         }
 
         function showError(msg) {
             document.getElementById('loading').innerHTML = `
-                <div class="text-center p-8">
-                    <i class="fas fa-exclamation-triangle text-ruby text-5xl mb-4"></i>
-                    <h2 class="text-2xl font-bold mb-2">¡Vaya! Algo salió mal</h2>
-                    <p class="text-text-muted mb-6">${msg}</p>
-                    <a href="inicio" class="btn-back">Volver al Inicio</a>
+                <div class="text-center p-8 max-w-md">
+                    <i class="fas fa-exclamation-circle text-red-500 text-6xl mb-6"></i>
+                    <h2 class="text-3xl font-bold mb-4">¡Vaya! Algo salió mal</h2>
+                    <p class="text-xuper-text-muted mb-8">${msg}</p>
+                    <a href="inicio" class="btn-back-modern mx-auto" style="width: auto; padding: 0 30px; gap: 10px;">
+                        <i class="fas fa-home"></i> Volver al Inicio
+                    </a>
                 </div>
             `;
         }
