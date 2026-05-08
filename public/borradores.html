@@ -270,6 +270,7 @@
             color: var(--text-muted);
             cursor: pointer;
             transition: all 0.2s ease;
+            text-decoration: none;
         }
         .header-btn:hover {
             border-color: var(--emerald);
@@ -686,6 +687,10 @@
                 <div class="header-btn" onclick="toggleView('list')" id="btn-list" title="Vista lista">
                     <i class="fas fa-list"></i>
                 </div>
+                <!-- 👤 Nuevo icono de perfil añadido exactamente a la derecha -->
+                <a href="cuenta.html" class="header-btn" title="Mi cuenta">
+                    <i class="fas fa-user-circle"></i>
+                </a>
             </div>
         </header>
 
