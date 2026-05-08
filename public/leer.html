@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -107,7 +108,6 @@
         /* scrollbar premium */
         ::-webkit-scrollbar {
             width: 6px;
-            height: 6px;
         }
         ::-webkit-scrollbar-track {
             background: #0a0f1c;
@@ -115,6 +115,15 @@
         ::-webkit-scrollbar-thumb {
             background: var(--accent-primary);
             border-radius: 8px;
+        }
+        
+        /* Utilidad para ocultar scrollbar en elementos con scroll horizontal (Cards) */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
 
         /* floating controls (font size) */
@@ -165,7 +174,7 @@
             display: flex;
             flex-wrap: wrap;
             gap: 48px;
-            margin-bottom: 64px;
+            margin-bottom: 32px;
             align-items: flex-start;
         }
         .poster-wrapper {
@@ -229,20 +238,23 @@
             border: 0.5px solid rgba(255,255,255,0.05);
         }
         
-        /* Updated: full-width reading area */
-        .reader-luxury {
-            background: rgba(3, 5, 11, 0.7);
-            backdrop-filter: blur(8px);
-            border-radius: 42px;
-            border: 1px solid rgba(110, 231, 255, 0.2);
-            padding: 3rem 2rem;
-            margin: 48px 0 32px;
-            box-shadow: 0 25px 50px -12px black;
+        .meta-card-lux {
+            background: rgba(12, 18, 30, 0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 28px;
+            padding: 1.2rem 1.5rem;
+            border: 1px solid rgba(110, 231, 255, 0.1);
+            transition: all 0.2s;
         }
+        .meta-card-lux:hover {
+            border-color: var(--accent-primary);
+            box-shadow: 0 8px 20px rgba(0,242,255,0.05);
+        }
+
+        /* reader area - Ahora libre de contenedores */
         .story-body {
-            /* Full width available, no max-width restriction */
-            max-width: none;
             width: 100%;
+            max-width: 100%; /* Aprovecha todo el ancho disponible */
             margin: 0 auto;
             font-family: var(--font-serif);
             font-size: 1.35rem;
@@ -263,55 +275,15 @@
             font-family: var(--font-serif);
         }
         
-        /* Horizontal scroll section - modern scrolling cards */
-        .scroll-horizontal-x {
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            display: flex;
-            flex-wrap: nowrap;
-            gap: 1.25rem;
-            padding-bottom: 1rem;
-            scrollbar-width: thin;
-        }
-        .scroll-horizontal-x::-webkit-scrollbar {
-            height: 5px;
-        }
-        .essence-card {
-            flex: 0 0 auto;
-            width: 280px;
-            scroll-snap-align: start;
-            background: rgba(12, 18, 30, 0.7);
-            backdrop-filter: blur(12px);
-            border-radius: 28px;
-            padding: 1.4rem 1.3rem;
-            border: 1px solid rgba(110, 231, 255, 0.1);
-            transition: all 0.25s ease;
-        }
-        .essence-card:hover {
-            border-color: var(--accent-primary);
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px -10px rgba(0,242,255,0.15);
-        }
-        .essence-icon {
-            font-size: 1.7rem;
-            color: var(--accent-primary);
-            margin-bottom: 0.75rem;
-        }
-        
         @media (max-width: 780px) {
             .story-container { padding: 80px 20px 60px; }
-            .reader-luxury { padding: 2rem 1.25rem; }
             .story-body { font-size: 1.2rem; }
             .reading-tool { bottom: 16px; right: 16px; padding: 6px 12px; }
-            .essence-card { width: 240px; }
         }
         @media (max-width: 640px) {
             .poster-wrapper { flex: 0 0 200px; margin: 0 auto; }
             .hero-asymmetric { justify-content: center; text-align: center; }
             .stat-glass { justify-content: center; }
-            .header-right-group {
-                gap: 0.6rem;
-            }
         }
 
         /* tags & animations */
@@ -323,7 +295,6 @@
             font-family: monospace;
             letter-spacing: 0.02em;
             border: 0.5px solid rgba(110,231,255,0.3);
-            display: inline-block;
         }
         .loading-morph {
             position: fixed;
@@ -371,21 +342,11 @@
             transform: translateX(-4px);
             box-shadow: 0 0 18px rgba(0,242,255,0.4);
         }
-        .author-profile-compact {
-            background: rgba(255,255,255,0.03);
-            border-radius: 60px;
-            padding: 0.25rem 0.9rem 0.25rem 0.5rem;
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(110,231,255,0.2);
-        }
-        .footer-gratitude {
-            background: linear-gradient(135deg, rgba(0,242,255,0.05), rgba(192,132,252,0.02));
-            border-radius: 40px;
-            border: 1px solid rgba(110,231,255,0.2);
-            margin-top: 3rem;
-            padding: 1.8rem 2rem;
-            text-align: center;
-            font-family: var(--font-serif);
+        .author-badge {
+            background: linear-gradient(145deg, #0f1627, #070b14);
+            border-radius: 80px;
+            padding: 0.4rem 0.5rem;
+            border: 1px solid rgba(110, 231, 255, 0.15);
         }
     </style>
 </head>
@@ -404,19 +365,13 @@
     <p class="mt-6 text-xs tracking-[0.2em] text-cyan-300/70 uppercase font-mono">cargando universo literario</p>
 </div>
 
-<!-- Header: back button + (reading time + writer profile aligned to right) -->
 <header class="fixed top-0 left-0 w-full z-50 p-5 flex justify-between items-center pointer-events-none">
     <a href="inicio" class="btn-back-neon pointer-events-auto" title="Volver al inicio">
         <i class="fas fa-arrow-left text-cyan-300 text-xl"></i>
     </a>
-    <div class="pointer-events-auto flex items-center gap-3 header-right-group">
+    <div class="pointer-events-auto flex gap-3 opacity-0 md:opacity-100">
         <div class="text-xs bg-black/30 backdrop-blur px-3 py-2 rounded-full border border-white/10 font-mono">
             <i class="fas fa-book-open text-cyan-400 mr-1"></i> <span id="readTimeLabel">Lectura</span>
-        </div>
-        <!-- Writer profile moved to header's right side -->
-        <div id="headerAuthorProfile" class="author-profile-compact flex items-center gap-2 transition-all">
-            <div class="w-7 h-7 rounded-full bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center text-white text-xs font-bold shadow-md" id="headerAuthorAvatar">?</div>
-            <span id="headerAuthorName" class="text-sm font-medium hidden sm:inline-block text-white/90">Cargando...</span>
         </div>
     </div>
 </header>
@@ -428,7 +383,20 @@
             <img id="posterImg" src="" alt="portada" class="story-poster">
         </div>
         <div class="hero-info">
-            <div class="flex flex-wrap gap-2 mb-4" id="badgeList"></div>
+            
+            <!-- Perfil del escritor alineado a la derecha de las opciones (Mejora 1) -->
+            <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+                <div class="flex flex-wrap gap-2" id="badgeList"></div>
+                
+                <div class="flex items-center gap-3 author-badge w-fit m-0">
+                    <div class="text-right pl-2">
+                        <p class="text-[10px] uppercase tracking-wider text-cyan-300 m-0 leading-tight">escritora</p>
+                        <p class="font-semibold text-sm m-0 leading-tight text-white" id="authorName"></p>
+                    </div>
+                    <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center text-white font-bold shadow-lg" id="authorAvatar">?</div>
+                </div>
+            </div>
+
             <h1 class="story-title mb-4" id="storyTitle">-</h1>
             <div class="flex flex-wrap gap-5 mb-6">
                 <div class="stat-glass"><i class="fas fa-eye text-cyan-400 mr-2"></i><span id="statViews">0</span><span class="text-xs ml-1 text-muted">vistas</span></div>
@@ -436,30 +404,52 @@
                 <div class="stat-glass"><i class="fas fa-hourglass-half text-purple-300 mr-2"></i><span id="statTime">--</span><span class="text-xs ml-1">min</span></div>
             </div>
             <p class="text-slate-300 text-lg leading-relaxed border-l-3 border-cyan-500 pl-5" id="storySinopsis"></p>
-            <!-- Original author badge removed: now located in header -->
         </div>
     </div>
 
-    <!-- lectura premium (full width) -->
-    <div class="reader-luxury fade-up" style="animation-delay: 0.1s;">
+    <!-- Lectura Inmersiva sin contenedor, a todo lo ancho (Mejora 2) -->
+    <div class="mt-14 mb-14 fade-up w-full" style="animation-delay: 0.1s;">
         <article class="story-body" id="storyBodyHTML"></article>
     </div>
 
-    <!-- metadata inmersiva: modern horizontal scroll cards -->
-    <div class="mt-12 fade-up" style="animation-delay: 0.2s;">
-        <div class="flex items-center gap-2 mb-6"><i class="fas fa-cubes text-cyan-400 text-xl"></i><span class="text-xl font-bold">esencia de la obra</span></div>
-        <!-- Horizontal scroll container for all cards -->
-        <div id="horizontalEssenceContainer" class="scroll-horizontal-x">
-            <!-- Dynamic cards will be injected here: metadata, tags, author note -->
+    <!-- Esencia de la obra en scroll horizontal fluido (Mejora 3) -->
+    <div class="mt-16 fade-up" style="animation-delay: 0.2s;">
+        <div class="flex items-center gap-2 mb-6">
+            <i class="fas fa-cubes text-cyan-400 text-xl"></i><span class="text-xl font-bold">esencia de la obra</span>
+        </div>
+        
+        <div class="flex overflow-x-auto gap-4 pb-6 hide-scrollbar snap-x snap-mandatory">
+            <!-- Grid convertido a tarjetas dentro del scroll -->
+            <div class="flex gap-4 snap-start" id="metaGrid"></div>
+            
+            <!-- Tags y Nota de la autora integrados en el scroll horizontal fluido -->
+            <div class="meta-card-lux min-w-[280px] shrink-0 snap-start" id="tagsContainer">
+                <div class="flex items-center gap-2 mb-3">
+                    <i class="fas fa-tag text-cyan-300"></i><span class="text-sm uppercase tracking-wide">constelaciones temáticas</span>
+                </div>
+                <div class="flex flex-wrap gap-2" id="tagList"></div>
+            </div>
+            
+            <div class="meta-card-lux min-w-[320px] shrink-0 snap-start" id="authorNoteBlock">
+                <div class="flex items-center gap-2 mb-2">
+                    <i class="fas fa-feather-alt text-cyan-300"></i><span class="text-sm uppercase tracking-wide">Nota de la autora</span>
+                </div>
+                <p id="authorNoteText" class="text-slate-300 italic mt-2 text-sm leading-relaxed"></p>
+            </div>
         </div>
     </div>
 
-    <!-- footer mensaje de agradecimiento al escritor/a -->
-    <div class="footer-gratitude fade-up" style="animation-delay: 0.3s;">
-        <i class="fas fa-feather-alt text-cyan-300 text-2xl mb-2 block"></i>
-        <p class="text-xl font-serif italic text-white/90">"Tu talento transforma palabras en mundos. Gracias por confiar en <span class="text-cyan-300 font-semibold">Masitaprex</span> para compartir tu creatividad con miles de personas. Seguiremos impulsando tu brillo. ✨"</p>
-        <p class="text-xs text-cyan-300/60 mt-3 tracking-wide">— Studio PeliPREX, siempre celebrando a sus escritores —</p>
-    </div>
+    <!-- Mensaje final emotivo para el escritor o escritora (Mejora 4) -->
+    <footer class="mt-20 pt-12 pb-10 border-t border-cyan-900/30 text-center fade-up" style="animation-delay: 0.3s;">
+        <div class="max-w-3xl mx-auto px-4 flex flex-col items-center">
+            <div class="w-12 h-12 rounded-full bg-cyan-900/20 flex items-center justify-center mb-6 border border-cyan-500/20 shadow-[0_0_15px_rgba(0,242,255,0.1)]">
+                <i class="fas fa-sparkles text-cyan-400 text-xl"></i>
+            </div>
+            <p class="text-slate-300 text-lg md:text-xl font-serif italic leading-relaxed">
+                "Tu talento transforma palabras en mundos. Gracias por confiar en Masitaprex para compartir tu creatividad con miles de personas. Seguiremos impulsando tu brillo. ✨"
+            </p>
+        </div>
+    </footer>
 </main>
 
 <!-- Reading tools -->
@@ -475,7 +465,7 @@
     const STORAGE_FONT_KEY = 'reader_font_size';
     let currentFontSize = 1.35; // rem
 
-    // apply font size to story-body (full width)
+    // apply font size to story-body
     function applyFontSize(sizeRem) {
         const bodyElem = document.querySelector('.story-body');
         if (bodyElem) {
@@ -507,6 +497,7 @@
         });
     }
 
+    // reading progress
     function initScrollProgress() {
         window.addEventListener('scroll', () => {
             const winScroll = document.documentElement.scrollTop;
@@ -542,6 +533,7 @@
             if (!data) throw new Error('La historia no está disponible');
             currentStoryData = data;
 
+            // increment views: rpc + fallback
             try {
                 const { error: rpcErr } = await supabaseClient.rpc('increment_views', { story_id: id });
                 if (rpcErr) {
@@ -550,6 +542,7 @@
             } catch(e) { console.warn(e); }
 
             renderPremiumUI(data);
+            // fade out loading
             const loadingDiv = document.getElementById('loadingOverlay');
             loadingDiv.style.opacity = '0';
             setTimeout(() => {
@@ -564,20 +557,15 @@
 
     function renderPremiumUI(story) {
         document.title = `${story.titulo} · Morphosis Studio`;
-        // poster & hero
+        // poster
         const poster = document.getElementById('posterImg');
         poster.src = story.poster_url || 'https://placehold.co/600x900/0a0f1c/6ee7ff?text=Portada';
         poster.alt = story.titulo;
         document.getElementById('storyTitle').innerText = story.titulo;
         document.getElementById('storySinopsis').innerText = story.sinopsis || 'El autor ha tejido una experiencia sin descripción, sumérgete en sus palabras.';
-        
-        // Update header writer profile
-        const authorName = story.autora_nombre || 'Anónimo';
-        document.getElementById('headerAuthorName').innerText = authorName;
-        const avatarLetter = (authorName).charAt(0).toUpperCase();
-        document.getElementById('headerAuthorAvatar').innerText = avatarLetter;
-        // also keep original author name hidden inside hero but we removed the block; we don't need duplication.
-        
+        document.getElementById('authorName').innerText = story.autora_nombre || 'Anónimo';
+        const avatarLetter = (story.autora_nombre || 'A').charAt(0).toUpperCase();
+        document.getElementById('authorAvatar').innerText = avatarLetter;
         document.getElementById('statViews').innerText = (story.vistas || 0).toLocaleString();
         document.getElementById('statRating').innerText = (story.valoracion_promedio || 0).toFixed(1);
         document.getElementById('statTime').innerText = story.tiempo_lectura || '??';
@@ -589,15 +577,12 @@
         if (story.categoria) badgeContainer.innerHTML += `<span class="badge-cyber"><i class="fas fa-layer-group mr-1 text-cyan-300"></i>${story.categoria}</span>`;
         if (story.publico) badgeContainer.innerHTML += `<span class="badge-cyber" style="border-color:#c084fc;">${story.publico}</span>`;
         
-        // contenido HTML lectura - full width enabled
+        // contenido HTML sin contenedor innecesario
         const bodyHtml = story.contenido_html || '<p class="italic text-center text-slate-400">El contenido de esta historia será revelado pronto.✨</p>';
         document.getElementById('storyBodyHTML').innerHTML = bodyHtml;
 
-        // ** Horizontal scroll section: "esencia de la obra" **
-        const container = document.getElementById('horizontalEssenceContainer');
-        container.innerHTML = '';
-        
-        // 1. meta items (6 cards)
+        // meta grid actualizado a formato de tarjeta para scroll horizontal
+        const metaGrid = document.getElementById('metaGrid');
         const metaItems = [
             { icon: 'globe', label: 'Idioma', value: story.idioma === 'es' ? 'Español' : (story.idioma || 'Español') },
             { icon: 'users', label: 'Público', value: story.publico || 'Todos los públicos' },
@@ -607,52 +592,37 @@
             { icon: 'list-ol', label: 'Orden', value: story.orden_indice === 0 ? 'Obra completa' : `Capítulo ${story.orden_indice}` }
         ];
         
-        metaItems.forEach(item => {
-            const card = document.createElement('div');
-            card.className = 'essence-card';
-            card.innerHTML = `
-                <div class="essence-icon"><i class="fas fa-${item.icon}"></i></div>
-                <span class="text-[10px] uppercase tracking-wider text-slate-400">${item.label}</span>
-                <p class="font-semibold text-white text-sm md:text-base mt-1 break-words">${item.value}</p>
-            `;
-            container.appendChild(card);
-        });
-        
-        // 2. Tags card
-        const tagsCard = document.createElement('div');
-        tagsCard.className = 'essence-card';
-        let tagsHtml = '<div class="essence-icon"><i class="fas fa-tags"></i></div><span class="text-[10px] uppercase tracking-wider text-slate-400">Constelaciones temáticas</span><div class="flex flex-wrap gap-2 mt-3">';
+        metaGrid.innerHTML = metaItems.map(item => `
+            <div class="meta-card-lux min-w-[180px] shrink-0 flex flex-col gap-2 snap-start">
+                <i class="fas fa-${item.icon} text-cyan-400 text-lg"></i>
+                <span class="text-[11px] uppercase tracking-wider text-slate-400">${item.label}</span>
+                <span class="font-medium text-white">${item.value}</span>
+            </div>
+        `).join('');
+
+        // tags
+        const tagListDiv = document.getElementById('tagList');
+        tagListDiv.innerHTML = '';
         if (story.tags && story.tags.trim()) {
             story.tags.split(',').forEach(tag => {
                 const clean = tag.trim();
-                if(clean) tagsHtml += `<span class="tag-nuance">#${clean}</span>`;
+                if(clean) tagListDiv.innerHTML += `<span class="tag-nuance">#${clean}</span>`;
             });
         } else {
-            tagsHtml += '<span class="text-slate-500 text-xs">sin etiquetas</span>';
+            tagListDiv.innerHTML = '<span class="text-slate-500 text-sm">sin etiquetas</span>';
         }
-        tagsHtml += '</div>';
-        tagsCard.innerHTML = tagsHtml;
-        container.appendChild(tagsCard);
+
+        // nota autora
+        const noteElem = document.getElementById('authorNoteText');
+        noteElem.innerText = story.nota_autora || 'El autor decidió dejar que la obra hable por sí misma.';
         
-        // 3. Nota de la autora card
-        const noteCard = document.createElement('div');
-        noteCard.className = 'essence-card';
-        const authorNoteText = story.nota_autora || 'El autor decidió dejar que la obra hable por sí misma.';
-        noteCard.innerHTML = `
-            <div class="essence-icon"><i class="fas fa-feather-alt"></i></div>
-            <span class="text-[10px] uppercase tracking-wider text-slate-400">Nota de la autora</span>
-            <p class="text-slate-300 italic text-sm mt-2 leading-relaxed">“${authorNoteText}”</p>
-        `;
-        container.appendChild(noteCard);
-        
-        // Ensure any previous reference style doesn't conflict: already done.
-        
-        // Font controls & progress
+        // extra: configurar controles de fuente despues de tener el DOM
         initFontControls();
         initScrollProgress();
-        
+
+        // suave animación a elementos
         const fadeItems = document.querySelectorAll('.fade-up');
-        fadeItems.forEach((el) => { el.style.opacity = '1'; });
+        fadeItems.forEach((el,idx) => { el.style.opacity = '1'; });
     }
 
     function showErrorScreen(msg) {
@@ -670,7 +640,10 @@
         loadingDiv.style.background = '#03050b';
     }
 
+    // ejecución
     initReader();
 </script>
 </body>
 </html>
+
+```
