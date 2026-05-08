@@ -405,6 +405,37 @@
             .scroll-dot { width: 7px; height: 7px; }
             .scroll-dot.active { width: 24px; }
         }
+
+        /* Botón "Realizar cambios" */
+        .btn-realizar-cambios {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: rgba(12, 18, 30, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(110, 231, 255, 0.3);
+            border-radius: 60px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            color: var(--text-soft);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            cursor: pointer;
+            font-size: 1rem;
+            text-decoration: none;
+        }
+        .btn-realizar-cambios:hover {
+            background: rgba(110, 231, 255, 0.1);
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 25px rgba(0, 242, 255, 0.3);
+            transform: translateY(-2px);
+            color: white;
+        }
+        .btn-realizar-cambios i {
+            font-size: 1.1rem;
+        }
     </style>
 </head>
 <body>
@@ -469,31 +500,15 @@
         <article class="story-body" id="storyBodyHTML"></article>
     </div>
 
-    <!-- ========== Esencia de la obra (Sección modificada) ========== -->
+    <!-- ========== Esencia de la obra (Sección modificada para espaciado uniforme) ========== -->
     <div class="mt-16 fade-up" style="animation-delay: 0.2s;">
         <div class="flex items-center gap-2 mb-6">
             <i class="fas fa-cubes text-cyan-400 text-xl"></i><span class="text-xl font-bold">esencia de la obra</span>
         </div>
         
-        <!-- Contenedor de scroll horizontal con espaciado generoso -->
+        <!-- Contenedor de scroll horizontal con espaciado uniforme entre todas las tarjetas -->
         <div class="flex overflow-x-auto gap-8 pb-6 hide-scrollbar snap-x snap-mandatory scroll-smooth" id="essenceScrollContainer">
-            <!-- Grid convertido a tarjetas dentro del scroll -->
-            <div class="flex gap-8 snap-start" id="metaGrid"></div>
-            
-            <!-- Tags y Nota de la autora integrados en el scroll horizontal fluido -->
-            <div class="meta-card-lux min-w-[280px] shrink-0 snap-start ml-2" id="tagsContainer">
-                <div class="flex items-center gap-2 mb-3">
-                    <i class="fas fa-tag text-cyan-300"></i><span class="text-sm uppercase tracking-wide">constelaciones temáticas</span>
-                </div>
-                <div class="flex flex-wrap gap-2" id="tagList"></div>
-            </div>
-            
-            <div class="meta-card-lux min-w-[320px] shrink-0 snap-start ml-2" id="authorNoteBlock">
-                <div class="flex items-center gap-2 mb-2">
-                    <i class="fas fa-feather-alt text-cyan-300"></i><span class="text-sm uppercase tracking-wide">Nota de la autora</span>
-                </div>
-                <p id="authorNoteText" class="text-slate-300 italic mt-2 text-sm leading-relaxed"></p>
-            </div>
+            <!-- Las tarjetas meta se insertarán dinámicamente aquí sin contenedor intermedio -->
         </div>
 
         <!-- 🎯 Indicador de scroll estilo Xuper TV (NUEVO) -->
@@ -502,8 +517,15 @@
         </div>
     </div>
 
+    <!-- Botón "Realizar cambios" antes del footer -->
+    <div class="flex justify-center mt-16 fade-up" style="animation-delay: 0.25s;">
+        <a href="nueva-historia.html" class="btn-realizar-cambios">
+            <i class="fas fa-pen-to-square"></i> Realizar cambios
+        </a>
+    </div>
+
     <!-- Mensaje final emotivo con ícono de pluma (Mejora 4) -->
-    <footer class="mt-20 pt-12 pb-10 border-t border-cyan-900/30 text-center fade-up" style="animation-delay: 0.3s;">
+    <footer class="mt-12 pt-12 pb-10 border-t border-cyan-900/30 text-center fade-up" style="animation-delay: 0.3s;">
         <div class="max-w-3xl mx-auto px-4 flex flex-col items-center">
             <div class="w-12 h-12 rounded-full bg-cyan-900/20 flex items-center justify-center mb-6 border border-cyan-500/20 shadow-[0_0_15px_rgba(0,242,255,0.1)]">
                 <i class="fas fa-pen-fancy text-cyan-400 text-xl"></i>
@@ -578,7 +600,7 @@
         });
     }
 
-    // 🎯 NUEVO: Inicializar indicador de scroll horizontal tipo Xuper TV
+    // 🎯 Inicializar indicador de scroll horizontal tipo Xuper TV
     function initScrollIndicator() {
         const container = document.getElementById('essenceScrollContainer');
         const indicatorWrapper = document.getElementById('scrollIndicator');
@@ -617,7 +639,6 @@
             if (!dots.length || !progressFill) return;
 
             const containerRect = container.getBoundingClientRect();
-            const containerLeft = containerRect.left;
             const containerWidth = containerRect.width;
             const scrollLeft = container.scrollLeft;
             const maxScroll = container.scrollWidth - containerWidth;
@@ -731,8 +752,11 @@
         const bodyHtml = story.contenido_html || '<p class="italic text-center text-slate-400">El contenido de esta historia será revelado pronto.✨</p>';
         document.getElementById('storyBodyHTML').innerHTML = bodyHtml;
 
-        // meta grid actualizado a formato de tarjeta para scroll horizontal (con gap-8 en el contenedor padre)
-        const metaGrid = document.getElementById('metaGrid');
+        // ---------- NUEVA FORMA: Insertar tarjetas meta directamente en el contenedor de scroll ----------
+        const scrollContainer = document.getElementById('essenceScrollContainer');
+        // Limpiar cualquier contenido previo (por si acaso)
+        scrollContainer.innerHTML = '';
+
         const metaItems = [
             { icon: 'globe', label: 'Idioma', value: story.idioma === 'es' ? 'Español' : (story.idioma || 'Español') },
             { icon: 'users', label: 'Público', value: story.publico || 'Todos los públicos' },
@@ -741,18 +765,43 @@
             { icon: 'bookmark', label: 'Estado', value: story.estado || 'Publicado' },
             { icon: 'list-ol', label: 'Orden', value: story.orden_indice === 0 ? 'Obra completa' : `Capítulo ${story.orden_indice}` }
         ];
-        
-        metaGrid.innerHTML = metaItems.map(item => `
-            <div class="meta-card-lux min-w-[180px] shrink-0 flex flex-col gap-2 snap-start">
-                <i class="fas fa-${item.icon} text-cyan-400 text-lg"></i>
-                <span class="text-[11px] uppercase tracking-wider text-slate-400">${item.label}</span>
-                <span class="font-medium text-white">${item.value}</span>
-            </div>
-        `).join('');
 
-        // tags
+        // Insertar cada tarjeta meta como un elemento independiente
+        metaItems.forEach(item => {
+            const cardHTML = `
+                <div class="meta-card-lux min-w-[180px] shrink-0 flex flex-col gap-2 snap-start">
+                    <i class="fas fa-${item.icon} text-cyan-400 text-lg"></i>
+                    <span class="text-[11px] uppercase tracking-wider text-slate-400">${item.label}</span>
+                    <span class="font-medium text-white">${item.value}</span>
+                </div>
+            `;
+            scrollContainer.insertAdjacentHTML('beforeend', cardHTML);
+        });
+
+        // Insertar tarjeta de constelaciones temáticas
+        const tagsHTML = `
+            <div class="meta-card-lux min-w-[280px] shrink-0 snap-start" id="tagsContainer">
+                <div class="flex items-center gap-2 mb-3">
+                    <i class="fas fa-tag text-cyan-300"></i><span class="text-sm uppercase tracking-wide">constelaciones temáticas</span>
+                </div>
+                <div class="flex flex-wrap gap-2" id="tagList"></div>
+            </div>
+        `;
+        scrollContainer.insertAdjacentHTML('beforeend', tagsHTML);
+
+        // Insertar tarjeta de nota de la autora
+        const noteHTML = `
+            <div class="meta-card-lux min-w-[320px] shrink-0 snap-start" id="authorNoteBlock">
+                <div class="flex items-center gap-2 mb-2">
+                    <i class="fas fa-feather-alt text-cyan-300"></i><span class="text-sm uppercase tracking-wide">Nota de la autora</span>
+                </div>
+                <p id="authorNoteText" class="text-slate-300 italic mt-2 text-sm leading-relaxed"></p>
+            </div>
+        `;
+        scrollContainer.insertAdjacentHTML('beforeend', noteHTML);
+
+        // Llenar tags
         const tagListDiv = document.getElementById('tagList');
-        tagListDiv.innerHTML = '';
         if (story.tags && story.tags.trim()) {
             story.tags.split(',').forEach(tag => {
                 const clean = tag.trim();
@@ -762,13 +811,15 @@
             tagListDiv.innerHTML = '<span class="text-slate-500 text-sm">sin etiquetas</span>';
         }
 
-        // nota autora
-        const noteElem = document.getElementById('authorNoteText');
-        noteElem.innerText = story.nota_autora || 'El autor decidió dejar que la obra hable por sí misma.';
+        // Llenar nota de autora
+        document.getElementById('authorNoteText').innerText = story.nota_autora || 'El autor decidió dejar que la obra hable por sí misma.';
         
         // extra: configurar controles de fuente despues de tener el DOM
         initFontControls();
         initScrollProgress();
+
+        // Reconstruir el indicador de scroll porque el contenido cambió
+        initScrollIndicator();
 
         // suave animación a elementos
         const fadeItems = document.querySelectorAll('.fade-up');
