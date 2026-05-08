@@ -714,15 +714,23 @@
     async function loginWithGoogle() {
         showLoading(true);
         try {
-            const { error } = await supabaseClient.auth.signInWithOAuth({
+            const { data, error } = await supabaseClient.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
-                    redirectTo: window.location.origin + '/login.html'
+                    redirectTo: window.location.origin + '/login.html',
+                    queryParams: {
+                        access_type: 'offline',
+                        prompt: 'consent'
+                    }
                 }
             });
-            if (error) throw error;
+            if (error) {
+                console.error('OAuth Error:', error);
+                throw error;
+            }
         } catch (error) {
-            showMessage('Error con Google: ' + error.message, 'error');
+            console.error('Google login error:', error);
+            showMessage('Error con Google: ' + (error?.message || error?.error_description || 'Intenta nuevamente'), 'error');
             showLoading(false);
         }
     }
@@ -730,15 +738,20 @@
     async function loginWithGitHub() {
         showLoading(true);
         try {
-            const { error } = await supabaseClient.auth.signInWithOAuth({
+            const { data, error } = await supabaseClient.auth.signInWithOAuth({
                 provider: 'github',
                 options: {
-                    redirectTo: window.location.origin + '/login.html'
+                    redirectTo: window.location.origin + '/login.html',
+                    scopes: 'user:email'
                 }
             });
-            if (error) throw error;
+            if (error) {
+                console.error('OAuth Error:', error);
+                throw error;
+            }
         } catch (error) {
-            showMessage('Error con GitHub: ' + error.message, 'error');
+            console.error('GitHub login error:', error);
+            showMessage('Error con GitHub: ' + (error?.message || error?.error_description || 'Intenta nuevamente'), 'error');
             showLoading(false);
         }
     }

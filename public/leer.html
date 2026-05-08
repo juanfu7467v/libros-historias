@@ -199,10 +199,22 @@
                 if (!data) throw new Error('La historia no existe o no está disponible.');
 
                 // Actualizar vistas (opcional, pero recomendado para realismo)
-                await supabaseClient.rpc('increment_views', { story_id: id }).catch(() => {
-                    // Si el RPC no existe, intentamos update manual
-                    supabaseClient.from('historias').update({ vistas: (data.vistas || 0) + 1 }).eq('id', id);
-                });
+                try {
+                    const { data: rpcData, error: rpcError } = await supabaseClient.rpc('increment_views', { story_id: id });
+                    if (rpcError) {
+                        console.warn('RPC increment_views no disponible, usando update manual:', rpcError);
+                        // Si el RPC no existe, intentamos update manual
+                        await supabaseClient.from('historias').update({ vistas: (data.vistas || 0) + 1 }).eq('id', id);
+                    }
+                } catch (rpcErr) {
+                    console.warn('Error al actualizar vistas:', rpcErr);
+                    // Intento fallback silencioso
+                    try {
+                        await supabaseClient.from('historias').update({ vistas: (data.vistas || 0) + 1 }).eq('id', id);
+                    } catch (updateErr) {
+                        console.warn('No se pudo actualizar vistas:', updateErr);
+                    }
+                }
 
                 renderStory(data);
             } catch (err) {
