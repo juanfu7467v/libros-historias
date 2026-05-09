@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
-    <title>Mi Perfil | Studio PeliPREX - Masitaprex</title>
+    <title>Mi Perfil Profesional | Studio PeliPREX - Masitaprex</title>
     <meta name="description" content="Tu espacio personal en Studio PeliPREX. Administra tus datos de escritor/a y opciones de cuenta.">
     <meta name="keywords" content="perfil, escritor, ajustes, cerrar sesión, eliminar cuenta, masitaprex" />
     <meta name="robots" content="index, follow" />
@@ -95,7 +95,7 @@
         .ambient-3 { top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80vw; height: 80vh; background: radial-gradient(ellipse, rgba(0,200,83,0.02) 0%, transparent 70%); }
         @keyframes floatAmbient { 0%,100%{transform:translate(0,0) scale(1);} 33%{transform:translate(20px,-20px) scale(1.05);} 66%{transform:translate(-15px,15px) scale(0.95);} }
 
-        /* ═══ SIDEBAR (sin cambios) ═══ */
+        /* ═══ SIDEBAR ═══ */
         #sidebar-overlay {
             position: fixed; inset: 0;
             background: rgba(0,0,0,0.8);
@@ -178,7 +178,7 @@
         }
         #menu-toggle:hover { transform: scale(1.05); background: var(--navy-surface); box-shadow: 0 0 15px var(--emerald-glow); }
 
-        /* ═══ LAYOUT PRINCIPAL (PERFIL + AJUSTES) ═══ */
+        /* ═══ LAYOUT PRINCIPAL ═══ */
         .main-container {
             width: 100%;
             max-width: 1200px;
@@ -191,11 +191,9 @@
             flex-wrap: wrap;
             gap: 32px;
         }
-        /* Columna izquierda: ajustes SIN CONTENEDOR (solo el título y botones) */
         .settings-sidebar {
             flex: 1;
             min-width: 220px;
-            /* ELIMINADO: background, backdrop-filter, border-radius, padding, border */
         }
         .settings-title {
             font-family: var(--font-mono);
@@ -208,232 +206,236 @@
             align-items: center;
             gap: 8px;
         }
-        .settings-option {
-            margin-bottom: 20px;
-        }
-        .settings-option button {
-            width: 100%;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid var(--border-subtle);
-            border-radius: 16px;
-            padding: 14px 16px;
-            font-family: var(--font-family);
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: var(--text-primary);
-            cursor: pointer;
-            transition: all 0.2s ease;
+        .settings-nav { display: flex; flex-direction: column; gap: 8px; }
+        .nav-item {
             display: flex;
             align-items: center;
             gap: 12px;
-            text-align: left;
-        }
-        .settings-option button i { width: 24px; font-size: 1.1rem; color: var(--text-muted); }
-        .settings-option button:hover {
-            background: rgba(0,200,83,0.08);
-            border-color: var(--emerald);
-            color: var(--emerald-light);
-        }
-        .settings-option button.danger:hover {
-            background: rgba(229,57,53,0.08);
-            border-color: var(--ruby);
-            color: var(--ruby-light);
-        }
-        .settings-option button.danger i { color: var(--ruby-light); }
-
-        /* Columna derecha: formulario de perfil */
-        .profile-form {
-            flex: 2.5;
-            min-width: 280px;
-        }
-        .profile-header {
-            margin-bottom: 32px;
-        }
-        .profile-header h1 {
-            font-family: var(--font-display);
-            font-size: 1.8rem;
-            font-weight: 700;
-            font-style: italic;
-            color: var(--white);
-            margin-bottom: 8px;
-        }
-        .profile-header p {
+            padding: 14px 20px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--navy-border);
+            border-radius: 14px;
             color: var(--text-muted);
-            font-size: 0.9rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
         }
-        .field-group {
+        .nav-item i { font-size: 1.1rem; width: 24px; text-align: center; }
+        .nav-item:hover { background: rgba(255,255,255,0.06); color: var(--white); transform: translateX(4px); }
+        .nav-item.active { background: rgba(0,200,83,0.1); border-color: var(--emerald-dark); color: var(--emerald-light); }
+        .nav-item.danger { border-color: rgba(229,57,53,0.2); }
+        .nav-item.danger:hover { background: rgba(229,57,53,0.1); color: var(--ruby-light); border-color: var(--ruby); }
+
+        .content-area {
+            flex: 3;
+            min-width: 320px;
+        }
+        .profile-form {
+            background: var(--navy-surface);
+            border: 1px solid var(--navy-border);
+            border-radius: var(--radius);
+            padding: 40px;
+            box-shadow: var(--shadow-card);
+            backdrop-filter: blur(10px);
+        }
+        .profile-header { margin-bottom: 40px; }
+        .profile-header h1 { font-family: var(--font-display); font-size: 2rem; color: var(--white); margin-bottom: 8px; }
+        .profile-header p { color: var(--text-muted); font-size: 0.95rem; }
+
+        /* Foto de Perfil Estilizada */
+        .avatar-section {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .avatar-container {
+            width: 100px;
+            height: 100px;
+            border-radius: 30px;
+            background: linear-gradient(135deg, var(--navy-card), var(--navy-border));
+            border: 2px solid var(--emerald);
+            box-shadow: 0 0 20px var(--emerald-glow);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .avatar-container img { width: 100%; height: 100%; object-fit: cover; }
+        .avatar-container i { font-size: 2.5rem; color: var(--emerald); }
+        .avatar-upload-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--navy-border);
+            color: var(--text-primary);
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .avatar-upload-btn:hover { background: var(--navy-card); border-color: var(--emerald); }
+
+        /* Formulario Grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
             margin-bottom: 32px;
         }
+
+        .field-group { margin-bottom: 24px; }
         .field-label {
-            display: block;
-            font-size: 0.78rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            color: var(--text-subtle);
-            margin-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
-        .field-label i { color: var(--emerald); font-size: 0.85rem; }
-        .field-tooltip {
-            display: inline-flex; align-items: center; justify-content: center;
-            width: 16px; height: 16px; border-radius: 50%;
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: var(--text-subtle); font-size: 0.7rem; cursor: help;
-            position: relative;
-            margin-left: 2px;
-        }
-        .field-tooltip:hover .tooltip-bubble { opacity: 1; pointer-events: auto; transform: translateY(0); }
-        .tooltip-bubble {
-            position: absolute; bottom: calc(100% + 8px); left: 50%;
-            transform: translateX(-50%) translateY(4px);
-            background: var(--navy-card);
-            border: 1px solid var(--navy-border);
-            border-radius: 10px; padding: 10px 14px;
-            font-size: 0.75rem; font-weight: 400; text-transform: none;
-            color: var(--text-muted); white-space: normal; width: 220px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-            opacity: 0; pointer-events: none;
-            transition: all 0.2s ease; z-index: 200;
-        }
+        .field-label i { color: var(--emerald); font-size: 0.9rem; }
         .field-input, .field-select, .field-textarea {
             width: 100%;
-            background: transparent;
-            border: none;
-            border-bottom: 2px solid var(--navy-border);
-            padding: 14px 4px;
+            background: rgba(10, 22, 40, 0.5);
+            border: 1px solid var(--navy-border);
+            border-radius: 12px;
+            padding: 14px 18px;
             color: var(--white);
             font-family: var(--font-family);
-            font-size: 1rem;
-            font-weight: 500;
-            outline: none;
-            transition: border-color 0.25s ease;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
         }
         .field-input:focus, .field-select:focus, .field-textarea:focus {
-            border-bottom-color: var(--emerald);
-            box-shadow: 0 2px 0 0 var(--emerald-glow);
+            outline: none;
+            border-color: var(--emerald);
+            background: rgba(10, 22, 40, 0.8);
+            box-shadow: 0 0 15px rgba(0,200,83,0.1);
         }
-        .select-wrapper { position: relative; }
-        .select-wrapper::after {
-            content: '\f107';
-            font-family: 'Font Awesome 6 Free'; font-weight: 900;
-            position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
-            color: var(--emerald);
-            pointer-events: none;
+        .field-textarea { min-height: 120px; resize: vertical; }
+        .field-hint { font-size: 0.75rem; color: var(--text-subtle); margin-top: 8px; display: flex; align-items: center; gap: 6px; }
+        
+        .section-divider {
+            height: 1px;
+            background: var(--border-subtle);
+            margin: 32px 0;
+            position: relative;
         }
-        .field-select { padding-right: 32px; cursor: pointer; background: transparent; appearance: none; }
-        .field-select option { background: var(--navy-card); color: var(--white); }
-        .field-textarea {
-            height: 110px;
-            resize: none;
-            border: 1px solid var(--navy-border);
-            border-radius: 14px;
-            padding: 12px 16px;
-            line-height: 1.6;
+        .section-divider::after {
+            content: attr(data-label);
+            position: absolute;
+            top: 50%;
+            left: 20px;
+            transform: translateY(-50%);
+            background: var(--navy-surface);
+            padding: 0 12px;
+            font-size: 0.7rem;
+            font-family: var(--font-mono);
+            color: var(--text-subtle);
+            text-transform: uppercase;
         }
-        .field-textarea:focus { border-color: var(--emerald); box-shadow: 0 0 0 4px rgba(0,200,83,0.1); }
-        .char-counter {
-            font-family: var(--font-mono); font-size: 0.7rem;
-            color: var(--text-subtle); text-align: right; margin-top: 6px;
-        }
-        .char-counter span { color: var(--emerald); }
-        .field-hint {
-            font-size: 0.75rem; color: var(--text-subtle);
-            margin-top: 8px; display: flex; align-items: center; gap: 5px;
-        }
-        /* Botón guardar: sin ícono y ancho completo */
+
         .save-btn {
             width: 100%;
-            background: linear-gradient(135deg, var(--emerald), var(--emerald-dark));
+            background: linear-gradient(135deg, var(--emerald-dark), var(--emerald));
             color: #000;
-            font-weight: 800;
             border: none;
-            border-radius: 60px;
-            padding: 14px 28px;
-            font-size: 0.9rem;
+            border-radius: 14px;
+            padding: 16px;
+            font-weight: 800;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
             cursor: pointer;
-            transition: all 0.25s ease;
-            margin-top: 16px;
-            box-shadow: 0 4px 16px rgba(0,200,83,0.3);
-            text-align: center;
-            display: block;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 25px var(--emerald-glow);
+            margin-top: 20px;
         }
-        .save-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,200,83,0.4); background: linear-gradient(135deg, var(--emerald-light), var(--emerald)); }
+        .save-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 30px var(--emerald-glow-strong); filter: brightness(1.1); }
+        .save-btn:active { transform: translateY(0); }
 
-        /* Modal */
-        .modal-overlay {
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(10px);
-            z-index: 2000;
-            display: none;
+        /* Social Inputs */
+        .social-input-group {
+            display: flex;
+            align-items: center;
+            background: rgba(10, 22, 40, 0.5);
+            border: 1px solid var(--navy-border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        .social-input-group:focus-within { border-color: var(--emerald); box-shadow: 0 0 15px rgba(0,200,83,0.1); }
+        .social-icon-box {
+            width: 48px;
+            height: 48px;
+            display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            background: rgba(255,255,255,0.03);
+            border-right: 1px solid var(--navy-border);
+            color: var(--text-muted);
         }
-        .modal-content {
-            background: linear-gradient(160deg, var(--navy-card), var(--navy-surface));
-            border: 1px solid var(--navy-border);
-            border-radius: 28px;
-            padding: 40px 32px;
-            max-width: 440px;
-            width: 100%;
-            text-align: center;
-            animation: modalIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        @keyframes modalIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .modal-icon {
-            width: 80px; height: 80px; border-radius: 50%;
-            background: rgba(0,200,83,0.1);
-            border: 2px solid rgba(0,200,83,0.3);
-            color: var(--emerald);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 2rem; margin: 0 auto 20px;
-        }
-        .modal-title { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; margin-bottom: 12px; }
-        .modal-desc { color: var(--text-muted); margin-bottom: 28px; line-height: 1.6; }
-        .modal-btn {
-            background: linear-gradient(135deg, var(--emerald), var(--emerald-dark));
+        .social-input {
+            flex: 1;
+            background: transparent;
             border: none;
-            padding: 14px 20px;
-            border-radius: 14px;
-            font-weight: 800;
-            color: #000;
-            cursor: pointer;
-            width: 100%;
+            padding: 12px 16px;
+            color: var(--white);
+            font-size: 0.9rem;
         }
+        .social-input:focus { outline: none; }
 
-        /* Footer */
+        /* FOOTER */
         .footer-ecosystem {
             width: 100%;
-            background: var(--navy-surface);
-            padding: 44px 20px 36px;
+            padding: 60px 24px;
+            background: rgba(0,0,0,0.3);
+            border-top: 1px solid var(--border-subtle);
             text-align: center;
-            border-top: 1px solid var(--border-active);
-            margin-top: 40px;
+            margin-top: auto;
         }
-        .footer-ecosystem::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--emerald), var(--gold), transparent);
+        .footer-ecosystem h3 { font-family: var(--font-display); font-size: 1.5rem; color: var(--white); margin-bottom: 24px; }
+        .footer-social-icons { display: flex; justify-content: center; gap: 20px; margin-bottom: 32px; }
+        .footer-social-icons a {
+            width: 44px; height: 44px; border-radius: 50%;
+            background: rgba(255,255,255,0.05); border: 1px solid var(--border-subtle);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-primary); transition: all 0.3s; text-decoration: none;
         }
-        .footer-ecosystem h3 { font-size: 0.88rem; font-weight: 700; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 18px; }
-        .footer-social-icons { display: flex; justify-content: center; gap: 20px; margin-bottom: 22px; }
-        .footer-social-icons a { display: inline-flex; align-items: center; justify-content: center; width: 46px; height: 46px; border-radius: 50%; background: rgba(0,200,83,0.08); color: var(--emerald-light); font-size: 1.4rem; transition: all 0.3s ease; border: 1px solid var(--border-subtle); text-decoration: none; }
-        .footer-social-icons a:hover { background: rgba(0,200,83,0.2); transform: translateY(-4px); border-color: var(--emerald); box-shadow: 0 8px 24px var(--emerald-glow); }
-        .footer-links-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 18px; margin: 18px 0 14px; }
-        .footer-links-row a { color: var(--text-muted); text-decoration: none; font-size: 0.78rem; font-weight: 600; transition: color 0.2s ease; }
-        .footer-links-row a:hover { color: var(--emerald); }
-        .footer-copyright { color: var(--text-subtle); font-size: 0.72rem; margin-top: 12px; }
-        .footer-version { color: var(--text-subtle); font-size: 0.65rem; margin-top: 6px; font-family: var(--font-mono); }
+        .footer-social-icons a:hover { background: var(--emerald); color: #000; transform: translateY(-5px); }
+        .footer-links-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-bottom: 24px; font-size: 0.85rem; }
+        .footer-links-row a { color: var(--text-muted); text-decoration: none; transition: color 0.3s; }
+        .footer-links-row a:hover { color: var(--emerald-light); }
+        .footer-version { font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-subtle); margin-top: 20px; }
+
+        /* MODAL */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(10px); z-index: 1000;
+            display: none; align-items: center; justify-content: center; padding: 20px;
+        }
+        .modal-content {
+            background: var(--navy-surface); border: 1px solid var(--emerald-dark);
+            border-radius: 24px; padding: 40px; max-width: 400px; width: 100%;
+            text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            animation: modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes modalPop { from{transform:scale(0.8);opacity:0;} to{transform:scale(1);opacity:1;} }
+        .modal-icon { width: 64px; height: 64px; background: var(--emerald-glow); color: var(--emerald); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 24px; }
+        .modal-title { font-family: var(--font-display); font-size: 1.5rem; color: var(--white); margin-bottom: 12px; }
+        .modal-desc { color: var(--text-muted); margin-bottom: 30px; line-height: 1.6; }
+        .modal-btn { width: 100%; background: var(--emerald); color: #000; border: none; border-radius: 12px; padding: 14px; font-weight: 700; cursor: pointer; }
 
         @media (max-width: 768px) {
             .profile-layout { flex-direction: column; }
-            .settings-sidebar { order: 2; margin-top: 16px; }
-            .profile-form { order: 1; }
-            .main-container { padding: 80px 16px 40px; }
+            .profile-form { padding: 24px; }
+            .profile-header h1 { font-size: 1.6rem; }
+            .main-container { padding-top: 60px; }
         }
     </style>
 </head>
@@ -442,130 +444,182 @@
     <div class="ambient-2"></div>
     <div class="ambient-3"></div>
 
-    <button id="menu-toggle" aria-label="Abrir menú">
-        <i data-lucide="menu"></i>
-    </button>
-    <div id="sidebar-overlay" class="hidden"></div>
+    <div id="sidebar-overlay"></div>
+    <div id="menu-toggle"><i class="fas fa-bars"></i></div>
 
     <aside id="sidebar">
         <div class="sb-header">
-            <div class="sb-logo-box">
-                <img src="https://cdn-icons-png.flaticon.com/128/747/747965.png" alt="Masitaprex">
-            </div>
-            <div class="sb-brand">Masitaprex</div>
-            <div class="sb-tagline">Infraestructura Tecnológica • LATAM</div>
+            <div class="sb-logo-box"><img src="https://cdn-icons-png.flaticon.com/128/747/747965.png" alt="Studio PeliPREX"></div>
+            <div class="sb-brand">Studio PeliPREX</div>
+            <div class="sb-tagline">Universo de Historias</div>
         </div>
         <div class="sb-scroll-area">
             <nav>
-                <div class="sb-cat">General</div>
+                <div class="sb-cat">Navegación</div>
                 <a href="inicio"><i class="fas fa-home sb-icon"></i><span>Inicio</span></a>
+                <a href="cuenta" class="active"><i class="fas fa-user-circle sb-icon"></i><span>Mi Perfil</span></a>
                 <div class="sb-cat">Studio PeliPREX</div>
-                <a href="nueva-historia" class="active"><i class="fas fa-user-circle sb-icon"></i><span>Mi Perfil</span></a>
+                <a href="nueva-historia"><i class="fas fa-pen-fancy sb-icon"></i><span>Nueva Historia</span></a>
                 <a href="mis-historias"><i class="fas fa-book-open sb-icon"></i><span>Mis Historias</span></a>
                 <a href="borradores"><i class="fas fa-file-alt sb-icon"></i><span>Borradores</span><span class="sb-badge" id="sidebar-draft-count">0</span></a>
-                <a href="estadisticas"><i class="fas fa-chart-bar sb-icon"></i><span>Estadísticas</span></a>
-                <div class="sb-cat">Entretenimiento</div>
-                <a href="https://www.masitaprex.com/PeliPREX"><i class="fas fa-film sb-icon"></i><span>Películas gratis</span></a>
+                <a href="estadisticas.html"><i class="fas fa-chart-bar sb-icon"></i><span>Estadísticas</span></a>
             </nav>
         </div>
         <div class="sb-footer">
-            <a href="https://m.facebook.com/61564349657272/" target="_blank"><i class="fab fa-facebook-f"></i></a>
-            <a href="https://youtube.com/@eltiojota628" target="_blank"><i class="fab fa-youtube"></i></a>
-            <a href="https://wa.me/51944950234" target="_blank"><i class="fab fa-whatsapp"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-discord"></i></a>
         </div>
     </aside>
 
     <div class="main-container">
         <div class="profile-layout">
-            <!-- COLUMNA IZQUIERDA: AJUSTES (sin contenedor extra) -->
             <div class="settings-sidebar">
-                <div class="settings-title">
-                    <i class="fas fa-sliders-h"></i> Ajustes de cuenta
-                </div>
-                <div class="settings-option">
-                    <button id="logoutBtn">
-                        <i class="fas fa-sign-out-alt"></i> Cerrar sesión
-                    </button>
-                </div>
-                <div class="settings-option">
-                    <button id="deleteAccountBtn" class="danger">
-                        <i class="fas fa-trash-alt"></i> Darme de baja (eliminar cuenta)
-                    </button>
-                </div>
-                <div class="field-hint" style="margin-top: 24px; font-size:0.7rem;">
-                    <i class="fas fa-shield-alt"></i> Tus datos están protegidos. Al eliminar la cuenta se borrarán todas tus historias.
+                <div class="settings-title"><i class="fas fa-cog"></i> Configuración</div>
+                <div class="settings-nav">
+                    <div class="nav-item active"><i class="fas fa-user-edit"></i> Perfil de Autor</div>
+                    <div class="nav-item" onclick="showModal('Seguridad', 'La gestión de contraseñas se realiza a través de Supabase Auth.', 'info')"><i class="fas fa-shield-alt"></i> Seguridad</div>
+                    <div class="nav-item" onclick="showModal('Notificaciones', 'Próximamente podrás configurar tus alertas.', 'info')"><i class="fas fa-bell"></i> Notificaciones</div>
+                    <div class="nav-item danger" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</div>
+                    <div class="nav-item danger" id="deleteAccountBtn"><i class="fas fa-user-minus"></i> Eliminar Cuenta</div>
                 </div>
             </div>
 
-            <!-- COLUMNA DERECHA: FORMULARIO DE PERFIL -->
-            <div class="profile-form">
-                <div class="profile-header">
-                    <h1>Tu perfil de escritor/a</h1>
-                    <p>Completa tu información personal. Así aparecerás en tus publicaciones.</p>
-                </div>
+            <div class="content-area">
+                <div class="profile-form">
+                    <div class="profile-header">
+                        <h1>Perfil de Autor</h1>
+                        <p>Personaliza tu identidad literaria en el Studio.</p>
+                    </div>
 
-                <div class="field-group">
-                    <label class="field-label">
-                        <i class="fas fa-feather-alt"></i> Nombre artístico
-                        <span class="field-tooltip">?
-                            <span class="tooltip-bubble">Tu seudónimo o nombre público como autor/a.</span>
-                        </span>
-                    </label>
-                    <input type="text" class="field-input" id="campo-autora" placeholder="Ej: Isabel Allende, J.K. Rowling…">
-                </div>
+                    <div class="avatar-section">
+                        <div class="avatar-container" id="avatar-preview">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div>
+                            <div class="field-label">Imagen de Perfil</div>
+                            <input type="text" class="field-input mb-2" id="campo-foto-perfil" placeholder="URL de tu foto (https://...)" onchange="updateAvatarPreview(this.value)">
+                            <p class="field-hint">Usa una URL directa de imagen (JPG, PNG).</p>
+                        </div>
+                    </div>
 
-                <div class="field-group">
-                    <label class="field-label">
-                        <i class="fas fa-envelope"></i> Email de contacto
-                        <span class="field-tooltip">?
-                            <span class="tooltip-bubble">Solo para comunicaciones del studio. No se muestra al público.</span>
-                        </span>
-                    </label>
-                    <input type="email" class="field-input" id="campo-email" placeholder="tu@email.com">
-                    <div class="field-hint"><i class="fas fa-lock"></i> Privado, solo visible para administradores.</div>
-                </div>
+                    <div class="section-divider" data-label="Información Básica"></div>
 
-                <div class="field-group">
-                    <label class="field-label">
-                        <i class="fas fa-quote-left"></i> Biografía corta
-                    </label>
-                    <textarea class="field-textarea" id="campo-biografia" placeholder="Escribe algo sobre ti, tu inspiración y estilo…" maxlength="300" oninput="updateCharCount(this,'bio-count',300)"></textarea>
-                    <div class="char-counter"><span id="bio-count">0</span> / 300 caracteres</div>
-                </div>
+                    <div class="form-grid">
+                        <div class="field-group">
+                            <label class="field-label"><i class="fas fa-feather-alt"></i> Nombre Artístico / Seudónimo</label>
+                            <input type="text" class="field-input" id="campo-autora" placeholder="Ej: Isabel Allende">
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label"><i class="fas fa-user-tag"></i> Nombre Completo</label>
+                            <input type="text" class="field-input" id="campo-nombre-completo" placeholder="Tu nombre real (opcional)">
+                        </div>
+                    </div>
 
-                <div class="field-group">
-                    <label class="field-label"><i class="fas fa-star"></i> Género favorito</label>
-                    <div class="select-wrapper">
+                    <div class="form-grid">
+                        <div class="field-group">
+                            <label class="field-label"><i class="fas fa-envelope"></i> Correo de Contacto</label>
+                            <input type="email" class="field-input" id="campo-email" placeholder="autor@ejemplo.com">
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label"><i class="fas fa-map-marker-alt"></i> País / Ciudad</label>
+                            <input type="text" class="field-input" id="campo-ubicacion" placeholder="Ej: Lima, Perú">
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="field-group">
+                            <label class="field-label"><i class="fas fa-birthday-cake"></i> Fecha de Nacimiento</label>
+                            <input type="date" class="field-input" id="campo-nacimiento">
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label"><i class="fas fa-globe"></i> Idioma Principal</label>
+                            <select class="field-select" id="campo-idioma">
+                                <option value="es">Español</option>
+                                <option value="en">Inglés</option>
+                                <option value="pt">Portugués</option>
+                                <option value="fr">Francés</option>
+                                <option value="it">Italiano</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="section-divider" data-label="Identidad Literaria"></div>
+
+                    <div class="field-group">
+                        <label class="field-label"><i class="fas fa-book"></i> Género Literario Principal</label>
                         <select class="field-select" id="campo-genero-fav">
-                            <option value="">— Elige un género —</option>
+                            <option value="">— Selecciona tu especialidad —</option>
                             <option value="Fantasia">✨ Fantasía</option>
+                            <option value="Ciencia Ficcion">🚀 Ciencia Ficción</option>
                             <option value="Romance">💕 Romance</option>
-                            <option value="Misterio">🔍 Misterio</option>
-                            <option value="Accion">⚔️ Acción</option>
+                            <option value="Misterio">🔍 Misterio / Thriller</option>
+                            <option value="Terror">👻 Terror</option>
+                            <option value="Drama">🎭 Drama</option>
                             <option value="Poesia">🌸 Poesía</option>
+                            <option value="Ensayo">✍️ Ensayo / No Ficción</option>
                         </select>
                     </div>
-                </div>
 
-                <div class="field-group">
-                    <label class="field-label"><i class="fas fa-globe-americas"></i> Idioma principal</label>
-                    <div class="select-wrapper">
-                        <select class="field-select" id="campo-idioma">
-                            <option value="es">🇪🇸 Español</option>
-                            <option value="en">🇺🇸 Inglés</option>
-                            <option value="pt">🇧🇷 Portugués</option>
-                        </select>
+                    <div class="field-group">
+                        <label class="field-label"><i class="fas fa-quote-left"></i> Firma o Frase Personal</label>
+                        <input type="text" class="field-input" id="campo-frase" placeholder="Una frase que te identifique...">
                     </div>
-                </div>
 
-                <button class="save-btn" id="saveProfileBtn">Guardar perfil</button>
+                    <div class="field-group">
+                        <label class="field-label"><i class="fas fa-address-card"></i> Biografía del Autor</label>
+                        <textarea class="field-textarea" id="campo-biografia" placeholder="Cuéntale al mundo quién eres, qué te inspira y cuál es tu trayectoria..." maxlength="1000"></textarea>
+                    </div>
+
+                    <div class="section-divider" data-label="Presencia Digital"></div>
+
+                    <div class="form-grid">
+                        <div class="field-group">
+                            <label class="field-label"><i class="fas fa-link"></i> Sitio Web Personal</label>
+                            <input type="url" class="field-input" id="campo-sitio-web" placeholder="https://tuweb.com">
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label"><i class="fab fa-instagram"></i> Instagram</label>
+                            <div class="social-input-group">
+                                <div class="social-icon-box"><i class="fab fa-instagram"></i></div>
+                                <input type="text" class="social-input" id="social-instagram" placeholder="@usuario">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="field-group">
+                            <label class="field-label"><i class="fab fa-twitter"></i> Twitter / X</label>
+                            <div class="social-input-group">
+                                <div class="social-icon-box"><i class="fab fa-twitter"></i></div>
+                                <input type="text" class="social-input" id="social-twitter" placeholder="@usuario">
+                            </div>
+                        </div>
+                        <div class="field-group">
+                            <label class="field-label"><i class="fab fa-facebook"></i> Facebook</label>
+                            <div class="social-input-group">
+                                <div class="social-icon-box"><i class="fab fa-facebook"></i></div>
+                                <input type="text" class="social-input" id="social-facebook" placeholder="URL perfil">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section-divider" data-label="Preferencias"></div>
+
+                    <div class="field-group">
+                        <label class="field-label"><i class="fas fa-cog"></i> Preferencias de Publicación</label>
+                        <textarea class="field-textarea" id="campo-preferencias" placeholder="Ej: Prefiero publicar capítulos semanales, busco feedback constructivo..." style="min-height: 80px;"></textarea>
+                    </div>
+
+                    <button class="save-btn" id="saveProfileBtn">Actualizar Perfil Profesional</button>
+                </div>
             </div>
         </div>
     </div>
 
     <footer class="footer-ecosystem">
         <div style="max-width: 960px; margin: 0 auto;">
-            <h3>Síguenos en nuestras redes</h3>
+            <h3>Conecta con la comunidad</h3>
             <div class="footer-social-icons">
                 <a href="https://m.facebook.com/61564349657272/" target="_blank"><i class="fab fa-facebook-f"></i></a>
                 <a href="https://youtube.com/@eltiojota628" target="_blank"><i class="fab fa-youtube"></i></a>
@@ -575,34 +629,23 @@
                 <a href="https://www.masitaprex.com/terminos-condiciones">Términos y condiciones</a>
                 <span class="link-separator">|</span>
                 <a href="https://www.masitaprex.com/politica-privacidad">Política de privacidad</a>
-                <span class="link-separator">|</span>
-                <a href="https://www.masitaprex.com/disclaimer-apis">Aviso legal APIS</a>
-                <span class="link-separator">|</span>
-                <a href="https://www.masitaprex.com/aviso-legal-peliprex">Aviso legal peliPREX</a>
             </div>
-            <p><strong style="color: var(--emerald-light);">Masitaprex</strong> © 2026 — Todos los derechos reservados</p>
-            <p style="font-size: 0.72rem;">Infraestructura tecnológica funciona con apis externas. No somos responsables por el contenido o servicios ofrecidos por terceros.</p>
-            <p class="footer-copyright">
-                Masitaprex - consulta Pe - peliPREX | <strong>Cajamarca, Perú</strong><br>
-                <strong>Representante: JOSÉ RENÉ CUBAS PÉREZ | RUC: 10736224351</strong>
-            </p>
-            <div class="footer-version">V 2.4.0</div>
+            <p><strong style="color: var(--emerald-light);">Masitaprex</strong> © 2026 — Studio PeliPREX</p>
+            <div class="footer-version">V 2.5.0 • Perfil Pro</div>
         </div>
     </footer>
 
-    <!-- Modal genérico -->
     <div class="modal-overlay" id="actionModal">
         <div class="modal-content">
             <div class="modal-icon" id="modalIcon"><i class="fas fa-check"></i></div>
-            <h2 class="modal-title" id="modalTitle">Perfecto</h2>
-            <p class="modal-desc" id="modalDesc">Tu perfil ha sido actualizado correctamente.</p>
-            <button class="modal-btn" id="modalCloseBtn">Continuar</button>
+            <h2 class="modal-title" id="modalTitle">Éxito</h2>
+            <p class="modal-desc" id="modalDesc">Operación completada.</p>
+            <button class="modal-btn" id="modalCloseBtn">Entendido</button>
         </div>
     </div>
 
     <script>
         lucide.createIcons();
-
         let supabaseClient;
         let currentUser;
 
@@ -614,17 +657,25 @@
                 const session = await ReturnConfig.checkAuth(supabaseClient);
                 if (session) {
                     currentUser = session.user;
-                    loadProfile();
-                    loadSidebarStats();
+                    await loadProfile();
+                    await loadSidebarStats();
                 } else {
                     window.location.href = 'login';
                 }
             } catch (error) {
                 console.error('Error init:', error);
-                alert('Error al conectar con la plataforma. Intenta recargar.');
             }
         }
         initApp();
+
+        function updateAvatarPreview(url) {
+            const container = document.getElementById('avatar-preview');
+            if (url && url.startsWith('http')) {
+                container.innerHTML = `<img src="${url}" onerror="this.innerHTML='<i class=\'fas fa-user\'></i>'">`;
+            } else {
+                container.innerHTML = '<i class="fas fa-user"></i>';
+            }
+        }
 
         async function loadProfile() {
             try {
@@ -633,65 +684,74 @@
                     .select('*')
                     .eq('id', currentUser.id)
                     .single();
+                
                 if (!error && data) {
+                    // Mapeo de campos
                     document.getElementById('campo-autora').value = data.autora_nombre || '';
+                    document.getElementById('campo-nombre-completo').value = data.nombre_completo || '';
                     document.getElementById('campo-email').value = data.autora_email || currentUser.email;
-                    document.getElementById('campo-biografia').value = data.biografia || '';
-                    document.getElementById('campo-genero-fav').value = data.genero_fav || '';
+                    document.getElementById('campo-ubicacion').value = data.pais_ciudad || '';
+                    document.getElementById('campo-nacimiento').value = data.fecha_nacimiento || '';
                     document.getElementById('campo-idioma').value = data.idioma || 'es';
-                    updateCharCount(document.getElementById('campo-biografia'), 'bio-count', 300);
-                    return;
+                    document.getElementById('campo-genero-fav').value = data.genero_fav || '';
+                    document.getElementById('campo-frase').value = data.frase_personal || '';
+                    document.getElementById('campo-biografia').value = data.biografia || '';
+                    document.getElementById('campo-sitio-web').value = data.sitio_web || '';
+                    document.getElementById('campo-preferencias').value = data.preferencias_publicacion || '';
+                    document.getElementById('campo-foto-perfil').value = data.foto_perfil_url || '';
+                    
+                    updateAvatarPreview(data.foto_perfil_url);
+
+                    // Redes sociales
+                    const redes = data.redes_sociales || {};
+                    document.getElementById('social-instagram').value = redes.instagram || '';
+                    document.getElementById('social-twitter').value = redes.twitter || '';
+                    document.getElementById('social-facebook').value = redes.facebook || '';
                 }
-            } catch(e) {}
-            const saved = localStorage.getItem(`profile_${currentUser.id}`);
-            if (saved) {
-                const p = JSON.parse(saved);
-                document.getElementById('campo-autora').value = p.autora_nombre || '';
-                document.getElementById('campo-email').value = p.autora_email || currentUser.email;
-                document.getElementById('campo-biografia').value = p.biografia || '';
-                document.getElementById('campo-genero-fav').value = p.genero_fav || '';
-                document.getElementById('campo-idioma').value = p.idioma || 'es';
-                updateCharCount(document.getElementById('campo-biografia'), 'bio-count', 300);
-            } else {
-                document.getElementById('campo-email').value = currentUser.email || '';
-            }
+            } catch(e) { console.error('Error loading profile:', e); }
         }
 
         async function saveProfile() {
-            const profileData = {
-                autora_nombre: document.getElementById('campo-autora').value.trim(),
-                autora_email: document.getElementById('campo-email').value.trim(),
-                biografia: document.getElementById('campo-biografia').value,
-                genero_fav: document.getElementById('campo-genero-fav').value,
-                idioma: document.getElementById('campo-idioma').value
+            const redes = {
+                instagram: document.getElementById('social-instagram').value.trim(),
+                twitter: document.getElementById('social-twitter').value.trim(),
+                facebook: document.getElementById('social-facebook').value.trim()
             };
+
+            const profileData = {
+                id: currentUser.id,
+                autora_nombre: document.getElementById('campo-autora').value.trim(),
+                nombre_completo: document.getElementById('campo-nombre-completo').value.trim(),
+                autora_email: document.getElementById('campo-email').value.trim(),
+                pais_ciudad: document.getElementById('campo-ubicacion').value.trim(),
+                fecha_nacimiento: document.getElementById('campo-nacimiento').value || null,
+                idioma: document.getElementById('campo-idioma').value,
+                genero_fav: document.getElementById('campo-genero-fav').value,
+                frase_personal: document.getElementById('campo-frase').value.trim(),
+                biografia: document.getElementById('campo-biografia').value.trim(),
+                sitio_web: document.getElementById('campo-sitio-web').value.trim(),
+                preferencias_publicacion: document.getElementById('campo-preferencias').value.trim(),
+                foto_perfil_url: document.getElementById('campo-foto-perfil').value.trim(),
+                redes_sociales: redes,
+                updated_at: new Date()
+            };
+
             if (!profileData.autora_nombre) {
-                showModal('Atención', 'El nombre artístico es obligatorio.', 'warning');
+                showModal('Atención', 'El nombre artístico es fundamental para tu identidad.', 'warning');
                 return;
             }
-            localStorage.setItem(`profile_${currentUser.id}`, JSON.stringify(profileData));
+
             try {
                 const { error } = await supabaseClient
                     .from('profiles')
-                    .upsert({
-                        id: currentUser.id,
-                        autora_nombre: profileData.autora_nombre,
-                        autora_email: profileData.autora_email,
-                        biografia: profileData.biografia,
-                        genero_fav: profileData.genero_fav,
-                        idioma: profileData.idioma,
-                        updated_at: new Date()
-                    }, { onConflict: 'id' });
-                if (error) console.warn('No se pudo guardar en profiles:', error);
-                showModal('Perfil actualizado', 'Tus datos se han guardado correctamente.', 'success');
+                    .upsert(profileData, { onConflict: 'id' });
+                
+                if (error) throw error;
+                showModal('Perfil Actualizado', 'Tu identidad profesional ha sido guardada con éxito.', 'success');
             } catch (err) {
-                showModal('Guardado local', 'Perfil guardado en tu navegador (sin conexión a servidor).', 'info');
+                console.error('Save error:', err);
+                showModal('Error', 'No pudimos sincronizar con el servidor: ' + err.message, 'warning');
             }
-        }
-
-        function updateCharCount(el, countId, max) {
-            const len = el.value.length;
-            document.getElementById(countId).innerText = len;
         }
 
         async function logout() {
@@ -700,21 +760,19 @@
         }
 
         function requestDeleteAccount() {
-            if (confirm('⚠️ ¿Estás seguro/a de que quieres eliminar tu cuenta permanentemente?\n\nEsta acción borrará todas tus historias, borradores y datos personales. No se puede deshacer.')) {
-                showModal('Eliminación de cuenta', 'Para eliminar tu cuenta, por favor contacta a soporte@masitaprex.com o utiliza la función de eliminación desde el panel de administración. Si tienes una función RPC llamada "delete_user_account", descomenta el código.', 'info');
+            if (confirm('⚠️ ¿Eliminar cuenta permanentemente?\nSe borrarán todas tus obras y datos. Esta acción es irreversible.')) {
+                showModal('Soporte', 'Para proceder con la eliminación total, escribe a soporte@masitaprex.com', 'info');
             }
         }
 
         function showModal(title, desc, type = 'success') {
             const modal = document.getElementById('actionModal');
-            const modalTitle = document.getElementById('modalTitle');
-            const modalDesc = document.getElementById('modalDesc');
-            const modalIcon = document.getElementById('modalIcon');
-            modalTitle.innerText = title;
-            modalDesc.innerText = desc;
-            if (type === 'success') modalIcon.innerHTML = '<i class="fas fa-check-circle"></i>';
-            else if (type === 'warning') modalIcon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
-            else modalIcon.innerHTML = '<i class="fas fa-info-circle"></i>';
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalDesc').innerText = desc;
+            const icon = document.getElementById('modalIcon');
+            if (type === 'success') icon.innerHTML = '<i class="fas fa-check-circle"></i>';
+            else if (type === 'warning') icon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+            else icon.innerHTML = '<i class="fas fa-info-circle"></i>';
             modal.style.display = 'flex';
         }
 
