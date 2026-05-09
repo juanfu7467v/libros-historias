@@ -653,7 +653,7 @@
                 <a href="nueva-historia.html"><i class="fas fa-pen-fancy sb-icon"></i><span>Nueva Historia</span></a>
                 <a href="mis-historias.html"><i class="fas fa-book-open sb-icon"></i><span>Mis Historias</span></a>
                 <a href="borradores.html" class="active"><i class="fas fa-file-alt sb-icon"></i><span>Borradores</span><span class="sb-badge" id="sidebar-draft-count">0</span></a>
-                <a href="estadísticas.html"><i class="fas fa-chart-bar sb-icon"></i><span>Estadísticas</span></a>
+                <a href="estadisticas.html"><i class="fas fa-chart-bar sb-icon"></i><span>Estadísticas</span></a>
                 <div class="sb-cat">Entretenimiento</div>
                 <a href="https://www.masitaprex.com/PeliPREX"><i class="fas fa-film sb-icon"></i><span>Películas gratis</span></a>
             </nav>
@@ -906,8 +906,8 @@
         };
 
         function openDraft(id) {
-            showToast('Abriendo borrador...', 'success');
-            setTimeout(() => window.location.href = `nueva-historia?id=${id}`, 500);
+            showToast('Abriendo historia...', 'success');
+            setTimeout(() => window.location.href = `leer?id=${id}`, 500);
         }
         window.openDraft = openDraft;
 
