@@ -408,7 +408,7 @@
 
         /* Botón "Realizar cambios" */
         .btn-realizar-cambios {
-            display: inline-flex;
+            display: none; /* Oculto por defecto, se muestra vía JS solo al autor */
             align-items: center;
             justify-content: center;
             gap: 8px;
@@ -425,6 +425,9 @@
             cursor: pointer;
             font-size: 1rem;
             text-decoration: none;
+            width: 100%; /* Ancho completo */
+            max-width: 100%;
+            box-sizing: border-box;
         }
         .btn-realizar-cambios:hover {
             background: rgba(110, 231, 255, 0.1);
@@ -518,8 +521,8 @@
     </div>
 
     <!-- Botón "Realizar cambios" antes del footer -->
-    <div class="flex justify-center mt-16 fade-up" style="animation-delay: 0.25s;">
-        <a href="nueva-historia.html" class="btn-realizar-cambios">
+    <div class="flex justify-center mt-16 fade-up px-4 md:px-0" style="animation-delay: 0.25s;">
+        <a id="btnEditStory" href="#" class="btn-realizar-cambios">
             <i class="fas fa-pen-to-square"></i> Realizar cambios
         </a>
     </div>
@@ -821,9 +824,27 @@
         // Reconstruir el indicador de scroll porque el contenido cambió
         initScrollIndicator();
 
+        // Control de visibilidad del botón de edición para el autor
+        checkAuthorPermissions(story);
+
         // suave animación a elementos
         const fadeItems = document.querySelectorAll('.fade-up');
         fadeItems.forEach((el,idx) => { el.style.opacity = '1'; });
+    }
+
+    async function checkAuthorPermissions(story) {
+        try {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (session && session.user && session.user.id === story.user_id) {
+                const editBtn = document.getElementById('btnEditStory');
+                if (editBtn) {
+                    editBtn.href = `nueva-historia?id=${story.id}`;
+                    editBtn.style.display = 'flex';
+                }
+            }
+        } catch (err) {
+            console.warn('Error verificando permisos de autor:', err);
+        }
     }
 
     function showErrorScreen(msg) {
